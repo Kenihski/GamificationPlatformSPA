@@ -86,19 +86,23 @@ namespace GamificationPlatform.Controllers
                 return Unauthorized();
 
             var challenge = await _challengeRepository.GetChallengeByIdAsync(id);
+
             if (challenge == null)
                 return NotFound();
 
             if (!challenge.IsPublished && !CanManageChallenge(challenge))
                 return NotFound();
 
-            var attempts = await _attemptRepository.GetCompletedAttemptsAsync(userId, id);
+            var attempts =
+                await _attemptRepository.GetCompletedAttemptsAsync(userId, id);
+
             var chronological = attempts
                 .OrderBy(a => a.CompletedAt)
                 .ThenBy(a => a.ChallengeAttemptId)
                 .ToList();
 
             var latest = chronological.LastOrDefault();
+
             var best = attempts
                 .OrderByDescending(a => a.Score)
                 .ThenByDescending(a => a.CompletedAt)
@@ -106,11 +110,18 @@ namespace GamificationPlatform.Controllers
                 .FirstOrDefault();
 
             var attemptNumbers = chronological
-                .Select((attempt, index) => new { attempt.ChallengeAttemptId, Number = index + 1 })
-                .ToDictionary(x => x.ChallengeAttemptId, x => x.Number);
+                .Select((attempt, index) => new
+                {
+                    attempt.ChallengeAttemptId,
+                    Number = index + 1
+                })
+                .ToDictionary(
+                    x => x.ChallengeAttemptId,
+                    x => x.Number);
 
             var history = attempts
-                .OrderByDescending(a => a.ChallengeAttemptId == best!.ChallengeAttemptId)
+                .OrderByDescending(a =>
+                    a.ChallengeAttemptId == best!.ChallengeAttemptId)
                 .ThenByDescending(a => a.CompletedAt)
                 .Select(a => new
                 {
@@ -120,18 +131,26 @@ namespace GamificationPlatform.Controllers
                     a.StartedAt,
                     a.CompletedAt,
                     TimeUsedSeconds = a.CompletedAt.HasValue
-                        ? Math.Max(0, (int)Math.Round((a.CompletedAt.Value - a.StartedAt).TotalSeconds))
+                        ? Math.Max(
+                            0,
+                            (int)Math.Round(
+                                (a.CompletedAt.Value - a.StartedAt)
+                                .TotalSeconds))
                         : 0,
-                    IsBest = a.ChallengeAttemptId == best!.ChallengeAttemptId,
-                    IsLatest = a.ChallengeAttemptId == latest!.ChallengeAttemptId
+                    IsBest = a.ChallengeAttemptId ==
+                        best!.ChallengeAttemptId,
+                    IsLatest = a.ChallengeAttemptId ==
+                        latest!.ChallengeAttemptId
                 })
                 .ToList();
 
             return Ok(new
             {
                 ChallengeId = id,
-                MaxPoints = (await _challengeRepository.GetChallengeWithQuestionsAsync(id))?
-                    .Questions.Sum(q => q.Points) ?? 0,
+                MaxPoints =
+                    (await _challengeRepository
+                        .GetChallengeWithQuestionsAsync(id))?
+                        .Questions.Sum(q => q.Points) ?? 0,
                 Attempts = history
             });
         }
@@ -477,6 +496,7 @@ namespace GamificationPlatform.Controllers
                 IsCore = challenge.IsCore,
                 TimeLimitMinutes = challenge.TimeLimitMinutes,
                 MaxPoints = challenge.MaxPoints,
+                QuestionCount = challenge.Questions?.Count ?? 0,
                 CreatedByUserId = challenge.CreatedByUserId
             };
         }

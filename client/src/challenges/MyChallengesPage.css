@@ -1,0 +1,105 @@
+
+.my-challenges-page {
+  --management-text: #f5f7ff;
+  --management-muted: #d1d9ee;
+  --management-blue: #91adff;
+  --management-border: rgba(111, 132, 255, 0.35);
+}
+
+.my-challenges-page .text-secondary {
+  color: var(--management-muted) !important;
+}
+
+.my-challenges-page .table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--management-text);
+  --bs-table-border-color: rgba(124, 139, 196, 0.25);
+  --bs-table-striped-bg: rgba(80, 99, 190, 0.09);
+  --bs-table-striped-color: var(--management-text);
+}
+
+.my-challenges-page .table thead th {
+  background: rgba(60, 75, 145, 0.2);
+  color: var(--management-blue);
+  border-bottom-color: var(--management-border);
+}
+
+.my-challenges-page .table td,
+.my-challenges-page .table th {
+  vertical-align: middle;
+}
+
+.challenge-management-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+  vertical-align: middle;
+}
+
+.challenge-management-status-published {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.45);
+}
+
+.challenge-management-status-draft {
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.my-challenges-page .featured-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.my-challenges-page .featured-badge-core {
+  border-color: rgba(145, 173, 255, 0.55);
+  background: rgba(67, 106, 230, 0.25);
+  color: #c8d6ff;
+}
+
+.my-challenges-page .featured-badge-community {
+  border-color: rgba(192, 154, 255, 0.55);
+  background: rgba(123, 78, 201, 0.25);
+  color: #e0c8ff;
+}
+
+.my-challenges-actions {
+  white-space: nowrap;
+}
+
+.my-challenges-actions .btn {
+  white-space: nowrap;
+}
+
+.my-challenges-page .btn-outline-primary {
+  border-color: #91adff;
+  color: #b8c8ff;
+}
+
+.my-challenges-page .btn-outline-success {
+  --bs-btn-color: #91efc4;
+  --bs-btn-border-color: #91efc4;
+}
+
+.my-challenges-page .btn-outline-danger {
+  --bs-btn-color: #ffb3bf;
+  --bs-btn-border-color: #ffb3bf;
+}
+
+.my-challenges-page .btn-outline-secondary {
+  --bs-btn-color: #d1d9ee;
+  --bs-btn-border-color: #91a5df;
+}

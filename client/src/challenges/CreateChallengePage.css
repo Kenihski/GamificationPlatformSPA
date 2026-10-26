@@ -1,0 +1,33 @@
+
+.create-challenge-page {
+  color: #f5f7ff;
+}
+
+.create-challenge-page .form-control,
+.create-challenge-page .form-select {
+  background-color: #253154;
+  color: #ffffff;
+  border: 1px solid rgba(137, 160, 255, 0.65);
+  border-radius: 9px;
+}
+
+.create-challenge-page .form-control:focus,
+.create-challenge-page .form-select:focus {
+  background-color: #2d3c65;
+  color: #ffffff;
+  border-color: #91adff;
+  box-shadow: 0 0 0 0.2rem rgba(111, 132, 255, 0.2);
+}
+
+.create-challenge-page .form-label,
+.create-challenge-page .form-check-label {
+  color: #edf1ff;
+}
+
+.challenge-image-preview {
+  display: block;
+  max-width: 240px;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 8px;
+}

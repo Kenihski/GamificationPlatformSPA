@@ -19,6 +19,8 @@ namespace GamificationPlatform.DTOs
 
         public int MaxPoints { get; set; }
 
+        public int QuestionCount { get; set; }
+
         public int CreatedByUserId { get; set; }
     }
 }

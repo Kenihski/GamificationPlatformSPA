@@ -1,0 +1,83 @@
+
+.home-page {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+.home-hero {
+  padding: 4rem 1rem 5rem;
+}
+
+.home-subtitle {
+  color: #6ea8fe;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.2rem;
+}
+
+.home-hero h1 {
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.home-hero .lead {
+  color: #adb5bd;
+  margin-bottom: 2rem;
+}
+
+.home-hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.home-section {
+  margin-top: 4rem;
+}
+
+.home-ranking-card,
+.home-feature-card {
+  background-color: #1d2430;
+  border: 1px solid #343a46;
+  color: #f8f9fa;
+  border-radius: 12px;
+}
+
+.home-ranking-card .card-body,
+.home-feature-card .card-body {
+  padding: 2rem;
+}
+
+.home-ranking-card .card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.home-ranking-card .btn {
+  margin-top: auto;
+}
+
+.home-ranking-label {
+  color: #6ea8fe;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+}
+
+.home-feature-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.home-feature-card p {
+  color: #adb5bd;
+  margin-bottom: 0;
+}
+
+@media (max-width: 576px) {
+  .home-hero {
+    padding: 3rem 0.5rem;
+  }
+}

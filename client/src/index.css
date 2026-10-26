@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+  min-width: 320px;
+  background-color: #111722;
+  color: #f8f9fa;
+}
+
+#root {
+  min-height: 100vh;
+}
