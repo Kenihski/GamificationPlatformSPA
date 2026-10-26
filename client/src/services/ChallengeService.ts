@@ -47,6 +47,22 @@ const createChallenge = async (
   return response.json() as Promise<Challenge>
 }
 
+const updateChallenge = async (
+  id: number,
+  data: ChallengeSaveRequest
+): Promise<void> => {
+  await apiFetch(`/api/challenges/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+}
+
+const deleteChallenge = async (id: number): Promise<void> => {
+  await apiFetch(`/api/challenges/${id}`, {
+    method: 'DELETE',
+  })
+}
+
 const publishChallenge = async (id: number): Promise<void> => {
   await apiFetch(`/api/challenges/${id}/publish`, {
     method: 'POST',
@@ -76,6 +92,8 @@ const ChallengeService = {
   getChallenge,
   getMyChallenges,
   createChallenge,
+  updateChallenge,
+  deleteChallenge,
   publishChallenge,
   unpublishChallenge,
   makeCore,

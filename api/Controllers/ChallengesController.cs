@@ -495,6 +495,7 @@ namespace GamificationPlatform.Controllers
                 IsPublished = challenge.IsPublished,
                 IsCore = challenge.IsCore,
                 TimeLimitMinutes = challenge.TimeLimitMinutes,
+                ShowAnswersAfterCompletion = challenge.ShowAnswersAfterCompletion,
                 MaxPoints = challenge.MaxPoints,
                 QuestionCount = challenge.Questions?.Count ?? 0,
                 CreatedByUserId = challenge.CreatedByUserId

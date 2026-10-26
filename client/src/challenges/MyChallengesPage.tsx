@@ -14,6 +14,7 @@ import ChallengeService from '../services/ChallengeService'
 import './MyChallengesPage.css'
 
 type ChallengeAction =
+  | 'delete'
   | 'publish'
   | 'unpublish'
   | 'make-core'
@@ -44,6 +45,8 @@ const MyChallengesPage = () => {
   const actionMutation = useMutation({
     mutationFn: async ({ id, action }: ActionRequest) => {
       switch (action) {
+        case 'delete':
+          return ChallengeService.deleteChallenge(id)
         case 'publish':
           return ChallengeService.publishChallenge(id)
         case 'unpublish':
@@ -69,6 +72,18 @@ const MyChallengesPage = () => {
   const handleAction = (id: number, action: ChallengeAction) => {
     setActionError(null)
     actionMutation.mutate({ id, action })
+  }
+
+  const handleDelete = (id: number, title: string) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${title}"?\n\nThis action cannot be undone.`
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    handleAction(id, 'delete')
   }
 
   if (isPending) {
@@ -136,6 +151,10 @@ const MyChallengesPage = () => {
                   actionMutation.isPending &&
                   actionMutation.variables?.id === challenge.challengeId
 
+                const isDeleting =
+                  isUpdating &&
+                  actionMutation.variables?.action === 'delete'
+
                 return (
                   <tr key={challenge.challengeId}>
                     <td>{challenge.title}</td>
@@ -183,20 +202,25 @@ const MyChallengesPage = () => {
                           View
                         </Link>
 
-                        <Button
-                          size="sm"
-                          variant="outline-warning"
-                          disabled
+                        <Link
+                          to={`/challenges/${challenge.challengeId}/edit`}
+                          className="btn btn-sm btn-outline-warning"
                         >
                           Edit
-                        </Button>
+                        </Link>
 
                         <Button
                           size="sm"
                           variant="outline-danger"
-                          disabled
+                          disabled={actionMutation.isPending}
+                          onClick={() =>
+                            handleDelete(
+                              challenge.challengeId,
+                              challenge.title
+                            )
+                          }
                         >
-                          Delete
+                          {isDeleting ? 'Deleting...' : 'Delete'}
                         </Button>
 
                         <Button
@@ -216,7 +240,7 @@ const MyChallengesPage = () => {
                             )
                           }
                         >
-                          {isUpdating
+                          {isUpdating && !isDeleting
                             ? 'Updating...'
                             : challenge.isPublished
                               ? 'Unpublish'

@@ -7,6 +7,7 @@ export interface Challenge {
   isPublished: boolean
   isCore: boolean
   timeLimitMinutes: number | null
+  showAnswersAfterCompletion: boolean
   maxPoints: number
   questionCount: number
   createdByUserId: number

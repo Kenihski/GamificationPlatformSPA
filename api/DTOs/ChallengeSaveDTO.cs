@@ -14,8 +14,6 @@ namespace GamificationPlatform.DTOs
         [StringLength(500)]
         public string Description { get; set; } = string.Empty;
 
-        [AllowedImage(ErrorMessage =
-            "Please select one of the available images.")]
         public string ImageUrl { get; set; } = string.Empty;
 
         [AllowedTimeLimit(ErrorMessage =

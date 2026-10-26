@@ -37,6 +37,9 @@ namespace GamificationPlatform.DAL
             // Apply pending migrations without deleting the database.
             await context.Database.MigrateAsync();
 
+            // Register bundled default images.
+            await DefaultImageSeeder.SeedAsync(context, app.Environment);
+
             if (await context.Users.AnyAsync())
             {
                 logger.LogInformation(

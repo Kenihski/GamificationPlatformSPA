@@ -17,6 +17,8 @@ namespace GamificationPlatform.DTOs
 
         public int? TimeLimitMinutes { get; set; }
 
+        public bool ShowAnswersAfterCompletion { get; set; }
+
         public int MaxPoints { get; set; }
 
         public int QuestionCount { get; set; }

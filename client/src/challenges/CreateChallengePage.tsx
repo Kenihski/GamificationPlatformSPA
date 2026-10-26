@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Alert, Button, Container, Form, Spinner } from 'react-bootstrap'
@@ -27,7 +27,22 @@ const CreateChallengePage = () => {
   const [imageCategory, setImageCategory] = useState<ImageCategory>('none')
   const [imageUrl, setImageUrl] = useState('')
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [uploadedPreviewUrl, setUploadedPreviewUrl] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  // Create a local preview and release it when the file changes.
+  useEffect(() => {
+    if (!imageFile) {
+      return
+    }
+
+    const objectUrl = URL.createObjectURL(imageFile)
+    setUploadedPreviewUrl(objectUrl)
+
+    return () => {
+      URL.revokeObjectURL(objectUrl)
+    }
+  }, [imageFile])
 
   const defaultImagesQuery = useQuery({
     queryKey: ['default-images'],
@@ -61,6 +76,7 @@ const CreateChallengePage = () => {
       await queryClient.invalidateQueries({
         queryKey: ['my-challenges'],
       })
+
       navigate('/my-challenges')
     },
     onError: (error: Error) => {
@@ -72,6 +88,7 @@ const CreateChallengePage = () => {
     setImageCategory(category)
     setImageUrl('')
     setImageFile(null)
+    setUploadedPreviewUrl(null)
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -112,8 +129,8 @@ const CreateChallengePage = () => {
   }
 
   const previewUrl =
-    imageCategory === 'upload' && imageFile
-      ? null
+    imageCategory === 'upload'
+      ? uploadedPreviewUrl
       : imageUrl
         ? getImageSource(imageUrl)
         : null
@@ -204,8 +221,9 @@ const CreateChallengePage = () => {
                 type="file"
                 accept=".jpg,.jpeg,.png,.webp"
                 onChange={(event) => {
-                const input = event.currentTarget as HTMLInputElement
-                setImageFile(input.files?.[0] ?? null)
+                  const input = event.currentTarget as HTMLInputElement
+                  setImageFile(input.files?.[0] ?? null)
+                  setUploadedPreviewUrl(null)
                 }}
               />
               <Form.Text className="text-secondary">
