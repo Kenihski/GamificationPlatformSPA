@@ -7,6 +7,17 @@ import type {
   QuizAttemptResult,
 } from '../types/Quiz'
 
+export interface QuizAttemptHistory {
+  challengeAttemptId: number
+  attemptNumber: number
+  score: number
+  timeUsedSeconds: number
+  timeUsed: string
+  completedAt: string
+  isBest: boolean
+  isLatest: boolean
+}
+
 const startQuiz = async (challengeId: number): Promise<QuizStartResponse> => {
   const response = await apiFetch(
     `/api/quiz/challenges/${challengeId}/start`,
@@ -54,11 +65,22 @@ const getAttemptResult = async (
   return response.json() as Promise<QuizAttemptResult>
 }
 
+const getChallengeHistory = async (
+  challengeId: number
+): Promise<QuizAttemptHistory[]> => {
+  const response = await apiFetch(
+    `/api/quiz/challenges/${challengeId}/history`
+  )
+
+  return response.json() as Promise<QuizAttemptHistory[]>
+}
+
 const QuizService = {
   startQuiz,
   submitQuiz,
   exitQuiz,
   getAttemptResult,
+  getChallengeHistory,
 }
 
 export default QuizService

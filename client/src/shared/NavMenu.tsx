@@ -1,9 +1,17 @@
 
 import { useState } from 'react'
-import { Button, Container, Modal, Nav, Navbar, Offcanvas } from 'react-bootstrap'
+import {
+  Button,
+  Container,
+  Modal,
+  Nav,
+  Navbar,
+  Offcanvas,
+} from 'react-bootstrap'
 import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import LoginForm from '../auth/LoginForm'
+import MatrixBackground from './MatrixBackground'
 import './NavMenu.css'
 
 const NavMenu = () => {
@@ -25,11 +33,12 @@ const NavMenu = () => {
       <Navbar className="site-navbar" variant="dark">
         <Container fluid>
           <Button
-            variant="outline-light"
-            className="me-3 menu-toggle"
+            variant="outline-secondary"
+            className="me-3 menu-toggle navbar-toggler"
             onClick={() => setShowMenu(true)}
             aria-label="Open navigation menu"
             aria-controls="sidebar-menu"
+            aria-expanded={showMenu}
           >
             <span className="navbar-toggler-icon" />
           </Button>
@@ -38,19 +47,28 @@ const NavMenu = () => {
             Learning Challenge Hub
           </Navbar.Brand>
 
-          <Nav className="align-items-center">
+          <Nav className="align-items-center gap-3">
+            <MatrixBackground />
+
             {isAuthenticated ? (
               <div className="d-flex align-items-center gap-3">
                 <span className="navbar-welcome">
                   Welcome, {user?.username}
                 </span>
 
-                <Button variant="outline-light" onClick={handleLogout}>
+                <Button
+                  variant="link"
+                  className="nav-link"
+                  onClick={handleLogout}
+                >
                   Logout
                 </Button>
               </div>
             ) : (
-              <Button variant="primary" onClick={() => setShowLogin(true)}>
+              <Button
+                variant="primary"
+                onClick={() => setShowLogin(true)}
+              >
                 Login
               </Button>
             )}
@@ -73,22 +91,36 @@ const NavMenu = () => {
         </Offcanvas.Header>
 
         <Offcanvas.Body className="d-flex flex-column">
-          <h6 className="sidebar-heading">Explore</h6>
+          <h6 className="sidebar-heading text-muted fw-bold px-3 mb-3">
+            Explore
+          </h6>
 
           <Nav className="flex-column">
             <Nav.Link as={NavLink} to="/" end onClick={closeMenu}>
               Home
             </Nav.Link>
 
-            <Nav.Link as={NavLink} to="/challenges" onClick={closeMenu}>
+            <Nav.Link
+              as={NavLink}
+              to="/challenges"
+              onClick={closeMenu}
+            >
               Challenges
             </Nav.Link>
 
-            <Nav.Link as={NavLink} to="/hall-of-fame" onClick={closeMenu}>
+            <Nav.Link
+              as={NavLink}
+              to="/hall-of-fame"
+              onClick={closeMenu}
+            >
               Hall of Fame
             </Nav.Link>
 
-            <Nav.Link as={NavLink} to="/leaderboard" onClick={closeMenu}>
+            <Nav.Link
+              as={NavLink}
+              to="/leaderboard"
+              onClick={closeMenu}
+            >
               Core Leaderboard
             </Nav.Link>
           </Nav>
@@ -97,25 +129,41 @@ const NavMenu = () => {
             <>
               <hr className="my-3" />
 
-              <h6 className="sidebar-heading">
+              <h6 className="sidebar-heading text-muted fw-bold px-3 mb-3">
                 {isAdmin ? 'My Workspace' : 'My Learning'}
               </h6>
 
               <Nav className="flex-column">
-                <Nav.Link as={NavLink} to="/my-challenges" onClick={closeMenu}>
+                <Nav.Link
+                  as={NavLink}
+                  to="/my-challenges"
+                  onClick={closeMenu}
+                >
                   My Challenges
                 </Nav.Link>
 
-                <Nav.Link as={NavLink} to="/challenges/create" onClick={closeMenu}>
+                <Nav.Link
+                  as={NavLink}
+                  to="/challenges/create"
+                  onClick={closeMenu}
+                >
                   Create Challenge
                 </Nav.Link>
 
-                <Nav.Link as={NavLink} to="/my-images" onClick={closeMenu}>
+                <Nav.Link
+                  as={NavLink}
+                  to="/my-images"
+                  onClick={closeMenu}
+                >
                   My Images
                 </Nav.Link>
 
                 {!isAdmin && (
-                  <Nav.Link as={NavLink} to="/achievements" onClick={closeMenu}>
+                  <Nav.Link
+                    as={NavLink}
+                    to="/achievements"
+                    onClick={closeMenu}
+                  >
                     Achievements
                   </Nav.Link>
                 )}
@@ -127,30 +175,68 @@ const NavMenu = () => {
             <>
               <hr className="my-3" />
 
-              <h6 className="sidebar-heading">Administration</h6>
+              <h6 className="sidebar-heading text-muted fw-bold px-3 mb-3">
+                Administration
+              </h6>
 
               <Nav className="flex-column">
-                <Nav.Link as={NavLink} to="/admin/users" onClick={closeMenu}>
+                <Nav.Link
+                  as={NavLink}
+                  to="/admin/users"
+                  onClick={closeMenu}
+                >
                   Users
                 </Nav.Link>
 
-                <Nav.Link as={NavLink} to="/admin/questions" onClick={closeMenu}>
+                <Nav.Link
+                  as={NavLink}
+                  to="/admin/questions"
+                  onClick={closeMenu}
+                >
                   Questions
                 </Nav.Link>
 
-                <Nav.Link as={NavLink} to="/admin/achievements" onClick={closeMenu}>
+                <Nav.Link
+                  as={NavLink}
+                  to="/admin/achievements"
+                  onClick={closeMenu}
+                >
                   Achievements
                 </Nav.Link>
 
-                <Nav.Link as={NavLink} to="/admin/images" onClick={closeMenu}>
+                <Nav.Link
+                  as={NavLink}
+                  to="/admin/images"
+                  onClick={closeMenu}
+                >
                   Images
                 </Nav.Link>
               </Nav>
             </>
           )}
 
-          <div className="sidebar-footer mt-auto">
-            <Nav.Link as={NavLink} to="/about" onClick={closeMenu}>
+          <div className="site-sidebar-footer">
+            <Nav.Link
+              as={NavLink}
+              to="/about"
+              onClick={closeMenu}
+              className="d-flex align-items-center gap-2"
+            >
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
               About
             </Nav.Link>
           </div>

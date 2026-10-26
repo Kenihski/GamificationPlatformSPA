@@ -1,7 +1,14 @@
 
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Alert, Button, ButtonGroup, Container, Form, Spinner } from 'react-bootstrap'
+import {
+  Alert,
+  Button,
+  ButtonGroup,
+  Container,
+  Form,
+  Spinner,
+} from 'react-bootstrap'
 import ChallengeService from '../services/ChallengeService'
 import type { ChallengeFilter } from '../types/Challenge'
 import ChallengeGrid from './ChallengeGrid'
@@ -18,6 +25,7 @@ const getInitialView = (): ChallengeView => {
 
 const ChallengeListPage = () => {
   const [filter, setFilter] = useState<ChallengeFilter>('All')
+  const [searchInput, setSearchInput] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [view, setView] = useState<ChallengeView>(getInitialView)
 
@@ -35,7 +43,7 @@ const ChallengeListPage = () => {
     <Container className="challenge-list-page mt-4 mb-5">
       <div className="mb-4">
         <h1 className="fw-bold mb-2">List of Challenges</h1>
-        <p className="challenge-list-description">
+        <p className="challenge-list-description mb-0">
           Explore available challenges and test your knowledge.
         </p>
       </div>
@@ -56,14 +64,26 @@ const ChallengeListPage = () => {
           )}
         </ButtonGroup>
 
-        <Form.Control
-          type="search"
-          className="challenge-search"
-          placeholder="Search challenges..."
-          aria-label="Search challenges by title or description"
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-        />
+        <Form
+          role="search"
+          className="challenge-search-form"
+          onSubmit={(event) => {
+            event.preventDefault()
+            setSearchTerm(searchInput)
+          }}
+        >
+          <Form.Control
+            type="search"
+            placeholder="Search challenges..."
+            aria-label="Search challenges by title or description"
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
+          />
+
+          <Button variant="outline-primary" type="submit">
+            Search
+          </Button>
+        </Form>
 
         <ButtonGroup aria-label="Choose challenge view">
           <Button

@@ -1,83 +1,589 @@
 
 .home-page {
-  padding-top: 2rem;
+  --home-text: #f5f7ff;
+  --home-muted: #d1d9ee;
+  --home-blue: #91adff;
+  --content-card-bg: #121a36;
+  --content-card-border: rgba(125, 151, 230, 0.55);
+  --primary-gradient: linear-gradient(135deg, #3159cf, #6540c5);
+  --primary-gradient-hover: linear-gradient(135deg, #3d65d9, #714bd1);
   padding-bottom: 4rem;
 }
 
-.home-hero {
-  padding: 4rem 1rem 5rem;
+/* Hero */
+
+.home-page .home-hero {
+  padding: 65px 15px 45px;
 }
 
-.home-subtitle {
-  color: #6ea8fe;
-  font-size: 0.85rem;
+.home-page .home-subtitle {
+  margin-bottom: 18px;
+  color: var(--home-blue);
+  font-size: 0.9rem;
   font-weight: 700;
-  letter-spacing: 0.2rem;
+  letter-spacing: 4px;
 }
 
-.home-hero h1 {
-  font-weight: 700;
-  margin-bottom: 1.5rem;
+.home-page .home-hero h1 {
+  max-width: 900px;
+  margin: 0 auto 20px;
+  color: #ffffff;
+  font-weight: 800;
+  line-height: 1.15;
+  text-shadow: 0 0 35px rgba(100, 139, 255, 0.25);
 }
 
-.home-hero .lead {
-  color: #adb5bd;
-  margin-bottom: 2rem;
+.home-page .home-hero .lead {
+  max-width: 650px;
+  margin: 0 auto;
+  color: var(--home-muted);
+  font-size: 1.15rem;
+  line-height: 1.8;
 }
 
-.home-hero-actions {
+.home-page .home-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.home-page .home-hero-actions .btn {
+  min-width: 190px;
+}
+
+/* Buttons */
+
+.home-page .home-hero .btn-primary,
+.home-page .featured-challenge-button {
+  border: 1px solid #6d83ff;
+  border-radius: 10px;
+  background: var(--primary-gradient);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 22px rgba(83, 107, 255, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-page .home-hero .btn-primary:hover,
+.home-page .featured-challenge-button:hover {
+  transform: translateY(-2px);
+  border-color: #9eabff;
+  background: var(--primary-gradient-hover);
+  box-shadow: 0 8px 30px rgba(83, 107, 255, 0.45);
+}
+
+.home-page .home-hero .btn-outline-primary,
+.home-page .home-ranking-button {
+  border: 1px solid rgba(145, 169, 255, 0.75);
+  border-radius: 10px;
+  background: rgba(24, 33, 69, 0.85);
+  color: #edf1ff;
+  font-weight: 600;
+  transition: background 0.2s ease, border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.home-page .home-hero .btn-outline-primary:hover,
+.home-page .home-ranking-button:hover {
+  transform: translateY(-2px);
+  border-color: #b2c1ff;
+  background: rgba(77, 99, 202, 0.4);
+  color: #ffffff;
+}
+
+/* Sections */
+
+.home-page .home-section {
+  margin-top: 45px;
+}
+
+.home-page .home-carousel-section {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 20px;
 }
 
-.home-section {
-  margin-top: 4rem;
+/* Featured Challenges */
+
+.home-page .featured-challenges {
+  width: 100%;
 }
 
-.home-ranking-card,
-.home-feature-card {
-  background-color: #1d2430;
-  border: 1px solid #343a46;
-  color: #f8f9fa;
-  border-radius: 12px;
+.home-page .featured-challenges-title {
+  margin: 0 0 24px;
+  color: #ffffff;
+  font-size: clamp(1.55rem, 2.8vw, 2rem);
+  font-weight: 750;
 }
 
-.home-ranking-card .card-body,
-.home-feature-card .card-body {
-  padding: 2rem;
+.home-page .featured-carousel {
+  position: relative;
+  padding-bottom: 38px;
 }
 
-.home-ranking-card .card-body {
+.home-page .featured-carousel-frame {
+  overflow: hidden;
+  border: 1px solid var(--content-card-border);
+  border-radius: 18px;
+  background: var(--content-card-bg);
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.4),
+    0 0 35px rgba(84, 103, 255, 0.12);
+}
+
+.home-page .featured-challenge-card {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  min-height: 390px;
+}
+
+.home-page .featured-challenge-image {
+  min-width: 0;
+  min-height: 390px;
+  overflow: hidden;
+  background: #0c1230;
+}
+
+.home-page .featured-challenge-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 390px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.home-page .featured-challenge-content {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
+  min-width: 0;
+  padding: 34px 36px;
 }
 
-.home-ranking-card .btn {
-  margin-top: auto;
+.home-page .featured-challenge-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.home-ranking-label {
-  color: #6ea8fe;
+.home-page .featured-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 13px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.home-page .featured-badge-core {
+  border-color: rgba(145, 173, 255, 0.55);
+  background: rgba(67, 106, 230, 0.25);
+  color: #c8d6ff;
+}
+
+.home-page .featured-badge-community {
+  border-color: rgba(192, 154, 255, 0.55);
+  background: rgba(123, 78, 201, 0.25);
+  color: #e0c8ff;
+}
+
+.home-page .featured-challenge-name {
+  margin: 0 0 13px;
+  color: #ffffff;
+  font-size: clamp(1.8rem, 2.9vw, 2.45rem);
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.home-page .featured-challenge-description {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  max-width: 540px;
+  margin-bottom: 22px;
+  color: var(--home-muted);
+  line-height: 1.7;
+}
+
+.home-page .featured-challenge-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+  color: #e1e9ff;
+  font-size: 0.95rem;
+}
+
+.home-page .featured-challenge-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(125, 151, 230, 0.25);
+  border-radius: 8px;
+  background: rgba(78, 98, 185, 0.12);
+}
+
+.home-page .featured-challenge-meta svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  color: var(--home-blue);
+}
+
+.home-page .featured-challenge-button {
+  padding: 13px 27px;
+  font-size: 1rem;
+}
+
+.home-page .featured-challenge-button span {
+  margin-left: 8px;
+}
+
+/* Carousel navigation */
+
+.home-page .featured-carousel-prev,
+.home-page .featured-carousel-next {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 60px;
+  transform: translateY(-85%);
+  border: 1px solid rgba(145, 169, 255, 0.45);
+  border-radius: 9px;
+  background: rgba(12, 18, 43, 0.9);
+  color: #ffffff;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.home-page .featured-carousel-prev {
+  left: 8px;
+}
+
+.home-page .featured-carousel-next {
+  right: 8px;
+}
+
+.home-page .featured-carousel-prev:hover,
+.home-page .featured-carousel-next:hover {
+  background: #303b70;
+}
+
+.home-page .featured-carousel-indicators {
+  position: absolute;
+  bottom: 7px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+}
+
+.home-page .featured-carousel-indicators button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #a9b8e8;
+  opacity: 0.45;
+  cursor: pointer;
+}
+
+.home-page .featured-carousel-indicators button.active {
+  background: #a9b8ff;
+  opacity: 1;
+}
+
+.home-page .featured-challenges-empty {
+  padding: 35px;
+  border: 1px solid var(--content-card-border);
+  border-radius: 16px;
+  background: var(--content-card-bg);
+  color: var(--home-muted);
+}
+
+/* Leaderboard and Hall of Fame */
+
+.home-page .home-ranking-card {
+  border: 1px solid var(--content-card-border);
+  border-radius: 18px;
+  background: var(--content-card-bg);
+  color: var(--home-text);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+}
+
+.home-page .home-ranking-card .card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+}
+
+.home-page .home-ranking-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.home-page .home-ranking-label {
+  margin-bottom: 8px;
+  color: var(--home-blue);
   font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.home-page .home-ranking-header h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.65rem;
+  font-weight: 750;
+}
+
+.home-page .home-ranking-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border: 1px solid rgba(133, 116, 255, 0.45);
+  border-radius: 14px;
+  background: rgba(95, 78, 195, 0.2);
+  font-size: 1.6rem;
+}
+
+.home-page .home-ranking-empty {
+  margin: 10px 0 30px;
+  color: var(--home-muted);
+}
+
+.home-page .home-ranking-button {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 10px 20px;
+}
+
+/* How It Works */
+
+.home-page .home-features {
+  margin-bottom: 65px;
+}
+
+.home-page .home-feature-link {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-page .home-feature-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-page .home-feature-card {
+  height: 100%;
+  border: 1px solid var(--content-card-border);
+  border-radius: 16px;
+  background: var(--content-card-bg);
+  color: var(--home-text);
+  transition: transform 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.home-page .home-feature-link:hover .home-feature-card,
+.home-page .home-feature-link:focus-visible .home-feature-card {
+  transform: translateY(-5px);
+  border-color: rgba(129, 151, 255, 0.7);
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.35),
+    0 0 25px rgba(92, 112, 255, 0.15);
+}
+
+.home-page .home-feature-card .card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 22px 24px;
+  text-align: center;
+}
+
+.home-page .home-feature-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.home-page .home-feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  border-radius: 14px;
+  color: #ffffff;
+}
+
+.home-page .home-feature-icon svg {
+  display: block;
+  width: 25px;
+  height: 25px;
+}
+
+.home-page .home-feature-blue {
+  background: linear-gradient(135deg, #315dd9, #597dff);
+}
+
+.home-page .home-feature-purple {
+  background: linear-gradient(135deg, #7044ce, #a06dff);
+}
+
+.home-page .home-feature-card .card-title {
+  margin-bottom: 8px;
+  color: #ffffff;
+  font-size: 1.2rem;
   font-weight: 700;
-  letter-spacing: 0.1rem;
+  text-align: center;
 }
 
-.home-feature-card h3 {
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
+.home-page .home-feature-card .card-text {
+  width: 90%;
+  margin: 0 auto;
+  color: var(--home-muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  text-align: center;
 }
 
-.home-feature-card p {
-  color: #adb5bd;
-  margin-bottom: 0;
-}
+/* Responsive layout */
 
-@media (max-width: 576px) {
-  .home-hero {
-    padding: 3rem 0.5rem;
+@media (max-width: 991.98px) {
+  .home-page .home-hero {
+    padding-top: 45px;
   }
+}
+
+@media (max-width: 850px) {
+  .home-page .featured-challenge-card {
+    grid-template-columns: 1fr;
+  }
+
+  .home-page .featured-challenge-image,
+  .home-page .featured-challenge-image img {
+    height: 300px;
+    min-height: 0;
+  }
+
+  .home-page .featured-challenge-content {
+    padding: 32px 38px 42px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .home-page .home-hero {
+    padding: 35px 5px 25px;
+  }
+
+  .home-page .home-subtitle {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+  }
+
+  .home-page .home-hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .home-page .home-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-page .featured-challenge-image,
+  .home-page .featured-challenge-image img {
+    height: 210px;
+  }
+
+  .home-page .featured-challenge-content {
+    padding: 25px 24px 35px;
+  }
+
+  .home-page .featured-challenge-name {
+    font-size: 1.6rem;
+  }
+
+  .home-page .featured-carousel-prev,
+  .home-page .featured-carousel-next {
+    top: 105px;
+    transform: translateY(-50%);
+  }
+
+  .home-page .home-section {
+    margin-top: 30px;
+  }
+
+  .home-page .home-ranking-card .card-body {
+    padding: 24px;
+  }
+
+  .home-page .home-ranking-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .home-page .home-feature-card .card-body {
+    padding: 22px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page .home-feature-card,
+  .home-page .home-ranking-button,
+  .home-page .featured-challenge-button,
+  .home-page .home-hero .btn {
+    transition: none;
+  }
+
+  .home-page .home-feature-link:hover .home-feature-card,
+  .home-page .home-hero .btn:hover,
+  .home-page .featured-challenge-button:hover {
+    transform: none;
+  }
+}
+
+/* Keep Matrix animation behind opaque home-page cards. */
+.home-page .featured-carousel-frame,
+.home-page .featured-challenges-empty,
+.home-page .home-ranking-card,
+.home-page .home-feature-card {
+  background-color: #121a36;
+  background-image: none;
+  opacity: 1;
+}
+
+.home-page .featured-challenge-content {
+  background-color: #121a36;
+}
+
+.home-page .featured-challenge-image {
+  background-color: #0c1230;
 }

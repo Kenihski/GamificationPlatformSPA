@@ -1,0 +1,68 @@
+
+/* Matrix background - Subapp 1 */
+
+#matrixBackground {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+body:not(:has(.home-hero)) #matrixBackground {
+  opacity: 0.18;
+}
+
+/* Page content stays above the canvas */
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+.site-navbar,
+main {
+  position: relative;
+}
+
+/* Matrix control */
+
+.matrix-control {
+  position: relative;
+}
+
+.matrix-toggle {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+
+.matrix-tooltip {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1080;
+  width: max-content;
+  max-width: 240px;
+  padding: 8px 12px;
+  border: 1px solid rgba(111, 132, 255, 0.35);
+  border-radius: 6px;
+  background: #111833;
+  color: #ffffff;
+  font-size: 0.875rem;
+}
+
+.matrix-control:not(.tooltip-dismissed):hover .matrix-tooltip,
+.matrix-control:not(.tooltip-dismissed):focus-within .matrix-tooltip {
+  display: block;
+}
+
+@media (max-width: 575.98px) {
+  .matrix-tooltip {
+    right: auto;
+    left: 0;
+  }
+}

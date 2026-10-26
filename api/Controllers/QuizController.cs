@@ -124,6 +124,79 @@ namespace GamificationPlatform.Controllers
             return CompleteAttemptAsync(challengeId, request, true);
         }
 
+        // Returns the current user's completed attempts, matching the MVC history ordering.
+        [HttpGet("challenges/{challengeId:int}/history")]
+        public async Task<IActionResult> History(int challengeId)
+        {
+            if (!TryGetCurrentUserId(out int userId))
+                return Unauthorized();
+
+            if (challengeId <= 0)
+                return BadRequest("Invalid challenge ID.");
+
+            var challenge = await _challengeRepository
+                .GetChallengeWithQuestionsAndOptionsAsync(challengeId);
+
+            if (challenge == null)
+                return NotFound();
+
+            var attempts = await _attemptRepository
+                .GetCompletedAttemptsAsync(userId, challengeId);
+
+            if (attempts.Count == 0)
+                return Ok(Array.Empty<object>());
+
+            var chronologicalAttempts = attempts
+                .OrderBy(a => a.CompletedAt)
+                .ThenBy(a => a.ChallengeAttemptId)
+                .ToList();
+
+            var latestAttempt = attempts
+                .OrderByDescending(a => a.CompletedAt)
+                .ThenByDescending(a => a.ChallengeAttemptId)
+                .First();
+
+            // When scores are equal, the most recently completed attempt is best.
+            var bestAttempt = attempts
+                .OrderByDescending(a => a.Score)
+                .ThenByDescending(a => a.CompletedAt)
+                .ThenByDescending(a => a.ChallengeAttemptId)
+                .First();
+
+            var history = attempts
+                .OrderByDescending(a =>
+                    a.ChallengeAttemptId == bestAttempt.ChallengeAttemptId)
+                .ThenByDescending(a => a.CompletedAt)
+                .ThenByDescending(a => a.ChallengeAttemptId)
+                .Select(a =>
+                {
+                    int seconds = a.CompletedAt.HasValue
+                        ? Math.Max(0, (int)Math.Round(
+                            (a.CompletedAt.Value - a.StartedAt).TotalSeconds))
+                        : 0;
+
+                    string timeUsed = seconds >= 60
+                        ? $"{Math.Round(seconds / 60.0)} min"
+                        : $"{seconds} sec";
+
+                    return new
+                    {
+                        a.ChallengeAttemptId,
+                        AttemptNumber = chronologicalAttempts.FindIndex(
+                            item => item.ChallengeAttemptId == a.ChallengeAttemptId) + 1,
+                        a.Score,
+                        TimeUsedSeconds = seconds,
+                        TimeUsed = timeUsed,
+                        a.CompletedAt,
+                        IsBest = a.ChallengeAttemptId == bestAttempt.ChallengeAttemptId,
+                        IsLatest = a.ChallengeAttemptId == latestAttempt.ChallengeAttemptId
+                    };
+                })
+                .ToList();
+
+            return Ok(history);
+        }
+
         [HttpGet("attempts/{id:int}")]
         public async Task<IActionResult> AttemptDetails(int id)
         {

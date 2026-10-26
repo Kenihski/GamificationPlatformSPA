@@ -7,49 +7,85 @@ interface ChallengeTableProps {
   challenges: Challenge[]
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
+
+const getImageUrl = (imageUrl: string | null) => {
+  if (!imageUrl) return null
+
+  if (
+    imageUrl.startsWith('http://') ||
+    imageUrl.startsWith('https://')
+  ) {
+    return imageUrl
+  }
+
+  return `${API_BASE_URL}/${imageUrl.replace(/^\/+/, '')}`
+}
+
 const ChallengeTable = ({ challenges }: ChallengeTableProps) => {
   return (
     <div className="table-responsive">
-      <Table striped hover className="challenge-table" variant="dark">
+      <Table striped className="challenge-table align-middle">
         <thead>
           <tr>
+            <th>Id</th>
             <th>Title</th>
-            <th>Category</th>
+            <th>Type</th>
+            <th>Description</th>
             <th>Max Points</th>
             <th>Time Limit</th>
-            <th>Action</th>
+            <th>Image</th>
           </tr>
         </thead>
 
         <tbody>
-          {challenges.map((challenge) => (
-            <tr key={challenge.challengeId}>
-              <td>{challenge.title}</td>
+          {challenges.map((challenge) => {
+            const imageUrl = getImageUrl(challenge.imageUrl)
 
-              <td>
-                <span
-                  className={`challenge-category ${
-                    challenge.isCore ? 'core' : 'community'
-                  }`}
-                >
-                  {challenge.isCore ? 'CORE' : 'COMMUNITY'}
-                </span>
-              </td>
+            return (
+              <tr key={challenge.challengeId}>
+                <td>{challenge.challengeId}</td>
 
-              <td>{challenge.maxPoints}</td>
+                <td>
+                  <Link to={`/challenges/${challenge.challengeId}`}>
+                    {challenge.title}
+                  </Link>
+                </td>
 
-              <td>{challenge.timeLimitMinutes} min</td>
+                <td>
+                  <span
+                    className={`featured-badge challenge-table-badge ${
+                      challenge.isCore
+                        ? 'featured-badge-core'
+                        : 'featured-badge-community'
+                    }`}
+                  >
+                    {challenge.isCore ? 'CORE' : 'COMMUNITY'}
+                  </span>
+                </td>
 
-              <td>
-                <Link
-                  to={`/challenges/${challenge.challengeId}`}
-                  className="btn btn-sm btn-outline-primary"
-                >
-                  View
-                </Link>
-              </td>
-            </tr>
-          ))}
+                <td>{challenge.description}</td>
+
+                <td>{challenge.maxPoints}</td>
+
+                <td className="text-nowrap">
+                  {challenge.timeLimitMinutes == null
+                    ? 'Unlimited'
+                    : `${challenge.timeLimitMinutes} minutes`}
+                </td>
+
+                <td>
+                  {imageUrl && (
+                    <img
+                      src={imageUrl}
+                      alt=""
+                      className="challenge-table-image"
+                    />
+                  )}
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </Table>
     </div>

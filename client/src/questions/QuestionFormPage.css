@@ -1,0 +1,14 @@
+
+.question-form-page {
+  max-width: 960px;
+}
+
+.question-image-preview {
+  display: block;
+  max-width: 250px;
+  max-height: 250px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+}
