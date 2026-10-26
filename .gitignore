@@ -1,0 +1,28 @@
+# .NET
+**/bin/
+**/obj/
+**/.vs/
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+**/Logs/
+*.log
+
+# User uploads
+**/wwwroot/uploads/
+
+# React
+**/node_modules/
+**/dist/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Editor
+.vscode/
