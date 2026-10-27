@@ -386,6 +386,69 @@
   padding: 10px 20px;
 }
 
+/* Home leaderboard and Hall of Fame rankings */
+
+.home-page .home-ranking-list {
+  margin-bottom: 25px;
+}
+
+.home-page .home-ranking-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 5px;
+  border-bottom: 1px solid rgba(124, 139, 196, 0.25);
+  color: #f2f5ff;
+}
+
+.home-page .home-ranking-entry:last-child {
+  border-bottom: none;
+}
+
+.home-page .home-ranking-user {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.home-page .home-ranking-position {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: rgba(94, 113, 231, 0.22);
+  color: #d0dcff;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.home-page .home-ranking-entry:nth-child(1) .home-ranking-position {
+  background: rgba(255, 196, 72, 0.15);
+  color: #ffd36d;
+}
+
+.home-page .home-ranking-entry:nth-child(2) .home-ranking-position {
+  background: rgba(192, 205, 232, 0.15);
+  color: #e1e9fa;
+}
+
+.home-page .home-ranking-entry:nth-child(3) .home-ranking-position {
+  background: rgba(209, 140, 96, 0.15);
+  color: #e8ad86;
+}
+
+.home-page .home-ranking-entry strong {
+  flex-shrink: 0;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
 /* How It Works */
 
 .home-page .home-features {
@@ -592,74 +655,4 @@
 
 .home-page .featured-challenge-image {
   background-color: #0c1230;
-}
-
-
-/* Home leaderboard and Hall of Fame rankings */
-
-.home-ranking-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  margin-bottom: 24px;
-}
-
-.home-ranking-entry {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(124, 139, 196, 0.2);
-  color: #edf1ff;
-}
-
-.home-ranking-entry:last-child {
-  border-bottom: none;
-}
-
-.home-ranking-user {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-  color: #b8c8ff;
-  font-weight: 600;
-}
-
-.home-ranking-position {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  min-width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: rgba(77, 99, 202, 0.2);
-  color: #91adff;
-  font-weight: 800;
-}
-
-.home-ranking-entry strong {
-  color: #edf1ff;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-
-/* Gold, silver and bronze rankings */
-
-.home-page .home-ranking-entry:nth-child(1) .home-ranking-position {
-  background: rgba(255, 196, 72, 0.15);
-  color: #ffd36d;
-}
-
-.home-page .home-ranking-entry:nth-child(2) .home-ranking-position {
-  background: rgba(192, 205, 232, 0.15);
-  color: #e1e9fa;
-}
-
-.home-page .home-ranking-entry:nth-child(3) .home-ranking-position {
-  background: rgba(209, 140, 96, 0.15);
-  color: #e8ad86;
 }

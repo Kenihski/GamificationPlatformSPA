@@ -1,3 +1,4 @@
+
 /* Navbar */
 
 .site-navbar {
@@ -39,9 +40,9 @@
 }
 
 .site-navbar .menu-toggle .navbar-toggler-icon {
-  width: 20px;
-  height: 20px;
-  opacity: 0.8;
+  width: 1.5em;
+  height: 1.5em;
+  opacity: 1;
 }
 
 .site-navbar .navbar-welcome {
@@ -221,7 +222,6 @@
     transition: none;
   }
 }
-
 
 /* Login button */
 

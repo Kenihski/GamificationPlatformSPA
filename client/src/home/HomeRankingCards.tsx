@@ -55,7 +55,7 @@ const HomeRankingCards = () => {
                 </p>
               ) : coreLeaderboard.entries.length > 0 ? (
                 <div className="home-ranking-list">
-                  {coreLeaderboard.entries.slice(0, 5).map((entry) => (
+                  {coreLeaderboard.entries.slice(0, 3).map((entry) => (
                     <div
                       className="home-ranking-entry"
                       key={entry.userId}
@@ -120,7 +120,7 @@ const HomeRankingCards = () => {
                 </p>
               ) : hallOfFame.users.length > 0 ? (
                 <div className="home-ranking-list">
-                  {hallOfFame.users.slice(0, 5).map((entry) => (
+                  {hallOfFame.users.slice(0, 3).map((entry) => (
                     <div
                       className="home-ranking-entry"
                       key={entry.userId}
