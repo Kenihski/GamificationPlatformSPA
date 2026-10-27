@@ -1,3 +1,4 @@
+
 using GamificationPlatform.DAL;
 using GamificationPlatform.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -34,12 +35,14 @@ namespace GamificationPlatform.Controllers
             foreach (var user in users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
+
                 result.Add(new
                 {
                     UserId = user.Id,
                     Username = user.UserName,
                     Email = user.Email,
-                    Roles = roles
+                    Roles = roles,
+                    ChallengesCreated = user.CreatedChallenges.Count
                 });
             }
 
@@ -50,19 +53,24 @@ namespace GamificationPlatform.Controllers
         public async Task<IActionResult> GetUserDetails(int id)
         {
             var user = await _userRepository.GetUserWithDetailsAsync(id);
+
             if (user == null)
                 return NotFound();
 
-            var createdChallenges = user.CreatedChallenges.Select(challenge => new
-            {
-                challenge.ChallengeId,
-                challenge.Title,
-                challenge.Description,
-                challenge.ImageUrl,
-                challenge.IsPublished,
-                challenge.IsCore,
-                MaxPoints = challenge.Questions.Sum(question => question.Points)
-            }).ToList();
+            var createdChallenges = user.CreatedChallenges
+                .Select(challenge => new
+                {
+                    challenge.ChallengeId,
+                    challenge.Title,
+                    challenge.Description,
+                    challenge.ImageUrl,
+                    challenge.IsPublished,
+                    challenge.IsCore,
+                    Questions = challenge.Questions.Count,
+                    MaxPoints = challenge.Questions.Sum(
+                        question => question.Points)
+                })
+                .ToList();
 
             var challengeHistory = user.UserChallenges
                 .Select(userChallenge =>
@@ -81,19 +89,26 @@ namespace GamificationPlatform.Controllers
                         .ToList();
 
                     var latest = attempts.First();
+
                     var best = attempts
                         .OrderByDescending(attempt => attempt.Score)
-                        .ThenBy(attempt => (attempt.CompletedAt ?? attempt.StartedAt) - attempt.StartedAt)
+                        .ThenBy(attempt =>
+                            (attempt.CompletedAt ?? attempt.StartedAt)
+                            - attempt.StartedAt)
                         .First();
 
                     return new
                     {
                         userChallenge.Challenge.ChallengeId,
                         ChallengeTitle = userChallenge.Challenge.Title,
-                        MaxPoints = userChallenge.Challenge.Questions.Sum(question => question.Points),
+                        MaxPoints = userChallenge.Challenge.Questions.Sum(
+                            question => question.Points),
+
                         Attempts = attempts.Select(attempt =>
                         {
-                            var duration = attempt.CompletedAt - attempt.StartedAt;
+                            var duration =
+                                attempt.CompletedAt - attempt.StartedAt;
+
                             string? timeUsed = duration.HasValue
                                 ? duration.Value.TotalMinutes >= 1
                                     ? $"{Math.Round(duration.Value.TotalMinutes)} min"
@@ -103,12 +118,22 @@ namespace GamificationPlatform.Controllers
                             return new
                             {
                                 attempt.ChallengeAttemptId,
-                                AttemptNumber = chronological.FindIndex(item => item.ChallengeAttemptId == attempt.ChallengeAttemptId) + 1,
+
+                                AttemptNumber = chronological.FindIndex(
+                                    item => item.ChallengeAttemptId ==
+                                        attempt.ChallengeAttemptId) + 1,
+
                                 attempt.Score,
                                 TimeUsed = timeUsed,
-                                CompletedAt = attempt.CompletedAt?.ToString("dd.MM.yyyy HH:mm"),
-                                IsBest = attempt.ChallengeAttemptId == best.ChallengeAttemptId,
-                                IsLatest = attempt.ChallengeAttemptId == latest.ChallengeAttemptId
+
+                                CompletedAt = attempt.CompletedAt?
+                                    .ToString("dd.MM.yyyy HH:mm"),
+
+                                IsBest = attempt.ChallengeAttemptId ==
+                                    best.ChallengeAttemptId,
+
+                                IsLatest = attempt.ChallengeAttemptId ==
+                                    latest.ChallengeAttemptId
                             };
                         }).ToList()
                     };
@@ -116,7 +141,8 @@ namespace GamificationPlatform.Controllers
                 .Where(history => history != null)
                 .ToList();
 
-            _logger.LogInformation("Admin viewed details for user {UserId}.", id);
+            _logger.LogInformation(
+                "Admin viewed details for user {UserId}.", id);
 
             return Ok(new
             {

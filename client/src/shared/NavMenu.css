@@ -2,17 +2,15 @@
 /* Navbar */
 
 .site-navbar {
-  min-height: 56px;
-  padding: 0;
+  padding: 0.5rem 0;
   background: #111833;
   border-bottom: 1px solid rgba(111, 132, 255, 0.35);
 }
 
 .site-navbar .navbar-brand {
   color: #ffffff;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  letter-spacing: 0.2px;
 }
 
 .site-navbar .navbar-brand:hover,
@@ -20,34 +18,29 @@
   color: #91adff;
 }
 
-.site-navbar .menu-toggle {
+/* Hamburger menu */
+
+.site-navbar .navbar-toggler {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
-  border: 1px solid rgba(145, 169, 255, 0.45);
-  background: transparent;
-  box-shadow: none;
+  border-color: rgba(145, 169, 255, 0.45);
 }
 
-.site-navbar .menu-toggle:hover {
-  background: rgba(91, 110, 220, 0.18);
-  border-color: rgba(145, 169, 255, 0.65);
+.site-navbar .navbar-toggler-icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
 }
 
-.site-navbar .menu-toggle:focus-visible {
+.site-navbar .navbar-toggler:focus {
   box-shadow: 0 0 0 0.2rem rgba(111, 132, 255, 0.2);
 }
 
-.site-navbar .menu-toggle .navbar-toggler-icon {
-  width: 1.5em;
-  height: 1.5em;
-  opacity: 1;
-}
+/* Navbar links and welcome text */
 
 .site-navbar .navbar-welcome {
   color: #edf1ff;
-  font-size: 0.9rem;
 }
 
 .site-navbar .nav-link {

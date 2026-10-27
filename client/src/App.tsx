@@ -12,6 +12,7 @@ import CreateQuestionPage from './questions/CreateQuestionPage'
 import EditQuestionPage from './questions/EditQuestionPage'
 import DeleteQuestionPage from './questions/DeleteQuestionPage'
 import AdminQuestionsPage from './questions/AdminQuestionsPage'
+import AdminUsersPage from './users/AdminUsersPage'
 import QuizPage from './quiz/QuizPage'
 import QuizResultPage from './quiz/QuizResultPage'
 import AchievementsPage from './achievements/AchievementsPage'
@@ -73,6 +74,10 @@ const App = () => {
         </Route>
 
         <Route element={<ProtectedRoute requiredRole="Admin" />}>
+          <Route
+            path="/admin/users"
+            element={<AdminUsersPage />}
+          />
           <Route
             path="/admin/questions"
             element={<AdminQuestionsPage />}

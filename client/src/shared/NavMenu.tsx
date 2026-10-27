@@ -30,18 +30,18 @@ const NavMenu = () => {
 
   return (
     <>
-      <Navbar className="site-navbar" variant="dark">
+      <Navbar className="site-navbar" data-bs-theme="dark">
         <Container fluid>
-          <Button
-            variant="outline-secondary"
-            className="me-3 menu-toggle navbar-toggler"
+          <button
+            type="button"
+            className="navbar-toggler me-3"
             onClick={() => setShowMenu(true)}
             aria-label="Open navigation menu"
             aria-controls="sidebar-menu"
             aria-expanded={showMenu}
           >
             <span className="navbar-toggler-icon" />
-          </Button>
+          </button>
 
           <Navbar.Brand as={Link} to="/" className="me-auto">
             Learning Challenge Hub
@@ -52,7 +52,7 @@ const NavMenu = () => {
 
             {isAuthenticated ? (
               <div className="d-flex align-items-center gap-3">
-                <span className="navbar-welcome">
+                <span className="nav-link navbar-welcome">
                   Welcome, {user?.username}
                 </span>
 

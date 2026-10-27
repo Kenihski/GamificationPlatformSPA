@@ -1,0 +1,108 @@
+/* Users table header */
+.users-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    gap: 20px;
+}
+
+.users-table-header > div:first-child {
+    flex: 1;
+    min-width: 0;
+}
+
+.users-table-search {
+    flex: 0 0 288px;
+    max-width: 320px;
+}
+
+/* Search input */
+.users-table-search .form-control {
+    background-color: #253154;
+    color: #ffffff;
+    border: 1px solid rgba(137, 160, 255, 0.65);
+    border-radius: 9px;
+}
+
+.users-table-search .form-control::placeholder {
+    color: #a9b4d2;
+    opacity: 1;
+}
+
+.users-table-search .form-control:focus {
+    background-color: #2d3c65;
+    color: #ffffff;
+    border-color: #91adff;
+    box-shadow: 0 0 0 0.2rem rgba(111, 132, 255, 0.2);
+}
+
+/* Users table */
+.users-table {
+    --bs-table-bg: transparent;
+    --bs-table-color: #f5f7ff;
+    --bs-table-border-color: rgba(124, 139, 196, 0.25);
+    --bs-table-striped-bg: rgba(80, 99, 190, 0.09);
+    --bs-table-striped-color: #f5f7ff;
+}
+
+.users-table thead th {
+    background: rgba(60, 75, 145, 0.2);
+    color: #91adff;
+    border-bottom-color: #50649d;
+}
+
+.users-table td,
+.users-table th {
+    vertical-align: middle;
+}
+
+.users-table a {
+    color: #b8c8ff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.users-table a:hover {
+    color: #ffffff;
+}
+
+/* User role badges */
+.user-role-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    border: 1px solid;
+    border-radius: 6px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.user-role-admin {
+    color: #ff9da8;
+    background: rgba(220, 53, 69, 0.15);
+    border-color: rgba(220, 53, 69, 0.5);
+}
+
+.user-role-member {
+    color: #b9ccff;
+    background: rgba(112, 137, 217, 0.15);
+    border-color: rgba(112, 137, 217, 0.5);
+}
+
+@media (max-width: 767px) {
+    .users-table-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .users-table-search {
+        flex: none;
+        width: 100%;
+        max-width: none;
+    }
+}
