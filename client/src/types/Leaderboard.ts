@@ -1,3 +1,4 @@
+
 export interface ChallengeLeaderboardEntry {
   rank: number
   userId: number
@@ -13,4 +14,17 @@ export interface ChallengeLeaderboard {
   title: string
   maxPoints: number
   entries: ChallengeLeaderboardEntry[]
+}
+
+export interface CoreLeaderboardEntry {
+  rank: number
+  userId: number
+  username: string
+  totalPoints: number
+  coreChallengesCompleted: number
+  totalTimeSeconds: number
+}
+
+export interface CoreLeaderboard {
+  entries: CoreLeaderboardEntry[]
 }

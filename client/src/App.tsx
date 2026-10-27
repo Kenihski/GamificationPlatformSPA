@@ -22,6 +22,7 @@ import DeleteAchievementPage from './achievements/DeleteAchievementPage'
 import HallOfFamePage from './halloffame/HallOfFamePage'
 import PublicAchievementsPage from './halloffame/PublicAchievementsPage'
 import ChallengeLeaderboardPage from './leaderboard/ChallengeLeaderboardPage'
+import CoreLeaderboardPage from './leaderboard/CoreLeaderboardPage'
 import ProtectedRoute from './auth/ProtectedRoute'
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
           path="/challenges/:id/leaderboard"
           element={<ChallengeLeaderboardPage />}
         />
+        <Route path="/leaderboard" element={<CoreLeaderboardPage />} />
         <Route path="/hall-of-fame" element={<HallOfFamePage />} />
         <Route
           path="/hall-of-fame/users/:id/achievements"
