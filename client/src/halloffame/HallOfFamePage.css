@@ -1,0 +1,61 @@
+.hall-of-fame-page h1 {
+  color: #ffffff;
+}
+
+.hall-of-fame-page .text-muted {
+  color: #d1d9ee !important;
+}
+
+.hall-of-fame-table {
+  --bs-table-bg: transparent;
+  --bs-table-color: #edf1ff;
+  --bs-table-border-color: rgba(124, 139, 196, 0.25);
+  --bs-table-hover-bg: rgba(80, 99, 190, 0.1);
+  --bs-table-hover-color: #ffffff;
+
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.hall-of-fame-table thead th {
+  padding: 12px 10px;
+  background: rgba(60, 75, 145, 0.2);
+  color: #91adff;
+  border-bottom: 1px solid rgba(124, 139, 196, 0.35);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.hall-of-fame-table tbody td {
+  padding: 12px 10px;
+  background: transparent;
+  color: #edf1ff;
+  border-bottom: 1px solid rgba(124, 139, 196, 0.25);
+  vertical-align: middle;
+}
+
+.hall-of-fame-table tbody tr:hover td {
+  background: rgba(80, 99, 190, 0.1);
+}
+
+.hall-of-fame-username {
+  color: #b8c8ff;
+}
+
+.hall-of-fame-username:hover {
+  color: #ffffff;
+}
+
+.hall-of-fame-back-button {
+  border: 1px solid rgba(145, 169, 255, 0.75);
+  border-radius: 10px;
+  background: rgba(24, 33, 69, 0.85);
+  color: #edf1ff;
+  font-weight: 600;
+}
+
+.hall-of-fame-back-button:hover {
+  border-color: #b2c1ff;
+  background: rgba(77, 99, 202, 0.4);
+  color: #ffffff;
+}

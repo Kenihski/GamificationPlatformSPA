@@ -19,6 +19,8 @@ import AdminAchievementsPage from './achievements/AdminAchievementsPage'
 import CreateAchievementPage from './achievements/CreateAchievementPage'
 import EditAchievementPage from './achievements/EditAchievementPage'
 import DeleteAchievementPage from './achievements/DeleteAchievementPage'
+import HallOfFamePage from './halloffame/HallOfFamePage'
+import PublicAchievementsPage from './halloffame/PublicAchievementsPage'
 import ProtectedRoute from './auth/ProtectedRoute'
 
 const App = () => {
@@ -32,6 +34,11 @@ const App = () => {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/challenges" element={<ChallengeListPage />} />
         <Route path="/challenges/:id" element={<ChallengeDetailsPage />} />
+        <Route path="/hall-of-fame" element={<HallOfFamePage />} />
+        <Route
+          path="/hall-of-fame/users/:id/achievements"
+          element={<PublicAchievementsPage />}
+        />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/my-challenges" element={<MyChallengesPage />} />

@@ -2,13 +2,34 @@
 import { useQuery } from '@tanstack/react-query'
 import { Alert, Container, Spinner } from 'react-bootstrap'
 import AchievementService from '../services/AchievementService'
+import HallOfFameService from '../services/HallOfFameService'
 import './AchievementsPage.css'
 
-const AchievementsPage = () => {
+interface AchievementsPageProps {
+  userId?: number
+}
+
+const AchievementsPage = ({ userId }: AchievementsPageProps) => {
+  const isPublic = userId !== undefined
+
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ['my-achievements'],
-    queryFn: AchievementService.getMine,
+    queryKey: isPublic
+      ? ['public-achievements', userId]
+      : ['my-achievements'],
+    queryFn: () =>
+      isPublic
+        ? HallOfFameService.getUserAchievements(userId)
+        : AchievementService.getMine(),
+    enabled: !isPublic || (Number.isInteger(userId) && userId > 0),
   })
+
+  if (isPublic && (!Number.isInteger(userId) || userId <= 0)) {
+    return (
+      <Container className="mt-4">
+        <Alert variant="danger">Invalid user ID.</Alert>
+      </Container>
+    )
+  }
 
   if (isPending) {
     return (
