@@ -1,11 +1,11 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { useLocation } from 'react-router-dom'
 import './MatrixBackground.css'
 
 const characters = '01{}[]();<>/=#@$'
 const fontSize = 16
+const storageKey = 'matrix-animation-enabled'
 
 interface MatrixColumn {
   y: number
@@ -15,47 +15,16 @@ interface MatrixColumn {
 
 const MatrixBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const controlRef = useRef<HTMLDivElement>(null)
-  const location = useLocation()
 
-  const isTakingChallenge = /^\/quiz\/\d+$/.test(location.pathname)
+  const [enabled, setEnabled] = useState(() => {
+    try {
+      return localStorage.getItem(storageKey) !== 'false'
+    } catch {
+      return true
+    }
+  })
 
-  const storageKey = isTakingChallenge
-    ? 'matrix-challenge-animation-enabled'
-    : 'matrix-animation-enabled'
-
-  const [enabled, setEnabled] = useState(false)
   const [tooltipDismissed, setTooltipDismissed] = useState(false)
-
-  useEffect(() => {
-    const reducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    )
-
-    const savedPreference = localStorage.getItem(storageKey)
-
-    setEnabled(
-      savedPreference === 'true' ||
-      (savedPreference !== 'false' &&
-        !isTakingChallenge &&
-        !reducedMotion.matches)
-    )
-
-    const handleReducedMotionChange = () => {
-      if (localStorage.getItem(storageKey) === null) {
-        setEnabled(!isTakingChallenge && !reducedMotion.matches)
-      }
-    }
-
-    reducedMotion.addEventListener('change', handleReducedMotionChange)
-
-    return () => {
-      reducedMotion.removeEventListener(
-        'change',
-        handleReducedMotionChange
-      )
-    }
-  }, [storageKey, isTakingChallenge])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -185,7 +154,6 @@ const MatrixBackground = () => {
       )}
 
       <div
-        ref={controlRef}
         className={`matrix-control ${
           tooltipDismissed ? 'tooltip-dismissed' : ''
         }`}

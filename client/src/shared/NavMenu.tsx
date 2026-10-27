@@ -67,8 +67,25 @@ const NavMenu = () => {
             ) : (
               <Button
                 variant="primary"
+                className="d-flex align-items-center gap-2"
                 onClick={() => setShowLogin(true)}
               >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M10 17l5-5-5-5M15 12H3m9-9h6a3 3 0 013 3v12a3 3 0 01-3 3h-6"
+                  />
+                </svg>
                 Login
               </Button>
             )}

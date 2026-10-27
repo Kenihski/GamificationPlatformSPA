@@ -9,6 +9,7 @@ import {
   Form,
   Spinner,
 } from 'react-bootstrap'
+import { useAuth } from '../auth/AuthContext'
 import ChallengeService from '../services/ChallengeService'
 import type { ChallengeFilter } from '../types/Challenge'
 import ChallengeGrid from './ChallengeGrid'
@@ -29,9 +30,18 @@ const ChallengeListPage = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [view, setView] = useState<ChallengeView>(getInitialView)
 
+  const { user } = useAuth()
+
   const { data: challenges, isPending, isError, error } = useQuery({
     queryKey: ['challenges', filter, searchTerm],
     queryFn: () => ChallengeService.getChallenges(filter, searchTerm),
+  })
+
+  // Fetch completed challenges for the signed-in user.
+  const { data: completedChallengeIds = [] } = useQuery({
+    queryKey: ['completed-challenges', user?.userId],
+    queryFn: () => ChallengeService.getCompletedChallenges(),
+    enabled: user != null,
   })
 
   const changeView = (selectedView: ChallengeView) => {
@@ -124,9 +134,15 @@ const ChallengeListPage = () => {
               No challenges found matching your search and filters.
             </Alert>
           ) : view === 'Grid' ? (
-            <ChallengeGrid challenges={challenges} />
+            <ChallengeGrid
+              challenges={challenges}
+              completedChallengeIds={completedChallengeIds}
+            />
           ) : (
-            <ChallengeTable challenges={challenges} />
+            <ChallengeTable
+              challenges={challenges}
+              completedChallengeIds={completedChallengeIds}
+            />
           )}
         </>
       )}

@@ -1,4 +1,3 @@
-
 namespace GamificationPlatform.DTOs
 {
     public class ChallengeDTO
@@ -24,5 +23,7 @@ namespace GamificationPlatform.DTOs
         public int QuestionCount { get; set; }
 
         public int CreatedByUserId { get; set; }
+
+        public string? CreatorUsername { get; set; }
     }
 }

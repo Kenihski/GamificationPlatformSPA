@@ -1,27 +1,15 @@
-
 import { useQuery } from '@tanstack/react-query'
-import {
-  Alert,
-  Badge,
-  Card,
-  Container,
-  Spinner,
-} from 'react-bootstrap'
+import { Alert, Container, Spinner } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
 import QuizService from '../services/QuizService'
-import './QuizPage.css'
+import './QuizResultPage.css'
 
 const QuizResultPage = () => {
   const { attemptId } = useParams()
   const id = Number(attemptId)
   const validId = Number.isInteger(id) && id > 0
 
-  const {
-    data: result,
-    isPending,
-    isError,
-    error,
-  } = useQuery({
+  const { data: result, isPending, isError, error } = useQuery({
     queryKey: ['quiz-result', id],
     queryFn: () => QuizService.getAttemptResult(id),
     enabled: validId,
@@ -29,11 +17,7 @@ const QuizResultPage = () => {
   })
 
   if (!validId) {
-    return (
-      <Container className="mt-4">
-        <Alert variant="danger">Invalid attempt ID.</Alert>
-      </Container>
-    )
+    return <Container className="mt-4"><Alert variant="danger">Invalid attempt ID.</Alert></Container>
   }
 
   if (isPending) {
@@ -45,152 +29,168 @@ const QuizResultPage = () => {
     )
   }
 
-  if (isError) {
+  if (isError || !result) {
     return (
       <Container className="mt-4">
-        <Alert variant="danger">
-          Could not load result: {error.message}
-        </Alert>
+        <Alert variant="danger">{isError ? `Could not load result: ${error.message}` : 'Result not found.'}</Alert>
       </Container>
     )
   }
 
-  if (!result) {
-    return (
-      <Container className="mt-4">
-        <Alert variant="info">Result not found.</Alert>
-      </Container>
-    )
-  }
-
-  const percentage =
-    result.maxPoints > 0
-      ? Math.round((result.score / result.maxPoints) * 100)
-      : 0
-
-  const minutes = Math.floor(result.timeUsedSeconds / 60)
-  const seconds = result.timeUsedSeconds % 60
+  const duration = Math.max(0, Math.round(result.timeUsedSeconds))
+  const formattedTime = `${String(Math.floor(duration / 60)).padStart(2, '0')}:${String(duration % 60).padStart(2, '0')}`
+  const completedAt = result.completedAt
+    ? new Date(result.completedAt).toLocaleString('nb-NO', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: false,
+      })
+    : '—'
 
   return (
-    <Container className="quiz-page">
-      <Card className="quiz-question-card mb-4">
-        <Card.Body className="text-center">
-          <h1 className="mb-3">Challenge Result</h1>
-          <h2 className="h4 mb-4">{result.challengeTitle}</h2>
+    <Container className="quiz-result-page">
+      <Link to={`/challenges/${result.challengeId}`} className="challenge-details-back">
+        ← Back to Challenge
+      </Link>
 
-          <Badge bg="success">Completed</Badge>
+      <section className="quiz-result-header">
+        <span className="quiz-result-label">ATTEMPT DETAILS</span>
+        <h1>{result.challengeTitle}</h1>
 
-          <div className="my-4">
-            <div className="display-4 fw-bold">
-              {result.score} / {result.maxPoints}
-            </div>
-
-            <p className="text-secondary mt-2">
-              {percentage}% of available points
-            </p>
+        <div className="quiz-result-stats quiz-result-stats-four">
+          <div className="quiz-result-stat">
+            <span className="quiz-result-stat-label">Score</span>
+            <strong>{result.score} / {result.maxPoints}</strong>
           </div>
-
-          <p>
-            Time used: {minutes} min {seconds} sec
-          </p>
-
-          <div className="d-flex justify-content-center gap-3 flex-wrap mt-4">
-            <Link
-              to={`/challenges/${result.challengeId}`}
-              className="btn btn-primary"
-            >
-              Back to Challenge
-            </Link>
-
-            <Link to="/challenges" className="btn btn-outline-light">
-              All Challenges
-            </Link>
+          <div className="quiz-result-stat">
+            <span className="quiz-result-stat-label">Time Used</span>
+            <strong>{formattedTime}</strong>
           </div>
-        </Card.Body>
-      </Card>
-
-      <h2 className="h4 mb-3">Question Results</h2>
+          <div className="quiz-result-stat">
+            <span className="quiz-result-stat-label">Questions</span>
+            <strong>{result.answers.length}</strong>
+          </div>
+          <div className="quiz-result-stat">
+            <span className="quiz-result-stat-label">Completed</span>
+            <strong>{completedAt}</strong>
+          </div>
+        </div>
+      </section>
 
       {!result.showAnswers && (
-        <Alert variant="info">
-          Detailed answers are not available for this challenge.
-        </Alert>
+        <div className="quiz-result-hidden-notice" role="status">
+          <strong>Answers Hidden</strong>
+          <p>
+            The challenge creator has disabled answer review for this challenge.
+            You can still view your overall score and points earned for each question.
+          </p>
+        </div>
       )}
 
-      {result.answers.map((answer, index) => (
-        <Card
-          key={answer.questionId}
-          className="quiz-question-card mb-3"
-        >
-          <Card.Body>
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h3 className="h5 mb-0">
-                Question {index + 1}: {answer.questionTitle}
-              </h3>
+      {result.answers.map((answer, index) => {
+        const isAnswered = answer.questionType === 'ShortAnswer'
+          ? Boolean(answer.textAnswer?.trim())
+          : Boolean(answer.options?.some((option) => option.isSelected)) ||
+            Boolean(answer.selectedOptionIds?.length)
 
-              <Badge bg={answer.isCorrect ? 'success' : 'danger'}>
-                {answer.pointsEarned} / {answer.points} pts
-              </Badge>
+        return (
+          <section key={answer.questionId} className="quiz-result-question">
+            <div className="quiz-question-heading">
+              <span className="quiz-question-number">
+                QUESTION {index + 1} OF {result.answers.length}
+              </span>
+              <span className="quiz-question-points">
+                {answer.pointsEarned} / {answer.points} points
+              </span>
             </div>
 
+            <h2 className="quiz-question-title">{answer.questionTitle}</h2>
             {answer.questionDescription && (
-              <p className="text-secondary">
-                {answer.questionDescription}
-              </p>
+              <p className="quiz-question-description">{answer.questionDescription}</p>
             )}
-
-            <p>
-              <strong>Result: </strong>
-              {answer.isCorrect ? 'Correct' : 'Incorrect'}
-            </p>
+            {answer.imageUrl && (
+              <img className="quiz-question-image" src={answer.imageUrl} alt="" />
+            )}
 
             {result.showAnswers && (
               <>
                 {answer.questionType === 'ShortAnswer' ? (
-                  <p>
-                    <strong>Your answer: </strong>
-                    {answer.textAnswer || 'No answer'}
-                  </p>
-                ) : (
-                  answer.options?.map((option) => (
-                    <div key={option.questionOptionId} className="mb-2">
-                      <Badge
-                        bg={option.isCorrect ? 'success' : 'secondary'}
-                        className="me-2"
-                      >
-                        {option.isCorrect ? 'Correct' : 'Option'}
-                      </Badge>
-
-                      {option.text}
-
-                      {option.isSelected && (
-                        <span className="ms-2 text-info">
-                          (Selected)
-                        </span>
-                      )}
+                  <div className="quiz-result-text-answer">
+                    <span>Your Answer</span>
+                    <div className="quiz-result-answer-value">
+                      {answer.textAnswer?.trim() || 'Not answered'}
                     </div>
-                  ))
+                  </div>
+                ) : (
+                  <div className="quiz-result-options">
+                    {answer.options?.map((option) => (
+                      <div
+                        key={option.questionOptionId}
+                        className={`quiz-result-option ${
+                          option.isCorrect
+                            ? 'quiz-result-option-correct'
+                            : option.isSelected
+                              ? 'quiz-result-option-selected'
+                              : ''
+                        }`}
+                      >
+                        <input
+                          className="form-check-input"
+                          type={answer.questionType === 'MultipleChoice' ? 'checkbox' : 'radio'}
+                          checked={option.isSelected}
+                          disabled
+                          readOnly
+                          aria-label={option.text}
+                        />
+                        <span className="quiz-result-option-text">{option.text}</span>
+                        {option.isSelected && (
+                          <span className="quiz-result-selected-label">Your answer</span>
+                        )}
+                        {option.isCorrect && (
+                          <span className="quiz-result-correct-label">Correct answer</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 )}
 
-                {answer.correctAnswers &&
-                  answer.correctAnswers.length > 0 && (
-                    <p className="mt-3">
-                      <strong>Correct answer: </strong>
-                      {answer.correctAnswers.join(', ')}
-                    </p>
+                <div className="quiz-result-feedback">
+                  <span className={`quiz-result-status ${
+                    !isAnswered
+                      ? 'quiz-result-status-unanswered'
+                      : answer.isCorrect
+                        ? 'quiz-result-status-correct'
+                        : 'quiz-result-status-wrong'
+                  }`}>
+                    {!isAnswered ? 'Not answered' : answer.isCorrect ? '✓ Correct' : '✗ Wrong'}
+                  </span>
+
+                  {answer.questionType === 'ShortAnswer' &&
+                    answer.correctAnswers && answer.correctAnswers.length > 0 && (
+                      <p className="quiz-result-correct-answer">
+                        <strong>{answer.correctAnswers.length === 1 ? 'Correct answer:' : 'Correct answers:'}</strong>{' '}
+                        {answer.correctAnswers.join(', ')}
+                      </p>
+                    )}
+
+                  {answer.explanation && (
+                    <div className="quiz-result-explanation">
+                      <strong>Explanation</strong>
+                      <p>{answer.explanation}</p>
+                    </div>
                   )}
-
-                {answer.explanation && (
-                  <Alert variant="info" className="mt-3 mb-0">
-                    <strong>Explanation: </strong>
-                    {answer.explanation}
-                  </Alert>
-                )}
+                </div>
               </>
             )}
-          </Card.Body>
-        </Card>
-      ))}
+          </section>
+        )
+      })}
+
+      <Link
+        to={`/challenges/${result.challengeId}`}
+        className="btn btn-outline-primary quiz-result-back-button"
+      >
+        Back to Challenge
+      </Link>
     </Container>
   )
 }

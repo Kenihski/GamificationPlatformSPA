@@ -1,4 +1,3 @@
-
 export interface Challenge {
   challengeId: number
   title: string
@@ -11,6 +10,7 @@ export interface Challenge {
   maxPoints: number
   questionCount: number
   createdByUserId: number
+  creatorUsername: string | null
 }
 
 export type ChallengeFilter = 'All' | 'Core' | 'Community'

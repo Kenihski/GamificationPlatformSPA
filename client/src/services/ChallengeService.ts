@@ -1,4 +1,3 @@
-
 import apiFetch from './ApiClient'
 import type { Challenge, ChallengeFilter } from '../types/Challenge'
 
@@ -34,6 +33,13 @@ const getMyChallenges = async (): Promise<Challenge[]> => {
   const response = await apiFetch('/api/challenges/mine')
 
   return response.json() as Promise<Challenge[]>
+}
+
+// Returns the IDs of challenges completed by the signed-in user.
+const getCompletedChallenges = async (): Promise<number[]> => {
+  const response = await apiFetch('/api/challenges/completed')
+
+  return response.json() as Promise<number[]>
 }
 
 const createChallenge = async (
@@ -91,6 +97,7 @@ const ChallengeService = {
   getChallenges,
   getChallenge,
   getMyChallenges,
+  getCompletedChallenges,
   createChallenge,
   updateChallenge,
   deleteChallenge,

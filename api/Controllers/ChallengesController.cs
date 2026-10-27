@@ -15,6 +15,7 @@ namespace GamificationPlatform.Controllers
     {
         private readonly IChallengeRepository _challengeRepository;
         private readonly IAttemptRepository _attemptRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IImageService _imageService;
         private readonly IAchievementService _achievementService;
         private readonly ILogger<ChallengesController> _logger;
@@ -22,12 +23,14 @@ namespace GamificationPlatform.Controllers
         public ChallengesController(
             IChallengeRepository challengeRepository,
             IAttemptRepository attemptRepository,
+            IUserRepository userRepository,
             IImageService imageService,
             IAchievementService achievementService,
             ILogger<ChallengesController> logger)
         {
             _challengeRepository = challengeRepository;
             _attemptRepository = attemptRepository;
+            _userRepository = userRepository;
             _imageService = imageService;
             _achievementService = achievementService;
             _logger = logger;
@@ -50,9 +53,12 @@ namespace GamificationPlatform.Controllers
                 await _challengeRepository.SearchPublishedChallengesAsync(
                     filter, searchTerm);
 
-            var challengeDTOs = challenges
-                .Select(MapToDTO)
-                .ToList();
+            var challengeDTOs = new List<ChallengeDTO>();
+
+            foreach (var challenge in challenges)
+            {
+                challengeDTOs.Add(await MapToDTOWithCreatorAsync(challenge));
+            }
 
             return Ok(challengeDTOs);
         }
@@ -74,7 +80,23 @@ namespace GamificationPlatform.Controllers
                 return NotFound();
             }
 
-            return Ok(MapToDTO(challenge));
+            return Ok(await MapToDTOWithCreatorAsync(challenge));
+        }
+
+        // Returns the IDs of challenges completed by the signed-in user.
+        [HttpGet("completed")]
+        [Authorize]
+        public async Task<ActionResult<List<int>>> GetCompletedChallenges()
+        {
+            if (!TryGetCurrentUserId(out int userId))
+            {
+                return Unauthorized();
+            }
+
+            var completedIds = await _attemptRepository
+                .GetCompletedChallengeIdsAsync(userId);
+
+            return Ok(completedIds);
         }
 
         // Returns the signed-in user's completed attempts for a challenge.
@@ -167,7 +189,14 @@ namespace GamificationPlatform.Controllers
             var challenges =
                 await _challengeRepository.GetChallengesByUserIdAsync(userId);
 
-            return Ok(challenges.Select(MapToDTO).ToList());
+            var challengeDTOs = new List<ChallengeDTO>();
+
+            foreach (var challenge in challenges)
+            {
+                challengeDTOs.Add(await MapToDTOWithCreatorAsync(challenge));
+            }
+
+            return Ok(challengeDTOs);
         }
 
         [HttpPost]
@@ -224,7 +253,7 @@ namespace GamificationPlatform.Controllers
             return CreatedAtAction(
                 nameof(GetChallenge),
                 new { id = challenge.ChallengeId },
-                MapToDTO(challenge));
+                await MapToDTOWithCreatorAsync(challenge));
         }
 
         [HttpPut("{id:int}")]
@@ -482,6 +511,21 @@ namespace GamificationPlatform.Controllers
                 User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             return int.TryParse(userIdValue, out userId);
+        }
+
+        private async Task<ChallengeDTO> MapToDTOWithCreatorAsync(Challenge challenge)
+        {
+            var dto = MapToDTO(challenge);
+
+            if (!challenge.IsCore)
+            {
+                var creator = await _userRepository
+                    .GetUserByIdAsync(challenge.CreatedByUserId);
+
+                dto.CreatorUsername = creator?.UserName ?? "Unknown";
+            }
+
+            return dto;
         }
 
         private static ChallengeDTO MapToDTO(Challenge challenge)

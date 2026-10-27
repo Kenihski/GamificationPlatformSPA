@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Card, Col, Container, Row, Spinner } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
@@ -75,6 +75,15 @@ const ClockIcon = () => (
     strokeWidth="2" aria-hidden="true">
     <circle cx="12" cy="12" r="9" />
     <path d="M12 7v5l3 2" />
+  </svg>
+)
+
+const UserIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+    aria-hidden="true">
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21a8 8 0 0 1 16 0" />
   </svg>
 )
 
@@ -186,6 +195,13 @@ const FeaturedChallenges = ({
                     ? 'Unlimited time'
                     : `${challenge.timeLimitMinutes} minutes`}
                 </span>
+
+                {!challenge.isCore && challenge.creatorUsername && (
+                  <span>
+                    <UserIcon />
+                    Created by {challenge.creatorUsername}
+                  </span>
+                )}
               </div>
 
               <Link
@@ -202,20 +218,20 @@ const FeaturedChallenges = ({
           <>
             <button
               type="button"
-              className="featured-carousel-prev"
+              className="featured-carousel-prev d-flex align-items-center justify-content-center"
               onClick={previous}
               aria-label="Previous featured challenge"
             >
-              ‹
+              <span className="carousel-control-prev-icon" aria-hidden="true" />
             </button>
 
             <button
               type="button"
-              className="featured-carousel-next"
+              className="featured-carousel-next d-flex align-items-center justify-content-center"
               onClick={next}
               aria-label="Next featured challenge"
             >
-              ›
+              <span className="carousel-control-next-icon" aria-hidden="true" />
             </button>
 
             <div className="featured-carousel-indicators">
@@ -249,9 +265,17 @@ const HomePage = () => {
     queryFn: () => ChallengeService.getChallenges('All', ''),
   })
 
-  const featuredChallenges = challenges
-    .filter((challenge) => challenge.isPublished)
-    .slice(0, 5)
+  const featuredChallenges = useMemo(() => {
+    const published = challenges.filter((challenge) => challenge.isPublished)
+
+    // Shuffle published challenges and select up to five.
+    for (let i = published.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[published[i], published[j]] = [published[j], published[i]]
+    }
+
+    return published.slice(0, 5)
+  }, [challenges])
 
   return (
     <Container className="home-page">

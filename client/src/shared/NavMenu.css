@@ -222,3 +222,18 @@
     transition: none;
   }
 }
+
+
+/* Login button */
+
+.site-navbar .btn-primary {
+  background: linear-gradient(135deg, #3159cf, #6540c5);
+  border-color: #6d83ff;
+  color: #ffffff;
+}
+
+.site-navbar .btn-primary:hover {
+  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  border-color: #9eabff;
+  color: #ffffff;
+}

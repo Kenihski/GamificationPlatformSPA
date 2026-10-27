@@ -5,6 +5,7 @@ import type { Challenge } from '../types/Challenge'
 
 interface ChallengeGridProps {
   challenges: Challenge[]
+  completedChallengeIds: number[]
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
@@ -19,11 +20,17 @@ const getImageUrl = (imageUrl: string | null) => {
   return `${API_BASE_URL}/${imageUrl.replace(/^\/+/, '')}`
 }
 
-const ChallengeGrid = ({ challenges }: ChallengeGridProps) => {
+const ChallengeGrid = ({
+  challenges,
+  completedChallengeIds,
+}: ChallengeGridProps) => {
+  const completedIds = new Set(completedChallengeIds)
+
   return (
     <Row xs={1} md={2} lg={3} className="g-4">
       {challenges.map((challenge) => {
         const imageUrl = getImageUrl(challenge.imageUrl)
+        const isCompleted = completedIds.has(challenge.challengeId)
 
         return (
           <Col key={challenge.challengeId}>
@@ -32,6 +39,16 @@ const ChallengeGrid = ({ challenges }: ChallengeGridProps) => {
               className="challenge-card-link"
             >
               <Card className="challenge-card position-relative">
+                {isCompleted && (
+                  <div
+                    className="completed-corner"
+                    title="Completed"
+                    aria-label="Challenge completed"
+                  >
+                    <span>✓</span>
+                  </div>
+                )}
+
                 <div className="challenge-image-container">
                   {imageUrl ? (
                     <Card.Img

@@ -17,8 +17,13 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 22px;
+  color: #91adff;
   font-weight: 600;
   text-decoration: none;
+}
+
+.challenge-details-back:hover {
+  color: #b8c8ff;
 }
 
 /* Challenge overview */

@@ -1,10 +1,12 @@
 
 import { Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../auth/AuthContext'
 import type { Challenge } from '../types/Challenge'
 
 interface ChallengeTableProps {
   challenges: Challenge[]
+  completedChallengeIds: number[]
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
@@ -22,7 +24,13 @@ const getImageUrl = (imageUrl: string | null) => {
   return `${API_BASE_URL}/${imageUrl.replace(/^\/+/, '')}`
 }
 
-const ChallengeTable = ({ challenges }: ChallengeTableProps) => {
+const ChallengeTable = ({
+  challenges,
+  completedChallengeIds,
+}: ChallengeTableProps) => {
+  const { user } = useAuth()
+  const completedIds = new Set(completedChallengeIds)
+
   return (
     <div className="table-responsive">
       <Table striped className="challenge-table align-middle">
@@ -34,6 +42,7 @@ const ChallengeTable = ({ challenges }: ChallengeTableProps) => {
             <th>Description</th>
             <th>Max Points</th>
             <th>Time Limit</th>
+            {user && <th>Completed</th>}
             <th>Image</th>
           </tr>
         </thead>
@@ -41,6 +50,7 @@ const ChallengeTable = ({ challenges }: ChallengeTableProps) => {
         <tbody>
           {challenges.map((challenge) => {
             const imageUrl = getImageUrl(challenge.imageUrl)
+            const isCompleted = completedIds.has(challenge.challengeId)
 
             return (
               <tr key={challenge.challengeId}>
@@ -73,6 +83,22 @@ const ChallengeTable = ({ challenges }: ChallengeTableProps) => {
                     ? 'Unlimited'
                     : `${challenge.timeLimitMinutes} minutes`}
                 </td>
+
+                {user && (
+                  <td className="text-center">
+                    {isCompleted ? (
+                      <span
+                        className="text-success fw-bold fs-4"
+                        title="Completed"
+                        aria-label="Completed"
+                      >
+                        ✓
+                      </span>
+                    ) : (
+                      <span className="text-muted">—</span>
+                    )}
+                  </td>
+                )}
 
                 <td>
                   {imageUrl && (
