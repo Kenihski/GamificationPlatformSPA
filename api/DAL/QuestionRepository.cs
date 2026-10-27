@@ -21,13 +21,14 @@ namespace GamificationPlatform.DAL
             _logger = logger;
         }
 
-        // Returns all questions together with their challenge.
+        // Returns all questions with their challenge and owner.
         public async Task<List<Question>> GetAllQuestionsAsync()
         {
             try
             {
                 return await _challengeDbContext.Questions
                     .Include(q => q.Challenge)
+                        .ThenInclude(c => c.CreatedByUser)
                     .ToListAsync();
             }
             catch (Exception ex) when (ex is not OperationCanceledException)

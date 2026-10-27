@@ -1,9 +1,15 @@
 
 import apiFetch from './ApiClient'
+import type { AdminQuestion } from '../types/AdminQuestion'
 import type {
   Question,
   QuestionSaveRequest,
 } from '../types/Question'
+
+const getAllQuestions = async (): Promise<AdminQuestion[]> => {
+  const response = await apiFetch('/api/admin/questions')
+  return response.json() as Promise<AdminQuestion[]>
+}
 
 const getQuestions = async (challengeId: number): Promise<Question[]> => {
   const response = await apiFetch(
@@ -66,6 +72,7 @@ const deleteQuestion = async (
 }
 
 const QuestionService = {
+  getAllQuestions,
   getQuestions,
   getQuestion,
   createQuestion,

@@ -34,6 +34,29 @@ namespace GamificationPlatform.Controllers
             _logger = logger;
         }
 
+        // Returns all questions for the administration page.
+        [HttpGet("/api/admin/questions")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<AdminQuestionDTO>>> GetAllQuestions()
+        {
+            var questions = await _questionRepository.GetAllQuestionsAsync();
+
+            var result = questions.Select(question => new AdminQuestionDTO
+            {
+                QuestionId = question.QuestionId,
+                ChallengeId = question.ChallengeId,
+                Title = question.Title,
+                Description = question.Description,
+                Points = question.Points,
+                ImageUrl = question.ImageUrl,
+                ChallengeTitle = question.Challenge.Title,
+                OwnerId = question.Challenge.CreatedByUserId,
+                OwnerUsername = question.Challenge.CreatedByUser.UserName ?? ""
+            }).ToList();
+
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<QuestionDTO>>> GetQuestions(
             int challengeId)
