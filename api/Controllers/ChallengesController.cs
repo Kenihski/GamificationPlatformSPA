@@ -6,6 +6,7 @@ using GamificationPlatform.Models;
 using GamificationPlatform.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 namespace GamificationPlatform.Controllers
 {
@@ -15,6 +16,7 @@ namespace GamificationPlatform.Controllers
     {
         private readonly IChallengeRepository _challengeRepository;
         private readonly IAttemptRepository _attemptRepository;
+        private readonly UserManager<User> _userManager;
         private readonly IUserRepository _userRepository;
         private readonly IImageService _imageService;
         private readonly IAchievementService _achievementService;
@@ -23,6 +25,7 @@ namespace GamificationPlatform.Controllers
         public ChallengesController(
             IChallengeRepository challengeRepository,
             IAttemptRepository attemptRepository,
+            UserManager<User> userManager,
             IUserRepository userRepository,
             IImageService imageService,
             IAchievementService achievementService,
@@ -30,6 +33,7 @@ namespace GamificationPlatform.Controllers
         {
             _challengeRepository = challengeRepository;
             _attemptRepository = attemptRepository;
+            _userManager = userManager;
             _userRepository = userRepository;
             _imageService = imageService;
             _achievementService = achievementService;
@@ -53,11 +57,50 @@ namespace GamificationPlatform.Controllers
                 await _challengeRepository.SearchPublishedChallengesAsync(
                     filter, searchTerm);
 
+            // Admins and challenge creators do not count toward popularity.
+            var adminUsers = await _userManager.GetUsersInRoleAsync("Admin");
+
+            var adminIds = adminUsers
+                .Select(user => user.Id)
+                .ToHashSet();
+
+            var attempts =
+                await _attemptRepository.GetAllCompletedAttemptsAsync();
+
+            // Count unique participants for each published challenge.
+            var participantCounts = attempts
+                .Where(attempt =>
+                    !adminIds.Contains(attempt.UserChallenge.UserId) &&
+                    attempt.UserChallenge.UserId !=
+                        attempt.UserChallenge.Challenge.CreatedByUserId &&
+                    attempt.UserChallenge.Challenge.IsPublished)
+                .GroupBy(attempt => attempt.UserChallenge.ChallengeId)
+                .Select(group => new
+                {
+                    ChallengeId = group.Key,
+                    Participants = group
+                        .Select(attempt => attempt.UserChallenge.UserId)
+                        .Distinct()
+                        .Count()
+                })
+                .ToList();
+
+            // The five most popular published challenges need at least one participant.
+            var popularIds = participantCounts
+                .Where(entry => entry.Participants >= 1)
+                .OrderByDescending(entry => entry.Participants)
+                .ThenBy(entry => entry.ChallengeId)
+                .Take(5)
+                .Select(entry => entry.ChallengeId)
+                .ToHashSet();
+
             var challengeDTOs = new List<ChallengeDTO>();
 
             foreach (var challenge in challenges)
             {
-                challengeDTOs.Add(await MapToDTOWithCreatorAsync(challenge));
+                var dto = await MapToDTOWithCreatorAsync(challenge);
+                dto.IsPopular = popularIds.Contains(challenge.ChallengeId);
+                challengeDTOs.Add(dto);
             }
 
             return Ok(challengeDTOs);

@@ -195,6 +195,12 @@
   color: #e0c8ff;
 }
 
+.home-page .featured-badge-popular {
+  border-color: rgba(255, 204, 108, 0.55);
+  background: rgba(175, 121, 28, 0.2);
+  color: #ffe2a0;
+}
+
 .home-page .featured-challenge-name {
   margin: 0 0 13px;
   color: #ffffff;

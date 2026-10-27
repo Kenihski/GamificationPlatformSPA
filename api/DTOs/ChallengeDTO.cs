@@ -1,3 +1,4 @@
+
 namespace GamificationPlatform.DTOs
 {
     public class ChallengeDTO
@@ -13,6 +14,8 @@ namespace GamificationPlatform.DTOs
         public bool IsPublished { get; set; }
 
         public bool IsCore { get; set; }
+
+        public bool IsPopular { get; set; }
 
         public int? TimeLimitMinutes { get; set; }
 

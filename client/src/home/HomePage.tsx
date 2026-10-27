@@ -173,6 +173,12 @@ const FeaturedChallenges = ({
                     ? 'CORE CHALLENGE'
                     : 'COMMUNITY CHALLENGE'}
                 </span>
+
+                {challenge.isPopular && (
+                  <span className="featured-badge featured-badge-popular">
+                    ★ POPULAR
+                  </span>
+                )}
               </div>
 
               <h3 className="featured-challenge-name">

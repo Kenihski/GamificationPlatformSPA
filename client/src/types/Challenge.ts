@@ -1,3 +1,4 @@
+
 export interface Challenge {
   challengeId: number
   title: string
@@ -5,6 +6,7 @@ export interface Challenge {
   imageUrl: string | null
   isPublished: boolean
   isCore: boolean
+  isPopular: boolean
   timeLimitMinutes: number | null
   showAnswersAfterCompletion: boolean
   maxPoints: number
