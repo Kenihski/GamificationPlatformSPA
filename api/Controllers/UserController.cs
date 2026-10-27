@@ -57,6 +57,8 @@ namespace GamificationPlatform.Controllers
             if (user == null)
                 return NotFound();
 
+            var roles = await _userManager.GetRolesAsync(user);
+
             var createdChallenges = user.CreatedChallenges
                 .Select(challenge => new
                 {
@@ -150,7 +152,8 @@ namespace GamificationPlatform.Controllers
                 {
                     UserId = user.Id,
                     Username = user.UserName,
-                    user.Email
+                    user.Email,
+                    Roles = roles
                 },
                 CreatedChallenges = createdChallenges,
                 ChallengeHistory = challengeHistory

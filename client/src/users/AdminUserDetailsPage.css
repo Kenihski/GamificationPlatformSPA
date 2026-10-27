@@ -1,0 +1,232 @@
+/* User details page */
+.admin-user-details {
+  color: #f5f7ff;
+  padding-top: 0 !important;
+}
+
+/* Tables */
+.admin-user-details .table {
+  --bs-table-bg: transparent;
+  --bs-table-color: #f5f7ff;
+  --bs-table-border-color: rgba(124, 139, 196, 0.25);
+  --bs-table-striped-bg: rgba(80, 99, 190, 0.09);
+  --bs-table-striped-color: #f5f7ff;
+}
+
+.admin-user-details .table thead th {
+  background: rgba(60, 75, 145, 0.2);
+  color: #91adff;
+  border-bottom-color: #50649d;
+}
+
+.admin-user-details .table td,
+.admin-user-details .table th {
+  vertical-align: middle;
+}
+
+.admin-user-details .table > :not(caption) > * > * {
+  padding: 0.5rem;
+}
+
+.admin-user-details .table a:not(.btn) {
+  color: #b8c8ff;
+}
+
+.admin-user-details .table a:not(.btn):hover {
+  color: #ffffff;
+}
+
+/* Challenge management buttons */
+.admin-user-details .my-challenges-actions {
+  white-space: nowrap;
+}
+
+.admin-user-details .my-challenges-actions .btn {
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+/* Match Subapp 1 button colors */
+.admin-user-details .btn-outline-primary {
+  --bs-btn-color: #b8c8ff;
+  --bs-btn-border-color: #91adff;
+}
+
+.admin-user-details .btn-outline-primary:hover {
+  background: rgba(77, 99, 202, 0.35);
+  border-color: #b2c1ff;
+  color: #ffffff;
+}
+
+.admin-user-details .btn-outline-warning {
+  --bs-btn-color: #ffc107;
+  --bs-btn-border-color: #ffc107;
+}
+
+.admin-user-details .my-challenges-actions .btn-outline-warning {
+  color: #ffc107;
+  border-color: #ffc107;
+}
+
+.admin-user-details .btn-outline-danger {
+  --bs-btn-color: #ffb3bf;
+  --bs-btn-border-color: #ffb3bf;
+}
+
+.admin-user-details .btn-outline-success {
+  --bs-btn-color: #91efc4;
+  --bs-btn-border-color: #91efc4;
+}
+
+.admin-user-details .btn-outline-secondary {
+  --bs-btn-color: #d1d9ee;
+  --bs-btn-border-color: #91a5df;
+}
+
+/* Challenge status badges */
+.admin-user-details .challenge-management-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+}
+
+.admin-user-details .challenge-management-status-published {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.45);
+}
+
+.admin-user-details .challenge-management-status-draft {
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.12);
+  border-color: rgba(148, 163, 184, 0.4);
+}
+
+/* Challenge history navigation */
+.user-history-navigation {
+  margin-bottom: 24px;
+}
+
+.user-history-navigation-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.user-history-nav-button {
+  min-height: 52px;
+  padding: 10px 14px;
+  color: #dce7ff;
+  background: #1c2748;
+  border: 1px solid #50649d;
+  border-radius: 9px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.user-history-nav-button:hover {
+  background: #2d3c65;
+  border-color: #91adff;
+  color: #ffffff;
+}
+
+.user-history-nav-button[aria-pressed="true"] {
+  background: #405ac5;
+  border-color: #91adff;
+  color: #ffffff;
+}
+
+.user-history-nav-button:focus-visible {
+  outline: 3px solid #a5b8ff;
+  outline-offset: 3px;
+}
+
+/* History pagination */
+.user-history-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.user-history-pagination span {
+  color: #d1d9ee;
+  font-size: 0.9rem;
+}
+
+/* Selected challenge history */
+.user-history-card {
+  padding: 24px;
+  background: #121a36;
+  border: 1px solid #50649d;
+  border-radius: 16px;
+}
+
+.user-history-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.user-history-card-header h4 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f5f7ff;
+}
+
+.user-history-attempt-count {
+  padding: 5px 12px;
+  color: #b9c9f5;
+  background: #1c2748;
+  border: 1px solid #3b4b77;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.user-history-card .table {
+  margin-bottom: 0;
+}
+
+/* Responsive layout */
+@media (max-width: 991px) {
+  .user-history-navigation-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .user-history-navigation-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 576px) {
+  .user-history-card {
+    padding: 16px;
+  }
+
+  .user-history-pagination {
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .user-history-nav-button {
+    transition: none;
+  }
+}

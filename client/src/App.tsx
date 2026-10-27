@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import NavMenu from './shared/NavMenu'
 import HomePage from './home/HomePage'
@@ -13,6 +12,7 @@ import EditQuestionPage from './questions/EditQuestionPage'
 import DeleteQuestionPage from './questions/DeleteQuestionPage'
 import AdminQuestionsPage from './questions/AdminQuestionsPage'
 import AdminUsersPage from './users/AdminUsersPage'
+import AdminUserDetailsPage from './users/AdminUserDetailsPage'
 import QuizPage from './quiz/QuizPage'
 import QuizResultPage from './quiz/QuizResultPage'
 import AchievementsPage from './achievements/AchievementsPage'
@@ -77,6 +77,10 @@ const App = () => {
           <Route
             path="/admin/users"
             element={<AdminUsersPage />}
+          />
+          <Route
+            path="/admin/users/:id"
+            element={<AdminUserDetailsPage />}
           />
           <Route
             path="/admin/questions"
