@@ -5,7 +5,7 @@ import AuthService from '../services/AuthService'
 import type { RegisterRequest } from '../types/Auth'
 
 interface RegisterFormProps {
-  onSuccess: () => void
+  onSuccess: (username: string) => void
   modal?: boolean
 }
 
@@ -40,13 +40,22 @@ const RegisterForm = ({ onSuccess, modal = false }: RegisterFormProps) => {
     setIsSubmitting(true)
 
     try {
+      const username = formData.username.trim()
+
       await AuthService.register({
         ...formData,
-        username: formData.username.trim(),
+        username,
         email: formData.email.trim(),
       })
 
-      onSuccess()
+      setFormData({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      })
+
+      onSuccess(username)
     } catch (err) {
       setError(
         err instanceof Error
@@ -125,14 +134,14 @@ const RegisterForm = ({ onSuccess, modal = false }: RegisterFormProps) => {
         />
       </Form.Group>
 
-    <Button
+      <Button
         type="submit"
         variant="primary"
         className={modal ? 'w-100' : ''}
         disabled={isSubmitting}
-    >
+      >
         {isSubmitting ? 'Registering...' : 'Register'}
-    </Button>
+      </Button>
     </Form>
   )
 }

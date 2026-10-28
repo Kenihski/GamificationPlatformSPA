@@ -270,7 +270,6 @@
   border-radius: 9px;
   background: rgba(12, 18, 43, 0.9);
   color: #ffffff;
-  font-size: 2rem;
   cursor: pointer;
 }
 
@@ -285,6 +284,12 @@
 .home-page .featured-carousel-prev:hover,
 .home-page .featured-carousel-next:hover {
   background: #303b70;
+}
+
+.home-page .featured-carousel .carousel-control-prev-icon,
+.home-page .featured-carousel .carousel-control-next-icon {
+  width: 19px;
+  height: 19px;
 }
 
 .home-page .featured-carousel-indicators {

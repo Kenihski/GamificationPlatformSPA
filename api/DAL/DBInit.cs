@@ -1,4 +1,3 @@
-
 using GamificationPlatform.Models;
 using GamificationPlatform.Services;
 using Microsoft.AspNetCore.Identity;
@@ -34,19 +33,12 @@ namespace GamificationPlatform.DAL
                 .GetRequiredService<ILoggerFactory>()
                 .CreateLogger("GamificationPlatform.DAL.DBInit");
 
-            // Apply pending migrations without deleting the database.
+            // Reset the development database and apply migrations.
+            await context.Database.EnsureDeletedAsync();
             await context.Database.MigrateAsync();
 
             // Register bundled default images.
             await DefaultImageSeeder.SeedAsync(context, app.Environment);
-
-            if (await context.Users.AnyAsync())
-            {
-                logger.LogInformation(
-                    "Database already contains users. Skipping development seeding.");
-
-                return;
-            }
 
             logger.LogInformation("Development database seeding started.");
 

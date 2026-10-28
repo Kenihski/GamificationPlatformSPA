@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Alert, Button, Form } from 'react-bootstrap'
 import { useAuth } from './AuthContext'
@@ -6,15 +6,26 @@ import { useAuth } from './AuthContext'
 interface LoginFormProps {
   onSuccess: () => void
   modal?: boolean
+  initialUsername?: string
 }
 
-const LoginForm = ({ onSuccess, modal = false }: LoginFormProps) => {
+const LoginForm = ({
+  onSuccess,
+  modal = false,
+  initialUsername = '',
+}: LoginFormProps) => {
   const { login } = useAuth()
 
-  const [usernameOrEmail, setUsernameOrEmail] = useState('')
+  const [usernameOrEmail, setUsernameOrEmail] = useState(initialUsername)
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    setUsernameOrEmail(initialUsername)
+    setPassword('')
+    setError('')
+  }, [initialUsername])
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()

@@ -17,7 +17,7 @@ import './NavMenu.css'
 
 const NavMenu = () => {
   const [showMenu, setShowMenu] = useState(false)
-  const [registrationSuccess, setRegistrationSuccess] = useState(false)
+  const [registeredUsername, setRegisteredUsername] = useState('')
 
   const {
     showLogin,
@@ -35,9 +35,9 @@ const NavMenu = () => {
 
   const closeMenu = () => setShowMenu(false)
 
-  const handleRegistrationSuccess = () => {
+  const handleRegistrationSuccess = (username: string) => {
+    setRegisteredUsername(username)
     closeRegister()
-    setRegistrationSuccess(true)
     openLogin()
   }
 
@@ -95,7 +95,7 @@ const NavMenu = () => {
                   variant="primary"
                   className="d-flex align-items-center gap-2"
                   onClick={() => {
-                    setRegistrationSuccess(false)
+                    setRegisteredUsername('')
                     openLogin()
                   }}
                 >
@@ -223,7 +223,7 @@ const NavMenu = () => {
               <hr className="my-3" />
 
               <h6 className="sidebar-heading text-muted fw-bold px-3 mb-3">
-                {isAdmin ? 'Administration' : 'Administration'}
+                Administration
               </h6>
 
               <Nav className="flex-column">
@@ -301,17 +301,12 @@ const NavMenu = () => {
         </Modal.Header>
 
         <Modal.Body>
-          {registrationSuccess && (
-            <div className="alert alert-success">
-              Registration successful. Please log in.
-            </div>
-          )}
-
           <LoginForm
             modal
+            initialUsername={registeredUsername}
             onSuccess={() => {
               closeLogin()
-              setRegistrationSuccess(false)
+              setRegisteredUsername('')
             }}
           />
 
@@ -350,7 +345,7 @@ const NavMenu = () => {
               type="button"
               className="btn btn-link p-0"
               onClick={() => {
-                setRegistrationSuccess(false)
+                setRegisteredUsername('')
                 openLogin()
               }}
             >

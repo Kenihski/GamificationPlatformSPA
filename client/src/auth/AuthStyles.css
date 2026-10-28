@@ -184,3 +184,13 @@ main a:not(.btn):hover {
 .auth-page a:not(.btn):hover {
   color: #d0dcff;
 }
+
+/* Keep dark input styling when Chrome autofills credentials */
+.form-control:-webkit-autofill,
+.form-control:-webkit-autofill:hover,
+.form-control:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px #253154 inset;
+  box-shadow: 0 0 0 1000px #253154 inset;
+  caret-color: #ffffff;
+}
