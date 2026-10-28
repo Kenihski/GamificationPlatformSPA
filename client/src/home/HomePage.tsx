@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Card, Col, Container, Row, Spinner } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
+import { useAuthModal } from '../auth/AuthModalContext'
 import ChallengeService from '../services/ChallengeService'
 import FeaturedChallenges from './FeaturedChallenges'
 import HomeRankingCards from './HomeRankingCards'
@@ -13,7 +14,7 @@ const BookIcon = () => (
     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
     aria-hidden="true">
     <path d="M12 7v14" />
-    <path d="M3 18V5a2 2 0 0 1 2-2h3a4 4 0 0 1 4 4 4 4 0 0 1 4-4h3a2 2 0 0 1 2 2v13a1 1 0 0 1-1 1h-4a4 4 0 0 0-4 2 4 4 0 0 0-4-2H4a1 1 0 0 1-1-1Z" />
+    <path d="M3 18V5a2 2 0 0 1 2-2h3a4 4 0 0 1 4 4 4 4 0 0 1-4-4h3a2 2 0 0 1 2 2v13a1 1 0 0 1-1 1h-4a4 4 0 0 0-4 2 4 4 0 0 0-4-2H4a1 1 0 0 1-1-1Z" />
   </svg>
 )
 
@@ -84,6 +85,7 @@ const FeatureCard = ({
 
 const HomePage = () => {
   const { user } = useAuth()
+  const { openRegister } = useAuthModal()
 
   const {
     data: challenges = [],
@@ -138,7 +140,7 @@ const HomePage = () => {
             <button
               type="button"
               className="btn btn-outline-primary btn-lg"
-              disabled
+              onClick={openRegister}
             >
               Register
             </button>

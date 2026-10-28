@@ -4,13 +4,11 @@ import {
   Alert,
   Button,
   Container,
-  Modal,
   Spinner,
   Table,
 } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
-import LoginForm from '../auth/LoginForm'
 import ChallengeService from '../services/ChallengeService'
 import QuestionService from '../services/QuestionService'
 import QuizService from '../services/QuizService'
@@ -40,7 +38,6 @@ const ChallengeDetailsPage = () => {
   const queryClient = useQueryClient()
 
   const [showQuestions, setShowQuestions] = useState(false)
-  const [showLogin, setShowLogin] = useState(false)
   const [managementError, setManagementError] = useState<string | null>(null)
   const [managementSuccess, setManagementSuccess] = useState<string | null>(null)
 
@@ -308,13 +305,13 @@ const ChallengeDetailsPage = () => {
               )}
 
               {!user && challenge.isPublished && hasQuestions && (
-                <Button
-                  variant="primary"
-                  className="featured-challenge-button"
-                  onClick={() => setShowLogin(true)}
+                <Link
+                  to="/login"
+                  state={{ from: `/quiz/${challenge.challengeId}` }}
+                  className="btn btn-primary featured-challenge-button"
                 >
                   Log in to Start Challenge
-                </Button>
+                </Link>
               )}
 
               {(challenge.isPublished || canManage) && (
@@ -614,28 +611,6 @@ const ChallengeDetailsPage = () => {
           </section>
         )}
       </Container>
-
-      <Modal
-        show={showLogin}
-        onHide={() => setShowLogin(false)}
-        centered
-        data-bs-theme="dark"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Login</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <LoginForm onSuccess={() => setShowLogin(false)} />
-
-          <p className="text-center mt-3 mb-0">
-            Don't have an account?{' '}
-            <span className="text-secondary">
-              Registration coming soon.
-            </span>
-          </p>
-        </Modal.Body>
-      </Modal>
     </>
   )
 }

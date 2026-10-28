@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import {
   Button,
@@ -8,25 +7,51 @@ import {
   Navbar,
   Offcanvas,
 } from 'react-bootstrap'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
+import { useAuthModal } from '../auth/AuthModalContext'
 import LoginForm from '../auth/LoginForm'
+import RegisterForm from '../auth/RegisterForm'
 import MatrixBackground from './MatrixBackground'
 import './NavMenu.css'
 
 const NavMenu = () => {
   const [showMenu, setShowMenu] = useState(false)
-  const [showLogin, setShowLogin] = useState(false)
+  const [registrationSuccess, setRegistrationSuccess] = useState(false)
+
+  const {
+    showLogin,
+    showRegister,
+    openLogin,
+    openRegister,
+    closeLogin,
+    closeRegister,
+  } = useAuthModal()
 
   const { user, isAuthenticated, logout } = useAuth()
   const isAdmin = user?.roles.includes('Admin') ?? false
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const closeMenu = () => setShowMenu(false)
+
+  const handleRegistrationSuccess = () => {
+    closeRegister()
+    setRegistrationSuccess(true)
+    openLogin()
+  }
 
   const handleLogout = () => {
     logout()
     closeMenu()
+    navigate('/', {
+      state: { message: 'You have been logged out successfully.' },
+    })
   }
+
+  const isAccountPage =
+    location.pathname === '/login' ||
+    location.pathname === '/register'
 
   return (
     <>
@@ -65,29 +90,34 @@ const NavMenu = () => {
                 </Button>
               </div>
             ) : (
-              <Button
-                variant="primary"
-                className="d-flex align-items-center gap-2"
-                onClick={() => setShowLogin(true)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  aria-hidden="true"
+              !isAccountPage && (
+                <Button
+                  variant="primary"
+                  className="d-flex align-items-center gap-2"
+                  onClick={() => {
+                    setRegistrationSuccess(false)
+                    openLogin()
+                  }}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10 17l5-5-5-5M15 12H3m9-9h6a3 3 0 013 3v12a3 3 0 01-3 3h-6"
-                  />
-                </svg>
-                Login
-              </Button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M10 17l5-5-5-5M15 12H3m9-9h6a3 3 0 013 3v12a3 3 0 01-3 3h-6"
+                    />
+                  </svg>
+                  Login
+                </Button>
+              )
             )}
           </Nav>
         </Container>
@@ -262,22 +292,72 @@ const NavMenu = () => {
 
       <Modal
         show={showLogin}
-        onHide={() => setShowLogin(false)}
+        onHide={closeLogin}
         centered
         data-bs-theme="dark"
+        className="auth-modal"
       >
         <Modal.Header closeButton>
           <Modal.Title>Login</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <LoginForm onSuccess={() => setShowLogin(false)} />
+          {registrationSuccess && (
+            <div className="alert alert-success">
+              Registration successful. Please log in.
+            </div>
+          )}
+
+          <LoginForm
+            modal
+            onSuccess={() => {
+              closeLogin()
+              setRegistrationSuccess(false)
+            }}
+          />
 
           <p className="text-center mt-3 mb-0">
             Don't have an account?{' '}
-            <span className="text-secondary">
-              Registration coming soon.
-            </span>
+            <button
+              type="button"
+              className="btn btn-link p-0 align-baseline"
+              onClick={openRegister}
+            >
+              Register here
+            </button>
+          </p>
+        </Modal.Body>
+      </Modal>
+
+      <Modal
+        show={showRegister}
+        onHide={closeRegister}
+        centered
+        data-bs-theme="dark"
+        className="auth-modal"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Create Account</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <RegisterForm
+            modal
+            onSuccess={handleRegistrationSuccess}
+          />
+
+          <p className="text-center mt-3 mb-0">
+            Already have an account?{' '}
+            <button
+              type="button"
+              className="btn btn-link p-0 align-baseline"
+              onClick={() => {
+                setRegistrationSuccess(false)
+                openLogin()
+              }}
+            >
+              Login here
+            </button>
           </p>
         </Modal.Body>
       </Modal>

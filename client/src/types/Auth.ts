@@ -16,3 +16,10 @@ export interface AuthUser {
   username: string
   roles: string[]
 }
+
+export interface RegisterRequest {
+  username: string
+  email: string
+  password: string
+  confirmPassword: string
+}

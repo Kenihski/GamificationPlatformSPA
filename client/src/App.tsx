@@ -28,89 +28,96 @@ import PublicAchievementsPage from './halloffame/PublicAchievementsPage'
 import ChallengeLeaderboardPage from './leaderboard/ChallengeLeaderboardPage'
 import CoreLeaderboardPage from './leaderboard/CoreLeaderboardPage'
 import ProtectedRoute from './auth/ProtectedRoute'
+import RegisterPage from './auth/RegisterPage'
+import LoginPage from './auth/LoginPage'
+import { AuthModalProvider } from './auth/AuthModalContext'
 
 const App = () => {
   return (
     <BrowserRouter>
-      <NavMenu />
-      <AchievementNotifications />
+      <AuthModalProvider>
+        <NavMenu />
+        <AchievementNotifications />
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/challenges" element={<ChallengeListPage />} />
-        <Route path="/challenges/:id" element={<ChallengeDetailsPage />} />
-        <Route
-          path="/challenges/:id/leaderboard"
-          element={<ChallengeLeaderboardPage />}
-        />
-        <Route path="/leaderboard" element={<CoreLeaderboardPage />} />
-        <Route path="/hall-of-fame" element={<HallOfFamePage />} />
-        <Route
-          path="/hall-of-fame/users/:id/achievements"
-          element={<PublicAchievementsPage />}
-        />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/challenges" element={<ChallengeListPage />} />
+          <Route path="/challenges/:id" element={<ChallengeDetailsPage />} />
+          <Route
+            path="/challenges/:id/leaderboard"
+            element={<ChallengeLeaderboardPage />}
+          />
+          <Route path="/leaderboard" element={<CoreLeaderboardPage />} />
+          <Route path="/hall-of-fame" element={<HallOfFamePage />} />
+          <Route
+            path="/hall-of-fame/users/:id/achievements"
+            element={<PublicAchievementsPage />}
+          />
 
-        <Route element={<ProtectedRoute />}>
-          <Route path="/my-challenges" element={<MyChallengesPage />} />
-          <Route path="/my-images" element={<MyImagesPage />} />
-          <Route path="/challenges/create" element={<CreateChallengePage />} />
-          <Route path="/challenges/:id/edit" element={<EditChallengePage />} />
-          <Route
-            path="/challenges/:id/questions/create"
-            element={<CreateQuestionPage />}
-          />
-          <Route
-            path="/challenges/:id/questions/:questionId/edit"
-            element={<EditQuestionPage />}
-          />
-          <Route
-            path="/challenges/:id/questions/:questionId/delete"
-            element={<DeleteQuestionPage />}
-          />
-          <Route path="/quiz/:id" element={<QuizPage />} />
-          <Route
-            path="/quiz/attempts/:attemptId"
-            element={<QuizResultPage />}
-          />
-          <Route path="/achievements" element={<AchievementsPage />} />
-        </Route>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/my-challenges" element={<MyChallengesPage />} />
+            <Route path="/my-images" element={<MyImagesPage />} />
+            <Route path="/challenges/create" element={<CreateChallengePage />} />
+            <Route path="/challenges/:id/edit" element={<EditChallengePage />} />
+            <Route
+              path="/challenges/:id/questions/create"
+              element={<CreateQuestionPage />}
+            />
+            <Route
+              path="/challenges/:id/questions/:questionId/edit"
+              element={<EditQuestionPage />}
+            />
+            <Route
+              path="/challenges/:id/questions/:questionId/delete"
+              element={<DeleteQuestionPage />}
+            />
+            <Route path="/quiz/:id" element={<QuizPage />} />
+            <Route
+              path="/quiz/attempts/:attemptId"
+              element={<QuizResultPage />}
+            />
+            <Route path="/achievements" element={<AchievementsPage />} />
+          </Route>
 
-        <Route element={<ProtectedRoute requiredRole="Admin" />}>
-          <Route
-            path="/admin/users"
-            element={<AdminUsersPage />}
-          />
-          <Route
-            path="/admin/users/:id"
-            element={<AdminUserDetailsPage />}
-          />
-          <Route
-            path="/admin/questions"
-            element={<AdminQuestionsPage />}
-          />
-          <Route
-            path="/admin/achievements"
-            element={<AdminAchievementsPage />}
-          />
-          <Route
-            path="/admin/achievements/create"
-            element={<CreateAchievementPage />}
-          />
-          <Route
-            path="/admin/achievements/:id/edit"
-            element={<EditAchievementPage />}
-          />
-          <Route
-            path="/admin/achievements/:id/delete"
-            element={<DeleteAchievementPage />}
-          />
-          <Route
-            path="/admin/images"
-            element={<AdminImagesPage />}
-          />
-        </Route>
-      </Routes>
+          <Route element={<ProtectedRoute requiredRole="Admin" />}>
+            <Route
+              path="/admin/users"
+              element={<AdminUsersPage />}
+            />
+            <Route
+              path="/admin/users/:id"
+              element={<AdminUserDetailsPage />}
+            />
+            <Route
+              path="/admin/questions"
+              element={<AdminQuestionsPage />}
+            />
+            <Route
+              path="/admin/achievements"
+              element={<AdminAchievementsPage />}
+            />
+            <Route
+              path="/admin/achievements/create"
+              element={<CreateAchievementPage />}
+            />
+            <Route
+              path="/admin/achievements/:id/edit"
+              element={<EditAchievementPage />}
+            />
+            <Route
+              path="/admin/achievements/:id/delete"
+              element={<DeleteAchievementPage />}
+            />
+            <Route
+              path="/admin/images"
+              element={<AdminImagesPage />}
+            />
+          </Route>
+        </Routes>
+      </AuthModalProvider>
     </BrowserRouter>
   )
 }

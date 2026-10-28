@@ -1,4 +1,3 @@
-
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using GamificationPlatform.DTOs;
@@ -110,6 +109,64 @@ namespace GamificationPlatform.Controllers
                 ExpiresAt = expiresAt,
                 UserId = user.Id,
                 Username = user.UserName ?? string.Empty
+            });
+        }
+
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(
+            [FromBody] RegisterDTO dto)
+        {
+            dto.Username = dto.Username.Trim();
+            dto.Email = dto.Email.Trim();
+
+            // Check whether username or email is already registered.
+            if (await _userManager.FindByNameAsync(dto.Username) != null)
+            {
+                return BadRequest(new
+                {
+                    message = "This username is already taken."
+                });
+            }
+
+            if (await _userManager.FindByEmailAsync(dto.Email) != null)
+            {
+                return BadRequest(new
+                {
+                    message = "This email is already registered."
+                });
+            }
+
+            var user = new User
+            {
+                UserName = dto.Username,
+                Email = dto.Email
+            };
+
+            // Identity hashes the password before storing the user.
+            var result = await _userManager.CreateAsync(
+                user, dto.Password);
+
+            if (!result.Succeeded)
+            {
+                _logger.LogWarning("User registration failed.");
+
+                return BadRequest(new
+                {
+                    message = "Registration failed.",
+                    errors = result.Errors.Select(
+                        error => error.Description)
+                });
+            }
+
+            _logger.LogInformation(
+                "User {UserId} registered successfully.",
+                user.Id);
+
+            // Require the user to log in after registration.
+            return Ok(new
+            {
+                message = "Registration successful. Please log in."
             });
         }
     }

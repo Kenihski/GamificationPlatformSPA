@@ -93,9 +93,7 @@ const FeaturedChallenges = ({ challenges }: FeaturedChallengesProps) => {
                       : 'featured-badge-community'
                   }`}
                 >
-                  {challenge.isCore
-                    ? 'CORE CHALLENGE'
-                    : 'COMMUNITY CHALLENGE'}
+                  {challenge.isCore ? 'CORE' : 'COMMUNITY'}
                 </span>
 
                 {challenge.isPopular && (

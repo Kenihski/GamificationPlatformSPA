@@ -1,0 +1,205 @@
+/* Shared authentication theme */
+:root {
+  --auth-panel: #111833;
+  --auth-border: rgba(111, 132, 255, 0.35);
+  --auth-input: #253154;
+  --auth-input-focus: #2d3c65;
+  --auth-text: #ffffff;
+  --auth-muted: #d1d9ee;
+  --auth-gradient: linear-gradient(135deg, #3159cf, #6540c5);
+  --auth-gradient-hover: linear-gradient(135deg, #3d65d9, #714bd1);
+}
+
+/* Login and registration form fields */
+.form-control,
+.form-select {
+  background-color: var(--auth-input);
+  color: var(--auth-text);
+  border: 1px solid rgba(137, 160, 255, 0.65);
+  border-radius: 9px;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--auth-input-focus);
+  color: var(--auth-text);
+  border-color: #91adff;
+  box-shadow: 0 0 0 0.2rem rgba(111, 132, 255, 0.2);
+}
+
+.form-control::placeholder {
+  color: #a9b4d2;
+}
+
+.form-control:disabled,
+.form-select:disabled,
+.form-control[readonly] {
+  background-color: #202741;
+  color: #b9c4df;
+}
+
+.form-label,
+.form-check-label {
+  color: #edf1ff;
+}
+
+/* Login and registration buttons */
+.btn-primary {
+  background: var(--auth-gradient);
+  border-color: #6d83ff;
+  color: #ffffff;
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: var(--auth-gradient-hover);
+  border-color: #9eabff;
+  color: #ffffff;
+}
+
+.btn-primary:disabled {
+  background: var(--auth-gradient);
+  border-color: #6d83ff;
+  color: #ffffff;
+  opacity: 0.65;
+}
+
+/* Login and registration modals */
+.modal-content {
+  background: var(--auth-panel);
+  color: var(--auth-text);
+  border: 1px solid var(--auth-border);
+}
+
+.modal-header,
+.modal-footer {
+  border-color: var(--auth-border);
+}
+
+.modal-title {
+  color: #ffffff;
+}
+
+.modal-content .form-control,
+.modal-content .form-select {
+  background-color: var(--auth-input);
+  border-color: rgba(137, 160, 255, 0.65);
+  color: #ffffff;
+}
+
+.modal-content .form-control:focus,
+.modal-content .form-select:focus {
+  background-color: var(--auth-input-focus);
+  border-color: #a5b8ff;
+  color: #ffffff;
+}
+
+.modal-content .form-control::placeholder {
+  color: #c0cbe4;
+}
+
+/* Dark modal close button */
+.auth-modal .modal-header .btn-close {
+  filter: none;
+  opacity: 0.8;
+}
+
+.auth-modal .modal-header .btn-close:hover {
+  opacity: 1;
+}
+
+/* Shared links */
+main a:not(.btn) {
+  color: #a9bfff;
+}
+
+main a:not(.btn):hover {
+  color: #d0dcff;
+}
+
+/* Modal links */
+.auth-modal .modal-body a,
+.auth-modal .modal-body .btn-link {
+  color: #a9bfff;
+  text-decoration: underline;
+}
+
+.auth-modal .modal-body a:hover,
+.auth-modal .modal-body .btn-link:hover {
+  color: #d0dcff;
+}
+
+/* Information messages */
+.alert-info {
+  --bs-alert-bg: #192744;
+  --bs-alert-border-color: #5978b8;
+  --bs-alert-color: #dce7ff;
+
+  background-color: #192744;
+  border-color: #5978b8;
+  color: #dce7ff;
+}
+
+/* Success messages */
+.alert-success {
+  --bs-alert-bg: #163d32;
+  --bs-alert-border-color: #278b68;
+  --bs-alert-color: #d5f9e9;
+
+  background-color: #163d32;
+  border-color: #278b68;
+  color: #d5f9e9;
+}
+
+/* Error messages */
+.alert-danger {
+  --bs-alert-bg: #4a222b;
+  --bs-alert-border-color: #c35b69;
+  --bs-alert-color: #ffe1e5;
+
+  background-color: #4a222b;
+  border-color: #c35b69;
+  color: #ffe1e5;
+}
+
+/* Warning messages */
+.alert-warning {
+  --bs-alert-bg: #453717;
+  --bs-alert-border-color: #c49a32;
+  --bs-alert-color: #fff0bd;
+
+  background-color: #453717;
+  border-color: #c49a32;
+  color: #fff0bd;
+}
+
+/* Links inside messages */
+.alert-info a,
+.alert-success a,
+.alert-danger a,
+.alert-warning a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* Standalone Login and Register pages */
+.auth-page {
+  padding-top: 1rem;
+  padding-bottom: 1.5rem;
+}
+
+.auth-page h1 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Standalone page links */
+.auth-page a:not(.btn) {
+  color: #a9bfff;
+}
+
+.auth-page a:not(.btn):hover {
+  color: #d0dcff;
+}

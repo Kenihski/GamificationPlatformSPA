@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Alert, Button, Form } from 'react-bootstrap'
@@ -6,9 +5,10 @@ import { useAuth } from './AuthContext'
 
 interface LoginFormProps {
   onSuccess: () => void
+  modal?: boolean
 }
 
-const LoginForm = ({ onSuccess }: LoginFormProps) => {
+const LoginForm = ({ onSuccess, modal = false }: LoginFormProps) => {
   const { login } = useAuth()
 
   const [usernameOrEmail, setUsernameOrEmail] = useState('')
@@ -66,7 +66,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
       <Button
         type="submit"
         variant="primary"
-        className="w-100"
+        className={modal ? 'w-100' : ''}
         disabled={isSubmitting}
       >
         {isSubmitting ? 'Logging in...' : 'Login'}
