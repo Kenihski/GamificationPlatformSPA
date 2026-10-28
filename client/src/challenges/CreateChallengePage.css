@@ -1,6 +1,12 @@
-
 .create-challenge-page {
   color: #f5f7ff;
+  padding-top: 16px !important;
+}
+
+/* Match the heading spacing in Subapp 1. */
+.create-challenge-page > h2 {
+  margin-top: 0 !important;
+  margin-bottom: 20px !important;
 }
 
 .create-challenge-page .form-control,
@@ -19,15 +25,73 @@
   box-shadow: 0 0 0 0.2rem rgba(111, 132, 255, 0.2);
 }
 
+/* Match the visible keyboard focus ring in Subapp 1. */
+.create-challenge-page .form-control:focus-visible,
+.create-challenge-page .form-select:focus-visible {
+  outline: 3px solid #b8c8ff;
+  outline-offset: 3px;
+}
+
 .create-challenge-page .form-label,
 .create-challenge-page .form-check-label {
   color: #edf1ff;
 }
 
-.challenge-image-preview {
+.create-challenge-page .form-text {
+  color: #d1d9ee;
+}
+
+/* Keep form groups compact, as in Subapp 1. */
+.create-challenge-page .form-label {
+  margin-bottom: 4px;
+}
+
+.create-challenge-page .form-check-input {
+  background-color: #ffffff;
+  border-color: #a9b4d2;
+}
+
+.create-challenge-page .form-check-input:checked {
+  background-color: #3159cf;
+  border-color: #6d83ff;
+}
+
+/* Match the Create and Cancel buttons in Subapp 1. */
+.create-challenge-page .btn-primary {
+  background: linear-gradient(135deg, #3159cf, #6540c5);
+  border-color: #6d83ff;
+  color: #ffffff;
+}
+
+.create-challenge-page .btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  border-color: #9eabff;
+  color: #ffffff;
+}
+
+.create-challenge-page .btn-outline-primary {
+  background: transparent;
+  border-color: #91adff;
+  color: #b8c8ff;
+}
+
+.create-challenge-page .btn-outline-primary:hover {
+  background: rgba(77, 99, 202, 0.25);
+  border-color: #b2c1ff;
+  color: #ffffff;
+}
+
+.create-challenge-page .challenge-image-preview {
   display: block;
-  max-width: 240px;
-  max-height: 180px;
+  width: 270px;
+  max-width: 100%;
+  height: auto;
+  margin: 12px 0 0 12px;
   object-fit: contain;
   border-radius: 8px;
+}
+
+/* Use the same required-field color as Subapp 1. */
+.create-challenge-page .text-danger {
+  color: #ffb3bf !important;
 }

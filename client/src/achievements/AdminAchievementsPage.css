@@ -1,4 +1,3 @@
-
 .achievement-admin-list .achievement-content {
   min-width: 0;
   overflow-wrap: anywhere;
@@ -178,4 +177,47 @@
   font-size: 0.72rem;
   font-weight: 700;
   line-height: 1.2;
+}
+
+/* Match vertical spacing in Subapp 1 */
+.achievement-admin-page {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Reduce spacing below the last achievement */
+.achievement-admin-list {
+  margin-bottom: 0 !important;
+}
+
+.achievement-admin-list .achievement-row:last-child {
+  margin-bottom: 0;
+}
+
+/* Delete button */
+.achievement-admin-page .achievement-admin-actions .btn-outline-danger {
+  color: #ffb3bf;
+  border-color: #ffb3bf;
+  background: transparent;
+}
+
+/* Match Subapp 1 hover */
+.achievement-admin-page .achievement-admin-actions .btn-outline-danger:hover {
+  background: #dc3545;
+  border-color: #dc3545;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+/* Match Publish button in Subapp 1 */
+.achievement-admin-page .achievement-admin-actions .btn-outline-success {
+  color: #91efc4;
+  border-color: #91efc4;
+  background: transparent;
+}
+
+.achievement-admin-page .achievement-admin-actions .btn-outline-success:hover {
+  color: #ffffff;
+  background: #198754;
+  border-color: #198754;
 }

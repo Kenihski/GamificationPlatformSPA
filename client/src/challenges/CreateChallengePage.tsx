@@ -23,7 +23,7 @@ const CreateChallengePage = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [timeLimit, setTimeLimit] = useState('')
-  const [showAnswers, setShowAnswers] = useState(true)
+  const [showAnswers, setShowAnswers] = useState(false)
   const [imageCategory, setImageCategory] = useState<ImageCategory>('none')
   const [imageUrl, setImageUrl] = useState('')
   const [imageFile, setImageFile] = useState<File | null>(null)
@@ -137,7 +137,7 @@ const CreateChallengePage = () => {
 
   return (
     <Container className="create-challenge-page py-4">
-      <h2 className="my-4">Create New Challenge</h2>
+      <h2 className="create-challenge-title">Create New Challenge</h2>
 
       {errorMessage && (
         <Alert variant="danger" role="alert">
@@ -291,12 +291,12 @@ const CreateChallengePage = () => {
           )}
         </Form.Group>
 
-        <div className="d-flex gap-2">
-          <Button type="submit" disabled={createMutation.isPending}>
+        <div className="d-flex gap-2 create-challenge-actions">
+          <Button type="submit" variant="primary" disabled={createMutation.isPending}>
             {createMutation.isPending ? 'Creating...' : 'Create Challenge'}
           </Button>
 
-          <Link to="/my-challenges" className="btn btn-outline-primary">
+          <Link to="/my-challenges" className="btn btn-outline-secondary">
             Cancel
           </Link>
         </div>

@@ -1,4 +1,4 @@
-
+/* Challenge Details - Subapp 1 styling adapted for React-Bootstrap */
 .challenge-details-page {
   --home-muted: #d1d9ee;
   --home-blue: #91adff;
@@ -6,28 +6,24 @@
   --content-card-border: rgba(125, 151, 230, 0.55);
   --primary-gradient: linear-gradient(135deg, #3159cf, #6540c5);
   --primary-gradient-hover: linear-gradient(135deg, #3d65d9, #714bd1);
-  padding: 28px 0 65px;
-  max-width: 1200px;
+  --text-error: #ffb3bf;
+  padding: 15px 0 65px;
 }
 
 /* Navigation */
-
 .challenge-details-back {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  margin-top: 25px;
   margin-bottom: 22px;
-  color: #91adff;
+  color: #a9bfff;
   font-weight: 600;
   text-decoration: none;
 }
-
-.challenge-details-back:hover {
-  color: #b8c8ff;
-}
+.challenge-details-back:hover { color: #d0dcff; }
 
 /* Challenge overview */
-
 .challenge-details-overview {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
@@ -37,14 +33,12 @@
   background: var(--content-card-bg);
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.35);
 }
-
 .challenge-details-image {
   position: relative;
   min-width: 0;
   min-height: 420px;
   background: #0c1230;
 }
-
 .challenge-details-image img {
   position: absolute;
   inset: 0;
@@ -54,7 +48,6 @@
   object-fit: cover;
   object-position: center;
 }
-
 .challenge-details-content {
   display: flex;
   flex-direction: column;
@@ -63,13 +56,11 @@
   min-width: 0;
   padding: 34px 36px;
 }
-
 .challenge-details-page .featured-challenge-badges {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
-
 .challenge-details-page .featured-badge {
   display: inline-flex;
   align-items: center;
@@ -80,33 +71,28 @@
   font-weight: 800;
   letter-spacing: 0.8px;
 }
-
 .challenge-details-page .featured-badge-core {
   border-color: rgba(145, 173, 255, 0.55);
   background: rgba(67, 106, 230, 0.25);
   color: #c8d6ff;
 }
-
 .challenge-details-page .featured-badge-community {
   border-color: rgba(192, 154, 255, 0.55);
   background: rgba(123, 78, 201, 0.25);
   color: #e0c8ff;
 }
-
 .challenge-details-title {
-  margin: 14px 0;
+  margin: 0 0 14px;
   font-size: clamp(1.8rem, 2.9vw, 2.45rem);
   font-weight: 750;
   overflow-wrap: anywhere;
 }
-
 .challenge-details-description {
   margin-bottom: 24px;
   color: var(--home-muted);
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
-
 .challenge-details-draft {
   display: inline-flex;
   align-items: center;
@@ -119,7 +105,6 @@
   font-weight: 800;
   letter-spacing: 0.8px;
 }
-
 .challenge-details-meta {
   display: flex;
   flex-wrap: wrap;
@@ -127,7 +112,6 @@
   margin-bottom: 26px;
   color: #e1e9ff;
 }
-
 .challenge-details-meta span {
   display: inline-flex;
   align-items: center;
@@ -137,14 +121,12 @@
   border-radius: 8px;
   background: rgba(78, 98, 185, 0.12);
 }
-
 .challenge-details-meta svg {
   width: 17px;
   height: 17px;
   flex-shrink: 0;
   color: var(--home-blue);
 }
-
 .challenge-details-actions {
   display: flex;
   flex-wrap: wrap;
@@ -152,40 +134,57 @@
   align-items: center;
 }
 
+/* Different button paddings are intentional in Subapp 1. */
+.challenge-details-page .featured-challenge-button {
+  padding: 13px 27px;
+  border: 1px solid #6d83ff;
+  border-radius: 10px;
+  background: var(--primary-gradient);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 22px rgba(83, 107, 255, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.challenge-details-page .featured-challenge-button:hover {
+  transform: translateY(-2px);
+  border-color: #9eabff;
+  background: var(--primary-gradient-hover);
+  box-shadow: 0 8px 30px rgba(83, 107, 255, 0.45);
+}
+.challenge-details-page .challenge-details-leaderboard-button {
+  padding: 13px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+}
 .challenge-details-note {
   margin: 12px 0 0;
   color: var(--home-muted);
   font-size: 0.875rem;
 }
 
-/* Buttons - same colors as Subapp 1 */
-
+/* Buttons from Subapp 1 site.css */
 .challenge-details-page .btn-primary {
   background: var(--primary-gradient);
   border-color: #6d83ff;
-  color: #ffffff;
+  color: #fff;
 }
-
 .challenge-details-page .btn-primary:hover {
   background: var(--primary-gradient-hover);
   border-color: #9eabff;
-  color: #ffffff;
+  color: #fff;
 }
-
 .challenge-details-page .btn-outline-primary {
-  background: transparent;
   border-color: #91adff;
   color: #b8c8ff;
 }
-
 .challenge-details-page .btn-outline-primary:hover {
   background: rgba(77, 99, 202, 0.35);
   border-color: #b2c1ff;
-  color: #ffffff;
+  color: #fff;
 }
 
-/* Management and history panels */
-
+/* Management and history */
 .challenge-details-panel {
   margin-top: 32px;
   padding: 28px;
@@ -194,25 +193,30 @@
   background: var(--content-card-bg);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
 }
-
 .challenge-details-section-title {
   margin: 0 0 24px;
   font-size: 1.5rem;
   font-weight: 750;
 }
-
 .challenge-details-page .challenge-management-status-published {
   background-color: #123d2a;
   border: 1px solid #216b4b;
   color: #55d69b;
 }
-
 .challenge-details-page .challenge-management-status-draft {
   background-color: #493c19;
   border: 1px solid #806523;
   color: #ffcf70;
 }
-
+/* Small status badges must not inherit the large hero badge padding. */
+.challenge-details-page .challenge-details-panel .featured-badge.challenge-table-badge {
+  padding: 3px 7px;
+  border-radius: 5px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
 .challenge-details-panel .btn-success {
   background: #123e31;
   border: 1px solid #176b50;
@@ -220,27 +224,41 @@
   color: #91efc4;
   font-weight: 600;
 }
-
 .challenge-details-panel .btn-success:hover {
   background: #195441;
   border-color: #329778;
-  color: #ffffff;
+  color: #fff;
 }
-
-.challenge-details-panel .my-challenges-type-button {
+.challenge-details-panel .btn-success:focus-visible {
+  outline: 2px solid #a7e7d8;
+  outline-offset: 3px;
+}
+/* The management type button is styled separately from the hero badges. */
+.challenge-details-page .challenge-details-panel .btn.my-challenges-type-button {
   padding: 0.375rem 0.75rem;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
+  letter-spacing: normal;
   border-radius: 8px;
 }
-
-/* Questions and history tables */
-
-.challenge-details-panel .table-responsive {
-  max-width: 100%;
+.challenge-details-page .challenge-details-panel .btn.my-challenges-type-button.featured-badge-community {
+  border-color: rgba(192, 154, 255, 0.55);
+  background: rgba(123, 78, 201, 0.25);
+  color: #e0c8ff;
+}
+.challenge-details-page .challenge-details-panel .btn.my-challenges-type-button.featured-badge-core {
+  border-color: rgba(145, 173, 255, 0.55);
+  background: rgba(67, 106, 230, 0.25);
+  color: #c8d6ff;
+}
+.challenge-details-page .btn-outline-danger {
+  --bs-btn-color: var(--text-error);
+  --bs-btn-border-color: var(--text-error);
 }
 
+/* Tables from Subapp 1 site.css */
+.challenge-details-panel .table-responsive { max-width: 100%; }
 .challenge-details-panel .table {
   --bs-table-bg: transparent;
   --bs-table-color: #f5f7ff;
@@ -248,31 +266,30 @@
   --bs-table-striped-bg: rgba(80, 99, 190, 0.09);
   --bs-table-striped-color: #f5f7ff;
   --bs-table-hover-bg: rgba(80, 99, 190, 0.18);
-  --bs-table-hover-color: #ffffff;
+  --bs-table-hover-color: #fff;
 }
-
 .challenge-details-panel .table thead th {
   background: rgba(60, 75, 145, 0.2);
   color: var(--home-blue);
   border-bottom-color: rgba(111, 132, 255, 0.35);
 }
-
 .challenge-details-panel .table td,
-.challenge-details-panel .table th {
-  vertical-align: middle;
-}
-
-.challenge-details-panel .table a {
-  color: #b8c8ff;
-}
-
-.challenge-details-panel .table a:hover {
-  color: #ffffff;
-}
+.challenge-details-panel .table th { vertical-align: middle; }
+.challenge-details-panel .table a:not(.btn) { color: #a9bfff; }
+.challenge-details-panel .table a:not(.btn):hover { color: #d0dcff; }
+/* Keep native Bootstrap .btn-sm dimensions; avoid custom min-width. */
 
 /* Notices */
-
-.challenge-details-notice,
+.challenge-details-notice {
+  padding: 14px 18px;
+  border: 1px solid #465477;
+  border-left: 4px solid #7089d9;
+  border-radius: 8px;
+  background-color: #1c2745;
+  color: #dce5ff;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
 .challenge-history-empty {
   padding: 18px 20px;
   border: 1px solid #465477;
@@ -283,61 +300,90 @@
   font-size: 0.95rem;
   line-height: 1.5;
 }
-
 .challenge-details-content > .challenge-details-notice {
   max-width: 100%;
   margin-bottom: 16px;
 }
 
 /* Responsive layout */
-
 @media (max-width: 991.98px) {
-  .challenge-details-overview {
-    grid-template-columns: 1fr;
-  }
-
-  .challenge-details-image {
-    min-height: 0;
-    height: 300px;
-  }
+  .challenge-details-overview { grid-template-columns: 1fr; }
+  .challenge-details-image { min-height: 0; height: 300px; }
 }
-
 @media (max-width: 575.98px) {
-  .challenge-details-page {
-    padding-top: 18px;
-  }
-
-  .challenge-details-image {
-    height: 210px;
-  }
-
-  .challenge-details-content {
-    padding: 25px 22px 30px;
-  }
-
-  .challenge-details-panel {
-    padding: 20px 16px;
-  }
-
-  .challenge-details-actions {
-    width: 100%;
-  }
-
-  .challenge-details-actions .btn {
-    width: 100%;
-  }
-
-  .challenge-details-title {
-    font-size: 1.6rem;
-  }
+  .challenge-details-page { padding-top: 18px; }
+  .challenge-details-image { height: 210px; }
+  .challenge-details-content { padding: 25px 22px 30px; }
+  .challenge-details-panel { padding: 20px 16px; }
+  .challenge-details-actions { width: 100%; }
+  .challenge-details-actions .btn { width: 100%; }
+  .challenge-details-title { font-size: 1.6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .challenge-details-actions .btn { transition: none; }
+  .challenge-details-actions .btn:hover { transform: none; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .challenge-details-actions .btn {
-    transition: none;
-  }
 
-  .challenge-details-actions .btn:hover {
-    transform: none;
-  }
+/* Match spacing between badge and title in Subapp 1 */
+.challenge-details-page .featured-challenge-badges {
+  margin-bottom: 20px;
+}
+
+/* Match Subapp 1 success alerts, overriding Bootstrap variables. */
+.challenge-details-page .alert-success {
+  --bs-alert-bg: #163d32;
+  --bs-alert-border-color: #278b68;
+  --bs-alert-color: #d5f9e9;
+  background-color: #163d32;
+  border-color: #278b68;
+  color: #d5f9e9;
+}
+
+/* Management type buttons: outline appearance without Bootstrap's blue fill. */
+.challenge-details-page .challenge-details-panel .btn.my-challenges-type-button {
+  --bs-btn-bg: transparent;
+  --bs-btn-hover-bg: transparent;
+  --bs-btn-active-bg: transparent;
+  --bs-btn-disabled-bg: transparent;
+  background: transparent;
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.challenge-details-page .challenge-details-panel .btn.my-challenges-type-button.featured-badge-community {
+  background: transparent;
+  border-color: rgba(192, 154, 255, 0.55);
+  color: #e0c8ff;
+  box-shadow: none;
+}
+
+.challenge-details-page .challenge-details-panel .btn.my-challenges-type-button.featured-badge-core,
+.challenge-details-page .challenge-details-panel .btn.my-challenges-type-button.featured-badge-core:hover,
+.challenge-details-page .challenge-details-panel .btn.my-challenges-type-button.featured-badge-core:focus,
+.challenge-details-page .challenge-details-panel .btn.my-challenges-type-button.featured-badge-core:active {
+  background: transparent;
+  border-color: rgba(145, 173, 255, 0.55);
+  color: #c8d6ff;
+  box-shadow: none;
+}
+
+/* Equal dimensions for Edit and Delete actions. */
+.challenge-details-page .challenge-details-panel .challenge-question-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  min-height: 29px;
+  padding: 0.25rem 0.75rem;
+  white-space: nowrap;
+}
+
+/* Community button hover */
+.challenge-details-page .challenge-details-panel .btn.my-challenges-type-button.featured-badge-community:hover {
+  background: #75439c;
+  border-color: #a77bda;
+  color: #ffffff;
+  box-shadow: none;
 }

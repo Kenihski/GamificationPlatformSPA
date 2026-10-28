@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
@@ -250,7 +249,12 @@ const MyChallengesPage = () => {
                         {isAdmin && (
                           <Button
                             size="sm"
-                            variant="outline-primary"
+                            variant="outline-secondary"
+                            className={`my-challenges-type-button ${
+                              challenge.isCore
+                                ? 'featured-badge-community'
+                                : 'featured-badge-core'
+                            }`}
                             disabled={actionMutation.isPending}
                             onClick={() =>
                               handleAction(

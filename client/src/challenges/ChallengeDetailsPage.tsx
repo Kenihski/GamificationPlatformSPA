@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
@@ -43,6 +42,7 @@ const ChallengeDetailsPage = () => {
   const [showQuestions, setShowQuestions] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
   const [managementError, setManagementError] = useState<string | null>(null)
+  const [managementSuccess, setManagementSuccess] = useState<string | null>(null)
 
   const challengeId = Number(id)
   const validId = Number.isInteger(challengeId) && challengeId > 0
@@ -108,7 +108,16 @@ const ChallengeDetailsPage = () => {
 
       return action
     },
-    onSuccess: async () => {
+    onSuccess: async (action) => {
+      const messages: Record<ManagementAction, string> = {
+        publish: 'Challenge published successfully.',
+        unpublish: 'Challenge unpublished successfully.',
+        makeCore: 'Challenge marked as Core.',
+        makeCommunity: 'Challenge marked as Community.',
+      }
+
+      setManagementSuccess(messages[action])
+
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: ['challenge', challengeId],
@@ -129,26 +138,8 @@ const ChallengeDetailsPage = () => {
   const handleManagementAction = (action: ManagementAction) => {
     if (!challenge || managementMutation.isPending) return
 
-    let confirmationMessage: string
-
-    switch (action) {
-      case 'publish':
-        confirmationMessage = 'Are you sure you want to publish this challenge?'
-        break
-      case 'unpublish':
-        confirmationMessage = 'Are you sure you want to unpublish this challenge?'
-        break
-      case 'makeCore':
-        confirmationMessage = 'Are you sure you want to make this a Core Challenge?'
-        break
-      case 'makeCommunity':
-        confirmationMessage = 'Are you sure you want to make this a Community Challenge?'
-        break
-    }
-
-    if (!window.confirm(confirmationMessage)) return
-
     setManagementError(null)
+    setManagementSuccess(null)
     managementMutation.mutate(action)
   }
 
@@ -197,6 +188,12 @@ const ChallengeDetailsPage = () => {
   return (
     <>
       <Container className="challenge-details-page">
+        {managementSuccess && (
+          <Alert variant="success" role="status">
+            {managementSuccess}
+          </Alert>
+        )}
+
         <Link to="/challenges" className="challenge-details-back">
           <span aria-hidden="true">←</span> Back to Challenges
         </Link>
@@ -323,7 +320,7 @@ const ChallengeDetailsPage = () => {
               {(challenge.isPublished || canManage) && (
                 <Link
                   to={`/challenges/${challengeId}/leaderboard`}
-                  className="btn btn-outline-primary"
+                  className="btn btn-outline-primary challenge-details-leaderboard-button"
                 >
                   View Leaderboard
                 </Link>
@@ -339,7 +336,7 @@ const ChallengeDetailsPage = () => {
         </section>
 
         {canManage && (
-          <section className="challenge-details-panel mt-4">
+          <section className="challenge-details-panel">
             <h2 className="challenge-details-section-title">
               Challenge Management
             </h2>
@@ -377,6 +374,7 @@ const ChallengeDetailsPage = () => {
                 {isAdmin &&
                   (challenge.isCore ? (
                     <Button
+                      variant="outline-secondary"
                       className="my-challenges-type-button featured-badge-community"
                       disabled={managementMutation.isPending}
                       onClick={() => handleManagementAction('makeCommunity')}
@@ -385,6 +383,7 @@ const ChallengeDetailsPage = () => {
                     </Button>
                   ) : (
                     <Button
+                      variant="outline-secondary"
                       className="my-challenges-type-button featured-badge-core"
                       disabled={managementMutation.isPending}
                       onClick={() => handleManagementAction('makeCore')}
@@ -532,7 +531,7 @@ const ChallengeDetailsPage = () => {
         )}
 
         {user && (
-          <section className="challenge-details-panel mt-4">
+          <section className="challenge-details-panel">
             <h2 className="challenge-details-section-title">Your History</h2>
 
             {historyPending ? (

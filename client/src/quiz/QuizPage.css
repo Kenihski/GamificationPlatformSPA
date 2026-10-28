@@ -3,7 +3,7 @@
 
 .quiz-page.quiz-take-page {
   max-width: 1200px;
-  padding: 24px 12px 60px;
+  padding: 36px 12px 60px;
 }
 
 .quiz-take-header {
@@ -207,8 +207,25 @@
   max-width: 600px;
 }
 
+/* Short Answer input */
 .quiz-short-answer .form-control {
   padding: 12px 14px;
+  background-color: #253154;
+  color: #ffffff;
+  border: 1px solid rgba(137, 160, 255, 0.65);
+  border-radius: 9px;
+}
+
+.quiz-short-answer .form-control:focus {
+  background-color: #2d3c65;
+  color: #ffffff;
+  border-color: #91adff;
+  box-shadow: 0 0 0 0.2rem rgba(111, 132, 255, 0.2);
+}
+
+.quiz-short-answer .form-control:disabled {
+  background-color: #202741;
+  color: #b9c4df;
 }
 
 /* Quiz action buttons */

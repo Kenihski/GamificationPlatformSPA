@@ -1,4 +1,3 @@
-
 .home-page {
   --home-text: #f5f7ff;
   --home-muted: #d1d9ee;
@@ -7,13 +6,12 @@
   --content-card-border: rgba(125, 151, 230, 0.55);
   --primary-gradient: linear-gradient(135deg, #3159cf, #6540c5);
   --primary-gradient-hover: linear-gradient(135deg, #3d65d9, #714bd1);
-  padding-bottom: 4rem;
 }
 
 /* Hero */
 
 .home-page .home-hero {
-  padding: 65px 15px 45px;
+  padding: 80px 15px 45px;
 }
 
 .home-page .home-subtitle {
@@ -656,3 +654,4 @@
 .home-page .featured-challenge-image {
   background-color: #0c1230;
 }
+

@@ -216,17 +216,18 @@ const QuizPage = () => {
     completeQuiz('submit')
   }
 
-  const handleExit = () => {
-    if (!quiz || completionStarted.current) return
+const handleExit = () => {
+  if (!quiz || completionStarted.current) return
 
-    const confirmed = window.confirm(
-      'Are you sure you want to exit? Your current answers will be submitted.'
-    )
+  const confirmed = window.confirm(
+    'Are you sure you want to exit the challenge?\n\n' +
+    'Your attempt will be submitted and unanswered questions will receive 0 points.'
+  )
 
-    if (confirmed) {
-      completeQuiz('exit')
-    }
+  if (confirmed) {
+    completeQuiz('exit')
   }
+}
 
   if (!validId) {
     return (
