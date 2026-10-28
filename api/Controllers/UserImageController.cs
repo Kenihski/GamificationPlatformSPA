@@ -1,4 +1,3 @@
-
 using System.Security.Claims;
 using GamificationPlatform.DAL;
 using GamificationPlatform.Models;
@@ -169,7 +168,11 @@ namespace GamificationPlatform.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllImages()
         {
-            var userImages = await _imageRepository.GetAllImagesAsync();
+            // Include the uploader's username.
+            var userImages = await _context.UserImages
+                .Include(image => image.User)
+                .ToListAsync();
+
             var defaultImages = await _imageService.GetDefaultImagesAsync();
 
             return Ok(new
@@ -178,6 +181,7 @@ namespace GamificationPlatform.Controllers
                 {
                     image.UserImageId,
                     image.UserId,
+                    UserName = image.User?.UserName,
                     image.FileName,
                     image.ImageUrl
                 }),

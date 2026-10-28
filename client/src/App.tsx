@@ -6,6 +6,7 @@ import ChallengeListPage from './challenges/ChallengeListPage'
 import ChallengeDetailsPage from './challenges/ChallengeDetailsPage'
 import MyChallengesPage from './challenges/MyChallengesPage'
 import MyImagesPage from './images/MyImagesPage'
+import AdminImagesPage from './images/AdminImagesPage'
 import CreateChallengePage from './challenges/CreateChallengePage'
 import EditChallengePage from './challenges/EditChallengePage'
 import CreateQuestionPage from './questions/CreateQuestionPage'
@@ -103,6 +104,10 @@ const App = () => {
           <Route
             path="/admin/achievements/:id/delete"
             element={<DeleteAchievementPage />}
+          />
+          <Route
+            path="/admin/images"
+            element={<AdminImagesPage />}
           />
         </Route>
       </Routes>

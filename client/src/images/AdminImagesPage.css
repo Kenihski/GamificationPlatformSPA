@@ -1,0 +1,239 @@
+.admin-images-page {
+  color: #f5f7ff;
+}
+
+/* Tabs */
+.admin-images-page .nav-tabs {
+  border-bottom: 1px solid #53649b;
+}
+
+.admin-images-page .nav-tabs .nav-link {
+  color: #b8c8e8;
+  background: transparent;
+  border-color: transparent;
+}
+
+.admin-images-page .nav-tabs .nav-link:hover {
+  color: #fff;
+  border-color: #53649b;
+}
+
+.admin-images-page .nav-tabs .nav-link.active {
+  color: #fff;
+  background: #253154;
+  border-color: #53649b #53649b #253154;
+}
+
+/* Image cards - same card border as Subapp 1 */
+.admin-images-page .admin-image-card {
+  position: relative;
+  overflow: visible;
+  background: #121a36;
+  border: 1px solid rgba(125, 151, 230, 0.55);
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+}
+
+.admin-images-page .admin-image-card .ratio {
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.admin-images-page .admin-image-card img {
+  object-fit: cover;
+}
+
+/* Three-dot menus */
+.admin-images-page .admin-image-options {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+}
+
+.admin-images-page .admin-image-options:has(.dropdown-menu.show) {
+  z-index: 1050;
+}
+
+.admin-images-page .admin-image-options-button {
+  background: #192344;
+  color: #fff;
+  border: 1px solid #7769c9;
+  box-shadow: none;
+}
+
+.admin-images-page .admin-image-options-button:hover,
+.admin-images-page .admin-image-options-button:focus,
+.admin-images-page .admin-image-options-button.show {
+  background: #303b70;
+  color: #fff;
+  border-color: #a58dff;
+  box-shadow: 0 0 0 0.15rem rgba(132, 111, 230, 0.2);
+}
+
+.admin-images-page .admin-image-options-button::after {
+  display: none;
+}
+
+.admin-images-page .admin-image-options-menu {
+  min-width: 240px;
+  background: #192344;
+  border: 1px solid #7185c3;
+  border-radius: 10px;
+  color: #edf1ff;
+  z-index: 1055;
+}
+
+.admin-images-page .admin-image-options-menu .text-secondary {
+  color: #b8c8e8 !important;
+}
+
+.admin-images-page .admin-image-options-menu .form-label {
+  color: #edf1ff;
+}
+
+/* Rename image input */
+.admin-images-page .admin-image-options-menu .form-control {
+  background: #253154;
+  border: 1px solid #7185c3;
+  border-radius: 9px;
+  color: #fff;
+}
+
+.admin-images-page .admin-image-options-menu .form-control:focus {
+  background: #2d3c65;
+  color: #fff;
+  border-color: #91adff;
+  box-shadow: 0 0 0 0.2rem rgba(111, 132, 255, 0.2);
+}
+
+/* Rename and delete buttons - Subapp 1 colors */
+.admin-images-page .btn-outline-primary {
+  border-color: #91adff;
+  color: #b8c8ff;
+}
+
+.admin-images-page .btn-outline-primary:hover {
+  background: rgba(77, 99, 202, 0.35);
+  border-color: #b2c1ff;
+  color: #fff;
+}
+
+.admin-images-page .btn-outline-danger {
+  --bs-btn-color: #ffb3bf;
+  --bs-btn-border-color: #ffb3bf;
+}
+
+/* Empty states */
+.admin-images-page .admin-images-empty {
+  background: #192344;
+  border: 1px solid #53649b;
+  border-radius: 6px;
+  color: #edf1ff;
+}
+
+.admin-images-page .admin-images-empty p {
+  color: #b8c8e8;
+}
+
+/* Feedback messages */
+.admin-images-page .alert-success {
+  background: #163d32;
+  border-color: #278b68;
+  color: #d5f9e9;
+}
+
+.admin-images-page .alert-danger {
+  background: #4a222b;
+  border-color: #c35b69;
+  color: #ffe1e5;
+}
+
+/* Primary buttons */
+.admin-images-page .btn-primary,
+.admin-images-modal .btn-primary {
+  background: linear-gradient(135deg, #3159cf, #6540c5);
+  border-color: #6d83ff;
+  color: #fff;
+}
+
+.admin-images-page .btn-primary:hover,
+.admin-images-modal .btn-primary:hover {
+  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  border-color: #9eabff;
+  color: #fff;
+}
+
+/* Modal - Subapp 1 styling */
+.admin-images-modal .modal-content {
+  background: #111833;
+  border: 1px solid rgba(111, 132, 255, 0.35);
+  color: #fff;
+}
+
+.admin-images-modal .modal-header,
+.admin-images-modal .modal-footer {
+  border-color: rgba(111, 132, 255, 0.35);
+}
+
+.admin-images-modal .form-control {
+  background: #253154;
+  border: 1px solid rgba(137, 160, 255, 0.65);
+  border-radius: 9px;
+  color: #fff;
+}
+
+.admin-images-modal .form-control:focus {
+  background: #2d3c65;
+  border-color: #a5b8ff;
+  color: #fff;
+  box-shadow: 0 0 0 0.2rem rgba(111, 132, 255, 0.2);
+}
+
+.admin-images-modal .form-control::placeholder {
+  color: #c0cbe4;
+}
+
+.admin-images-modal .form-text {
+  color: #b8c8e8;
+}
+
+.admin-images-modal .btn-secondary {
+  background: #303b65;
+  border-color: #56669b;
+  color: #fff;
+}
+
+.admin-images-modal .btn-secondary:hover {
+  background: #425184;
+  border-color: #7185c3;
+  color: #fff;
+}
+
+/* File input button */
+.admin-images-modal input[type="file"]::file-selector-button {
+  background: #fff;
+  color: #333;
+  border: 0;
+  border-right: 1px solid #7185c3;
+}
+
+.admin-images-modal input[type="file"]:hover::file-selector-button {
+  background: #e9ecef;
+  color: #333;
+}
+
+/* Modal close button */
+.admin-images-modal .btn-close {
+  filter: none;
+  opacity: 0.65;
+}
+
+.admin-images-modal .btn-close:hover {
+  opacity: 1;
+}
+
+/* Space below the image gallery */
+.admin-images-page {
+  padding-bottom: 15px;
+}
