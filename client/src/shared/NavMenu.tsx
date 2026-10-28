@@ -223,7 +223,7 @@ const NavMenu = () => {
               <hr className="my-3" />
 
               <h6 className="sidebar-heading text-muted fw-bold px-3 mb-3">
-                Administration
+                {isAdmin ? 'Administration' : 'Administration'}
               </h6>
 
               <Nav className="flex-column">
@@ -294,11 +294,10 @@ const NavMenu = () => {
         show={showLogin}
         onHide={closeLogin}
         centered
-        data-bs-theme="dark"
         className="auth-modal"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Login</Modal.Title>
+          <Modal.Title as="h5">Login</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -320,7 +319,7 @@ const NavMenu = () => {
             Don't have an account?{' '}
             <button
               type="button"
-              className="btn btn-link p-0 align-baseline"
+              className="btn btn-link p-0"
               onClick={openRegister}
             >
               Register here
@@ -333,11 +332,10 @@ const NavMenu = () => {
         show={showRegister}
         onHide={closeRegister}
         centered
-        data-bs-theme="dark"
         className="auth-modal"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Create Account</Modal.Title>
+          <Modal.Title as="h5">Create Account</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -350,7 +348,7 @@ const NavMenu = () => {
             Already have an account?{' '}
             <button
               type="button"
-              className="btn btn-link p-0 align-baseline"
+              className="btn btn-link p-0"
               onClick={() => {
                 setRegistrationSuccess(false)
                 openLogin()

@@ -19,7 +19,7 @@ const LoginPage = () => {
 
   return (
     <Container className="auth-page">
-      <h1>Login</h1>
+      <h2>Login</h2>
 
       {state?.from && (
         <Alert variant="info">

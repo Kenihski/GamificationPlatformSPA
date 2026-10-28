@@ -117,18 +117,6 @@ main a:not(.btn):hover {
   color: #d0dcff;
 }
 
-/* Modal links */
-.auth-modal .modal-body a,
-.auth-modal .modal-body .btn-link {
-  color: #a9bfff;
-  text-decoration: underline;
-}
-
-.auth-modal .modal-body a:hover,
-.auth-modal .modal-body .btn-link:hover {
-  color: #d0dcff;
-}
-
 /* Information messages */
 .alert-info {
   --bs-alert-bg: #192744;
@@ -186,13 +174,6 @@ main a:not(.btn):hover {
 .auth-page {
   padding-top: 1rem;
   padding-bottom: 1.5rem;
-}
-
-.auth-page h1 {
-  font-size: 1.75rem;
-  line-height: 1.2;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
 }
 
 /* Standalone page links */

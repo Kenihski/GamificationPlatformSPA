@@ -22,7 +22,7 @@ const RegisterPage = () => {
 
   return (
     <main className="container auth-page">
-      <h1>Register</h1>
+      <h2>Register</h2>
 
       <RegisterForm onSuccess={handleSuccess} />
 
