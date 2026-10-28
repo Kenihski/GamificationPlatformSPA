@@ -5,6 +5,7 @@ import AboutPage from './home/AboutPage'
 import ChallengeListPage from './challenges/ChallengeListPage'
 import ChallengeDetailsPage from './challenges/ChallengeDetailsPage'
 import MyChallengesPage from './challenges/MyChallengesPage'
+import MyImagesPage from './images/MyImagesPage'
 import CreateChallengePage from './challenges/CreateChallengePage'
 import EditChallengePage from './challenges/EditChallengePage'
 import CreateQuestionPage from './questions/CreateQuestionPage'
@@ -51,6 +52,7 @@ const App = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/my-challenges" element={<MyChallengesPage />} />
+          <Route path="/my-images" element={<MyImagesPage />} />
           <Route path="/challenges/create" element={<CreateChallengePage />} />
           <Route path="/challenges/:id/edit" element={<EditChallengePage />} />
           <Route

@@ -1,4 +1,3 @@
-
 import apiFetch from './ApiClient'
 
 export interface DefaultImage {
@@ -37,10 +36,17 @@ const uploadImage = async (file: File): Promise<string> => {
   return result.imageUrl
 }
 
+const deleteImage = async (id: number): Promise<void> => {
+  await apiFetch(`/api/images/${id}`, {
+    method: 'DELETE',
+  })
+}
+
 const ImageService = {
   getDefaultImages,
   getMyImages,
   uploadImage,
+  deleteImage,
 }
 
 export default ImageService

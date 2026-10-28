@@ -1,0 +1,86 @@
+.my-images-page {
+  color: #f5f7ff;
+}
+
+.my-images-page .card {
+  background: #121a36;
+  border: 1px solid rgba(125, 151, 230, 0.55);
+  color: #f5f7ff;
+  border-radius: 10px;
+}
+
+.my-images-page .form-control {
+  background-color: #182342;
+  border: 1px solid #52648f;
+  color: #f5f7ff;
+}
+
+.my-images-page .form-control:focus {
+  background-color: #182342;
+  color: #fff;
+  border-color: #91adff;
+  box-shadow: 0 0 0 0.2rem rgba(109, 131, 255, 0.2);
+}
+
+.my-images-page .btn-primary {
+  background: linear-gradient(135deg, #3159cf, #6540c5);
+  border-color: #6d83ff;
+}
+
+.my-images-page .btn-primary:hover {
+  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  border-color: #9eabff;
+}
+
+.my-images-card {
+  overflow: hidden;
+}
+
+.my-images-card img {
+  object-fit: cover;
+}
+
+.my-images-card .card-body {
+  padding: 1rem;
+}
+
+.my-images-page .btn-outline-danger {
+  color: #ff9ca6;
+  border-color: #c85a69;
+}
+
+.my-images-page .btn-outline-danger:hover {
+  color: #fff;
+  background-color: #a83f50;
+  border-color: #a83f50;
+}
+
+
+/* Feedback messages */
+.my-images-page .alert-success {
+  background: #163d32;
+  border-color: #278b68;
+  color: #d5f9e9;
+}
+
+.my-images-page .alert-info {
+  background: #192744;
+  border-color: #5978b8;
+  color: #dce7ff;
+}
+
+.my-images-page .alert-danger {
+  background: #4a222b;
+  border-color: #c35b69;
+  color: #ffe1e5;
+}
+
+/* Close button for dismissible alerts */
+.my-images-page .alert .btn-close {
+  filter: invert(1) grayscale(100%);
+  opacity: 0.7;
+}
+
+.my-images-page .alert .btn-close:hover {
+  opacity: 1;
+}
