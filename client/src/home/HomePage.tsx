@@ -175,17 +175,17 @@ const HomePage = () => {
 
         <Row className="g-4">
           <FeatureCard
-            title="Core Challenges"
-            description="Official challenges with individual leaderboards. Your first completed attempt also counts toward the overall Core Leaderboard."
+            title="Challenges"
+            description="Explore official Core Challenges and challenges created by the community. Choose a topic, test your knowledge and track your progress."
             to="/challenges"
             color="blue"
             icon={<BookIcon />}
           />
 
           <FeatureCard
-            title="Community Challenges"
-            description="User-created challenges with individual leaderboards. Results do not affect the overall Core Leaderboard."
-            to="/challenges"
+            title="About"
+            description="Learn how the Challenge Hub works. Find out how challenges, scoring, leaderboards and achievements fit together."
+            to="/about"
             color="purple"
             icon={<UsersIcon />}
           />
