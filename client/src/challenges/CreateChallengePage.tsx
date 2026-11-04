@@ -7,9 +7,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import ChallengeService from '../services/ChallengeService'
 import type { ChallengeSaveRequest } from '../services/ChallengeService'
 import ImageService from '../services/ImageService'
+import { useAuth } from '../auth/AuthContext'
 import './CreateChallengePage.css'
 
-type ImageCategory = 'none' | 'upload' | 'my' | 'default'
+type ImageCategory = 'upload' | 'my' | 'default'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
 
@@ -18,15 +19,18 @@ const getImageSource = (url: string) =>
 
 const CreateChallengePage = () => {
   const navigate = useNavigate()
+  const { user } = useAuth()
+  const isAdmin = user?.roles.includes('Admin') ?? false
   const queryClient = useQueryClient()
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [timeLimit, setTimeLimit] = useState('')
   const [showAnswers, setShowAnswers] = useState(false)
-  const [imageCategory, setImageCategory] = useState<ImageCategory>('none')
+  const [imageCategory, setImageCategory] = useState<ImageCategory>('default')
   const [imageUrl, setImageUrl] = useState('')
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [isCore, setIsCore] = useState(false)
   const [uploadedPreviewUrl, setUploadedPreviewUrl] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -49,6 +53,15 @@ const CreateChallengePage = () => {
     queryFn: ImageService.getDefaultImages,
   })
 
+  // Preselect Freyr's Question 1 image once defaults are available.
+  useEffect(() => {
+    if (imageCategory !== 'default' || imageUrl) return
+    const firstImage = defaultImagesQuery.data?.find(
+      (image) => image.name === 'Question 1'
+    )
+    if (firstImage) setImageUrl(firstImage.imageUrl)
+  }, [defaultImagesQuery.data, imageCategory, imageUrl])
+
   const myImagesQuery = useQuery({
     queryKey: ['my-images'],
     queryFn: ImageService.getMyImages,
@@ -68,6 +81,7 @@ const CreateChallengePage = () => {
         imageUrl: selectedImageUrl,
         timeLimitMinutes: timeLimit === '' ? null : Number(timeLimit),
         showAnswersAfterCompletion: showAnswers,
+        isCore: isAdmin && isCore,
       }
 
       return ChallengeService.createChallenge(data)
@@ -86,7 +100,7 @@ const CreateChallengePage = () => {
 
   const handleCategoryChange = (category: ImageCategory) => {
     setImageCategory(category)
-    setImageUrl('')
+    setImageUrl(category === 'default' ? (defaultImagesQuery.data?.find(image => image.name === 'Question 1')?.imageUrl ?? '') : '')
     setImageFile(null)
     setUploadedPreviewUrl(null)
   }
@@ -146,6 +160,24 @@ const CreateChallengePage = () => {
       )}
 
       <Form onSubmit={handleSubmit}>
+        {isAdmin ? (
+          <Form.Group className="mb-3" controlId="challengeType">
+            <Form.Label>Challenge Type</Form.Label>
+            <Form.Select
+              value={isCore ? 'core' : 'community'}
+              onChange={(event) => setIsCore(event.target.value === 'core')}
+            >
+              <option value="community">Community</option>
+              <option value="core">Core</option>
+            </Form.Select>
+            <Form.Text className="text-secondary">
+              You can change the type later only for challenges you created.
+            </Form.Text>
+          </Form.Group>
+        ) : (
+          <p className="text-secondary">Your challenge will be created as a Community challenge.</p>
+        )}
+
         <Form.Group className="mb-3" controlId="challengeTitle">
           <Form.Label>
             Title <span className="text-danger">*</span>
@@ -207,11 +239,14 @@ const CreateChallengePage = () => {
               handleCategoryChange(event.target.value as ImageCategory)
             }
           >
-            <option value="none">No image</option>
             <option value="upload">Upload new image...</option>
             <option value="my">My Images</option>
             <option value="default">Default Images</option>
           </Form.Select>
+          <Form.Text className="text-secondary" role="status">
+            Question 1 is selected by default. Choose another default image,
+            one of your images, or upload a new one.
+          </Form.Text>
 
           {imageCategory === 'upload' && (
             <div className="mt-3">
@@ -282,10 +317,13 @@ const CreateChallengePage = () => {
             </div>
           )}
 
+          <div role="status" className="visually-hidden">
+            {previewUrl ? 'Challenge image preview updated.' : 'Choose an image to preview.'}
+          </div>
           {previewUrl && (
             <img
               src={previewUrl}
-              alt="Selected challenge preview"
+              alt="Selected challenge image preview"
               className="challenge-image-preview mt-3"
             />
           )}
