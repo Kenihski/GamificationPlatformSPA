@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
@@ -75,6 +75,10 @@ const CreateQuestionPage = () => {
   const [uploadedPreviewUrl, setUploadedPreviewUrl] =
     useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const errorSummaryRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (errorMessage) errorSummaryRef.current?.focus()
+  }, [errorMessage])
 
   useEffect(() => {
     if (!imageFile) return
@@ -375,7 +379,7 @@ const CreateQuestionPage = () => {
       </Alert>
 
       {errorMessage && (
-        <Alert variant="danger" role="alert">
+        <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">
           {errorMessage}
         </Alert>
       )}
