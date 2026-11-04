@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Alert, Button, Form } from 'react-bootstrap'
 import { useAuth } from './AuthContext'
@@ -19,6 +19,10 @@ const LoginForm = ({
   const [usernameOrEmail, setUsernameOrEmail] = useState(initialUsername)
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const errorSummaryRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (error) errorSummaryRef.current?.focus()
+  }, [error])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
@@ -47,7 +51,7 @@ const LoginForm = ({
   return (
     <Form onSubmit={handleSubmit}>
       {error && (
-        <Alert variant="danger" role="alert">
+        <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">
           {error}
         </Alert>
       )}
