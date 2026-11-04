@@ -16,8 +16,7 @@ type ChallengeAction =
   | 'delete'
   | 'publish'
   | 'unpublish'
-  | 'make-core'
-  | 'make-community'
+  | 'change-type'
 
 interface ActionRequest {
   id: number
@@ -50,10 +49,8 @@ const MyChallengesPage = () => {
           return ChallengeService.publishChallenge(id)
         case 'unpublish':
           return ChallengeService.unpublishChallenge(id)
-        case 'make-core':
-          return ChallengeService.makeCore(id)
-        case 'make-community':
-          return ChallengeService.makeCommunity(id)
+        case 'change-type':
+          return ChallengeService.changeType(id)
       }
     },
     onSuccess: async () => {
@@ -246,26 +243,15 @@ const MyChallengesPage = () => {
                               : 'Publish'}
                         </Button>
 
-                        {isAdmin && (
+                        {isAdmin && Number(user?.userId) === challenge.createdByUserId && (
                           <Button
                             size="sm"
-                            variant="outline-secondary"
-                            className={`my-challenges-type-button ${
-                              challenge.isCore
-                                ? 'featured-badge-community'
-                                : 'featured-badge-core'
-                            }`}
+                            variant="outline-primary"
+                            className="my-challenges-type-button"
                             disabled={actionMutation.isPending}
-                            onClick={() =>
-                              handleAction(
-                                challenge.challengeId,
-                                challenge.isCore
-                                  ? 'make-community'
-                                  : 'make-core'
-                              )
-                            }
+                            onClick={() => handleAction(challenge.challengeId, 'change-type')}
                           >
-                            {challenge.isCore ? 'Community' : 'Core'}
+                            Change Type
                           </Button>
                         )}
                       </div>
