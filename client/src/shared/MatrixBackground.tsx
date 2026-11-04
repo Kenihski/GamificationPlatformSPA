@@ -5,7 +5,13 @@ import './MatrixBackground.css'
 
 const characters = '01{}[]();<>/=#@$'
 const fontSize = 16
-const storageKey = 'matrix-animation-enabled'
+const cookieName = 'matrix-animation-enabled'
+const getSavedPreference = (): boolean | null => {
+  const value = document.cookie.split('; ').find((item) =>
+    item.startsWith(`${cookieName}=`)
+  )?.split('=')[1]
+  return value === 'true' ? true : value === 'false' ? false : null
+}
 
 interface MatrixColumn {
   y: number
@@ -17,14 +23,21 @@ const MatrixBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const [enabled, setEnabled] = useState(() => {
-    try {
-      return localStorage.getItem(storageKey) !== 'false'
-    } catch {
-      return true
-    }
+    const saved = getSavedPreference()
+    return saved ?? !window.matchMedia('(prefers-reduced-motion: reduce)').matches
   })
 
   const [tooltipDismissed, setTooltipDismissed] = useState(false)
+
+  // Follow OS motion changes only until a visitor explicitly chooses a setting.
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const onChange = () => {
+      if (getSavedPreference() === null) setEnabled(!media.matches)
+    }
+    media.addEventListener('change', onChange)
+    return () => media.removeEventListener('change', onChange)
+  }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -131,11 +144,8 @@ const MatrixBackground = () => {
 
     setEnabled(nextEnabled)
 
-    try {
-      localStorage.setItem(storageKey, String(nextEnabled))
-    } catch {
-      // The toggle still works without browser storage.
-    }
+    const secure = window.location.protocol === 'https:' ? '; Secure' : ''
+    document.cookie = `${cookieName}=${nextEnabled}; Max-Age=7776000; Path=/; SameSite=Lax${secure}`
   }
 
   const action = enabled
