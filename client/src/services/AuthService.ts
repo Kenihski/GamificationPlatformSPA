@@ -93,12 +93,17 @@ const register = async (data: RegisterRequest): Promise<void> => {
     if (errorData && typeof errorData === 'object') {
       const error = errorData as {
         message?: string
-        errors?: string[]
+        errors?: string[] | Record<string, string[]>
         title?: string
       }
+      const details = error.errors
+        ? Array.isArray(error.errors)
+          ? error.errors
+          : Object.values(error.errors).flat()
+        : []
 
       throw new Error(
-        error.errors?.join(' ') ||
+        details.join(' ') ||
         error.message ||
         error.title ||
         'Registration failed. Please try again.'
