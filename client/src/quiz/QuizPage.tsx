@@ -213,6 +213,23 @@ const QuizPage = () => {
   }
 
   const handleSubmit = () => {
+    if (!quiz || completionStarted.current) return
+
+    const unanswered = quiz.questions.filter((question) => {
+      if (question.questionType === 'ShortAnswer') {
+        return !(textAnswersRef.current[question.questionId] ?? '').trim()
+      }
+      return (answersRef.current[question.questionId] ?? []).length === 0
+    }).length
+
+    if (unanswered > 0) {
+      const total = quiz.questions.length
+      const message = unanswered === total
+        ? `You haven't answered any of the ${total} questions. Are you sure you want to submit? Unanswered questions will receive 0 points.`
+        : `You have left ${unanswered} out of ${total} questions unanswered. Are you sure you want to submit? Unanswered questions will receive 0 points.`
+      if (!window.confirm(message)) return
+    }
+
     completeQuiz('submit')
   }
 
