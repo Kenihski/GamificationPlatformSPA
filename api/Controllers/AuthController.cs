@@ -43,6 +43,8 @@ namespace GamificationPlatform.Controllers
 
             if (user == null)
             {
+                // Keep the client response generic; do not reveal account existence.
+                _logger.LogWarning("Login attempt failed for unknown credentials.");
                 return Unauthorized("Invalid username/email or password.");
             }
 
@@ -123,6 +125,7 @@ namespace GamificationPlatform.Controllers
             // Check whether username or email is already registered.
             if (await _userManager.FindByNameAsync(dto.Username) != null)
             {
+                _logger.LogWarning("Registration rejected because username is already in use.");
                 return BadRequest(new
                 {
                     message = "This username is already taken."
@@ -131,6 +134,7 @@ namespace GamificationPlatform.Controllers
 
             if (await _userManager.FindByEmailAsync(dto.Email) != null)
             {
+                _logger.LogWarning("Registration rejected because email is already in use.");
                 return BadRequest(new
                 {
                     message = "This email is already registered."
