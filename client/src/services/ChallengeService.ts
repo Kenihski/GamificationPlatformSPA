@@ -7,6 +7,7 @@ export interface ChallengeSaveRequest {
   imageUrl: string
   timeLimitMinutes: number | null
   showAnswersAfterCompletion: boolean
+  isCore?: boolean
 }
 
 const getChallenges = async (
@@ -81,16 +82,8 @@ const unpublishChallenge = async (id: number): Promise<void> => {
   })
 }
 
-const makeCore = async (id: number): Promise<void> => {
-  await apiFetch(`/api/challenges/${id}/make-core`, {
-    method: 'POST',
-  })
-}
-
-const makeCommunity = async (id: number): Promise<void> => {
-  await apiFetch(`/api/challenges/${id}/make-community`, {
-    method: 'POST',
-  })
+const changeType = async (id: number): Promise<void> => {
+  await apiFetch(`/api/challenges/${id}/change-type`, { method: 'POST' })
 }
 
 const ChallengeService = {
@@ -103,8 +96,7 @@ const ChallengeService = {
   deleteChallenge,
   publishChallenge,
   unpublishChallenge,
-  makeCore,
-  makeCommunity,
+  changeType,
 }
 
 export default ChallengeService
