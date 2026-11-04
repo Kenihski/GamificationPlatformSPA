@@ -21,5 +21,8 @@ namespace GamificationPlatform.DTOs
         public int? TimeLimitMinutes { get; set; }
 
         public bool ShowAnswersAfterCompletion { get; set; } = true;
+
+        // Only an administrator may set this during challenge creation.
+        public bool IsCore { get; set; } = false;
     }
 }
