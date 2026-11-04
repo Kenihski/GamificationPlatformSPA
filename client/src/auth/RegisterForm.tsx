@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Alert, Button, Form } from 'react-bootstrap'
 import AuthService from '../services/AuthService'
@@ -18,6 +18,10 @@ const RegisterForm = ({ onSuccess, modal = false }: RegisterFormProps) => {
   })
 
   const [error, setError] = useState('')
+  const errorSummaryRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (error) errorSummaryRef.current?.focus()
+  }, [error])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -70,7 +74,7 @@ const RegisterForm = ({ onSuccess, modal = false }: RegisterFormProps) => {
   return (
     <Form onSubmit={handleSubmit}>
       {error && (
-        <Alert variant="danger" role="alert">
+        <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">
           {error}
         </Alert>
       )}
