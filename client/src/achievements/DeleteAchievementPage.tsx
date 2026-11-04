@@ -106,11 +106,10 @@ const DeleteAchievementPage = () => {
           </div>
 
           <Alert variant="danger">
-            Deleting this achievement will also remove it from users who
-            have already unlocked it.
+            Deleting this achievement removes existing unlocks and their AP contributions, which may change the Hall of Fame rankings.
           </Alert>
 
-          {error && <Alert variant="danger">{error}</Alert>}
+          {error && <Alert variant="danger" role="alert">{error}</Alert>}
 
           <div className="d-flex gap-2">
             <Button
@@ -123,7 +122,7 @@ const DeleteAchievementPage = () => {
             >
               {deleteMutation.isPending
                 ? 'Deleting...'
-                : 'Delete Achievement'}
+                : 'Confirm deletion'}
             </Button>
 
             <Link
