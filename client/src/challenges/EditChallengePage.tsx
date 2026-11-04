@@ -197,6 +197,10 @@ const EditForm = ({ challenge }: EditFormProps) => {
   return (
     <Container className="create-challenge-page py-4">
       <h2 className="my-4">Update Challenge</h2>
+      <Alert variant="warning" role="status">
+        Updating this challenge keeps its questions, completed attempts and scores.
+        Changing answer-review settings also affects access to earlier attempt reviews.
+      </Alert>
 
       {errorMessage && (
         <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">{errorMessage}</Alert>
