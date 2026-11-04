@@ -229,3 +229,16 @@
   border-color: #9eabff;
   color: #ffffff;
 }
+
+/* Wide-screen quick navigation; smaller screens keep the full sidebar menu. */
+@media (min-width: 1200px) {
+  .site-navbar .site-navbar-primary {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .site-navbar .site-navbar-primary .nav-link {
+    white-space: nowrap;
+    font-weight: 600;
+  }
+}
