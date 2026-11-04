@@ -35,10 +35,14 @@ const NavMenu = () => {
 
   const closeMenu = () => setShowMenu(false)
 
-  const handleRegistrationSuccess = (username: string) => {
-    setRegisteredUsername(username)
+  const handleRegistrationSuccess = (_username: string) => {
     closeRegister()
-    openLogin()
+    setRegisteredUsername('')
+    navigate('/login', {
+      state: {
+        message: 'Registration successful! Your account has been created. You can now log in.',
+      },
+    })
   }
 
   const handleLogout = () => {
