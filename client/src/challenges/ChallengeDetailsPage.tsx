@@ -17,8 +17,7 @@ import './ChallengeDetailsPage.css'
 type ManagementAction =
   | 'publish'
   | 'unpublish'
-  | 'makeCore'
-  | 'makeCommunity'
+  | 'changeType'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
 
@@ -95,11 +94,8 @@ const ChallengeDetailsPage = () => {
         case 'unpublish':
           await ChallengeService.unpublishChallenge(challengeId)
           break
-        case 'makeCore':
-          await ChallengeService.makeCore(challengeId)
-          break
-        case 'makeCommunity':
-          await ChallengeService.makeCommunity(challengeId)
+        case 'changeType':
+          await ChallengeService.changeType(challengeId)
           break
       }
 
@@ -109,8 +105,7 @@ const ChallengeDetailsPage = () => {
       const messages: Record<ManagementAction, string> = {
         publish: 'Challenge published successfully.',
         unpublish: 'Challenge unpublished successfully.',
-        makeCore: 'Challenge marked as Core.',
-        makeCommunity: 'Challenge marked as Community.',
+        changeType: 'Challenge type changed successfully.',
       }
 
       setManagementSuccess(messages[action])
@@ -368,26 +363,15 @@ const ChallengeDetailsPage = () => {
               </div>
 
               <div className="d-flex gap-2 flex-wrap">
-                {isAdmin &&
-                  (challenge.isCore ? (
-                    <Button
-                      variant="outline-secondary"
-                      className="my-challenges-type-button featured-badge-community"
-                      disabled={managementMutation.isPending}
-                      onClick={() => handleManagementAction('makeCommunity')}
-                    >
-                      Community
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="outline-secondary"
-                      className="my-challenges-type-button featured-badge-core"
-                      disabled={managementMutation.isPending}
-                      onClick={() => handleManagementAction('makeCore')}
-                    >
-                      Core
-                    </Button>
-                  ))}
+                {isAdmin && isOwner && (
+                  <Button
+                    variant="outline-primary"
+                    disabled={managementMutation.isPending}
+                    onClick={() => handleManagementAction('changeType')}
+                  >
+                    Change Type
+                  </Button>
+                )}
 
                 {challenge.isPublished ? (
                   <Button
