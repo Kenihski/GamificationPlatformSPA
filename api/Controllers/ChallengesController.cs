@@ -252,6 +252,25 @@ namespace GamificationPlatform.Controllers
                 return Unauthorized();
             }
 
+            // Match MVC: use Question 1 when no image was submitted.
+            if (string.IsNullOrWhiteSpace(dto.ImageUrl))
+            {
+                var defaults = await _imageService.GetDefaultImagesAsync();
+                dto.ImageUrl = defaults
+                    .FirstOrDefault(image => image.Name == "Question 1")
+                    ?.ImageUrl ?? string.Empty;
+
+                if (string.IsNullOrWhiteSpace(dto.ImageUrl))
+                {
+                    ModelState.AddModelError(nameof(dto.ImageUrl),
+                        "The default image is unavailable. Please choose another image.");
+                    _logger.LogWarning(
+                        "Challenge creation rejected: default image unavailable for user {UserId}.",
+                        userId);
+                    return ValidationProblem(ModelState);
+                }
+            }
+
             // Users may select default images or their own uploads.
             if (!await _imageService.IsAllowedImageAsync(
                 dto.ImageUrl, userId))
@@ -273,7 +292,7 @@ namespace GamificationPlatform.Controllers
                     dto.ShowAnswersAfterCompletion,
                 CreatedByUserId = userId,
                 IsPublished = false,
-                IsCore = false,
+                IsCore = User.IsInRole("Admin") && dto.IsCore,
                 MaxPoints = 0
             };
 
@@ -474,58 +493,32 @@ namespace GamificationPlatform.Controllers
             return NoContent();
         }
 
-        [HttpPost("{id:int}/make-core")]
+        // Only the administrator who created a challenge may change its type.
+        [HttpPost("{id:int}/change-type")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> MakeCore(int id)
+        public async Task<IActionResult> ChangeType(int id)
         {
-            var challenge =
-                await _challengeRepository.GetChallengeByIdAsync(id);
+            if (!TryGetCurrentUserId(out int userId))
+                return Unauthorized();
 
+            var challenge = await _challengeRepository.GetChallengeByIdAsync(id);
             if (challenge == null)
-            {
                 return NotFound();
-            }
 
-            if (challenge.IsCore)
+            if (challenge.CreatedByUserId != userId)
             {
-                return NoContent();
+                _logger.LogWarning(
+                    "Admin {UserId} attempted to change challenge {ChallengeId} owned by another user.",
+                    userId, id);
+                return Forbid();
             }
 
-            challenge.IsCore = true;
-
+            challenge.IsCore = !challenge.IsCore;
             await _challengeRepository.SaveChangesAsync();
 
             _logger.LogInformation(
-                "Challenge {ChallengeId} was marked as Core.",
-                id);
-
-            return NoContent();
-        }
-
-        [HttpPost("{id:int}/make-community")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> MakeCommunity(int id)
-        {
-            var challenge =
-                await _challengeRepository.GetChallengeByIdAsync(id);
-
-            if (challenge == null)
-            {
-                return NotFound();
-            }
-
-            if (!challenge.IsCore)
-            {
-                return NoContent();
-            }
-
-            challenge.IsCore = false;
-
-            await _challengeRepository.SaveChangesAsync();
-
-            _logger.LogInformation(
-                "Challenge {ChallengeId} was marked as Community.",
-                id);
+                "Admin {UserId} changed challenge {ChallengeId} type to {Type}.",
+                userId, id, challenge.IsCore ? "Core" : "Community");
 
             return NoContent();
         }
