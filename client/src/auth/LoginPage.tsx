@@ -28,7 +28,7 @@ const LoginPage = () => {
       )}
 
       {state?.message && (
-        <Alert variant="success">
+        <Alert variant="success" role="status">
           {state.message}
         </Alert>
       )}
