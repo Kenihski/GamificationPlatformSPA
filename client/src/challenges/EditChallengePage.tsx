@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Alert, Button, Container, Form, Spinner } from 'react-bootstrap'
@@ -40,6 +40,10 @@ const EditForm = ({ challenge }: EditFormProps) => {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [uploadedPreviewUrl, setUploadedPreviewUrl] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const errorSummaryRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (errorMessage) errorSummaryRef.current?.focus()
+  }, [errorMessage])
   const [imageInitialized, setImageInitialized] = useState(false)
 
   const defaultImagesQuery = useQuery({
@@ -195,7 +199,7 @@ const EditForm = ({ challenge }: EditFormProps) => {
       <h2 className="my-4">Update Challenge</h2>
 
       {errorMessage && (
-        <Alert variant="danger">{errorMessage}</Alert>
+        <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">{errorMessage}</Alert>
       )}
 
       <Form onSubmit={handleSubmit}>
