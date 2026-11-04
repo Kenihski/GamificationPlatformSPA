@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Challenge } from '../types/Challenge'
 import './HomePage.css'
@@ -47,6 +47,16 @@ interface FeaturedChallengesProps {
 
 const FeaturedChallenges = ({ challenges }: FeaturedChallengesProps) => {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
+
+  useEffect(() => {
+    if (paused || challenges.length < 2 ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const timer = window.setInterval(() => {
+      setActiveIndex((index) => (index + 1) % challenges.length)
+    }, 5000)
+    return () => window.clearInterval(timer)
+  }, [paused, challenges.length])
 
   if (challenges.length === 0) {
     return (
@@ -77,7 +87,14 @@ const FeaturedChallenges = ({ challenges }: FeaturedChallengesProps) => {
     <div className="featured-challenges">
       <h2 className="featured-challenges-title">Featured Challenges</h2>
 
-      <div className="featured-carousel">
+      <div className="featured-carousel"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false)
+        }}
+      >
         <div className="featured-carousel-frame">
           <div className="featured-challenge-card">
             <div className="featured-challenge-image">
