@@ -33,7 +33,34 @@ const apiFetch = async (
       throw new Error('You do not have permission to perform this action.')
     }
 
-    throw new Error(`API request failed: ${response.status}`)
+    // API validation errors are structured ProblemDetails objects.
+    // Show meaningful validation messages without exposing server exception details.
+    const contentType = response.headers.get('content-type') ?? ''
+    if (contentType.includes('json')) {
+      const payload: unknown = await response.json().catch(() => null)
+      if (payload && typeof payload === 'object') {
+        const problem = payload as {
+          title?: string
+          detail?: string
+          message?: string
+          errors?: Record<string, string[]> | string[]
+        }
+        const fieldErrors = problem.errors
+          ? Array.isArray(problem.errors)
+            ? problem.errors
+            : Object.values(problem.errors).flat()
+          : []
+        const message = fieldErrors.join(' ') ||
+          problem.message || problem.detail || problem.title
+        if (message) throw new Error(message)
+      }
+    }
+
+    throw new Error(
+      response.status >= 500
+        ? 'Something went wrong on the server. Please try again later.'
+        : `API request failed: ${response.status}`
+    )
   }
 
   return response
