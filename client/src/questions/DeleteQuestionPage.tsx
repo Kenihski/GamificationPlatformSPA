@@ -121,8 +121,7 @@ const DeleteQuestionPage = () => {
       <h2 className="my-4">Delete Question</h2>
 
       <Alert variant="warning">
-        <strong>Warning:</strong> Deleting this question will reset
-        all previous attempts and scores for this challenge.
+        <strong>Warning:</strong> Deleting this question removes the challenge's attempt history, submitted answers and scores. This cannot be undone.
       </Alert>
 
       {isLastPublishedQuestion && (
@@ -235,7 +234,7 @@ const DeleteQuestionPage = () => {
         >
           {deleteMutation.isPending
             ? 'Deleting...'
-            : 'Delete Question'}
+            : 'Confirm deletion'}
         </Button>
 
         <Link
