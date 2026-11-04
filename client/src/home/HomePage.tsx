@@ -51,6 +51,14 @@ const AwardIcon = () => (
   </svg>
 )
 
+const InfoIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 11v6M12 7h.01" />
+  </svg>
+)
+
 interface FeatureCardProps {
   title: string
   description: string
@@ -187,7 +195,7 @@ const HomePage = () => {
             description="Learn how the Challenge Hub works. Find out how challenges, scoring, leaderboards and achievements fit together."
             to="/about"
             color="purple"
-            icon={<UsersIcon />}
+            icon={<InfoIcon />}
           />
 
           <FeatureCard
