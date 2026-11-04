@@ -27,3 +27,44 @@ body {
   --bs-btn-color: #d1d9ee;
   --bs-btn-border-color: #91a5df;
 }
+
+/* Accessible keyboard focus on interactive controls (not decorative elements). */
+:where(a, button, input, select, textarea, [role="button"]):focus-visible {
+  outline: 3px solid #b8c8ff;
+  outline-offset: 3px;
+}
+
+/* Consistent accessible destructive actions across SPA forms. */
+.btn-outline-danger {
+  --bs-btn-color: #ffb0a8;
+  --bs-btn-border-color: #ff756b;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #852b36;
+  --bs-btn-hover-border-color: #ff756b;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #852b36;
+  --bs-btn-active-border-color: #ff756b;
+}
+
+/* Improve contrast of errors and feedback against dark panels. */
+.alert-danger { color: #ffe2de; background-color: #602932; border-color: #ff756b; }
+.alert-warning { color: #fff0c5; background-color: #493917; border-color: #e3ad48; }
+.alert-success { color: #e2ffe9; background-color: #1e5338; border-color: #65c493; }
+.form-control.is-invalid, .form-select.is-invalid { border-color: #ff756b; }
+
+/* Shared editing and destructive-action page dimensions. */
+.question-form-page, .achievement-form-page, .create-challenge-page {
+  max-width: 960px;
+  padding-inline: clamp(12px, 3vw, 24px);
+}
+.question-form-page img, .achievement-form-page img, .create-challenge-page img {
+  max-width: 100%;
+  height: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
