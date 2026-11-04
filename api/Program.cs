@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,7 @@ builder.Host.UseSerilog((context, configuration) =>
 
 // Register API controllers.
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi();
 
 // Configure the separate SQLite database.
@@ -132,6 +135,34 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+// Log unexpected failures without returning exception or database details to clients.
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var failure = context.Features.Get<IExceptionHandlerFeature>();
+        var logger = context.RequestServices
+            .GetRequiredService<ILoggerFactory>()
+            .CreateLogger("UnhandledApiException");
+
+        if (failure != null)
+        {
+            logger.LogError(failure.Error,
+                "Unhandled exception for {Method} {Path}, trace {TraceId}.",
+                context.Request.Method, context.Request.Path, context.TraceIdentifier);
+        }
+
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        await context.Response.WriteAsJsonAsync(new ProblemDetails
+        {
+            Status = StatusCodes.Status500InternalServerError,
+            Title = "An unexpected error occurred.",
+            Detail = "Please try again later.",
+            Instance = context.Request.Path
+        });
+    });
+});
 
 app.UseSerilogRequestLogging();
 
