@@ -109,11 +109,29 @@ const AchievementNotifications = () => {
     return () => media.removeEventListener('change', onResize)
   }, [])
 
+  // Keep notification placement aligned below the actual responsive navbar.
+  useEffect(() => {
+    const navbar = document.querySelector<HTMLElement>('.site-navbar')
+    if (!navbar) return
+    const update = () => {
+      document.documentElement.style.setProperty(
+        '--site-navbar-height', `${navbar.getBoundingClientRect().height}px`)
+    }
+    update()
+    const observer = new ResizeObserver(update)
+    observer.observe(navbar)
+    return () => {
+      observer.disconnect()
+      document.documentElement.style.removeProperty('--site-navbar-height')
+    }
+  }, [])
+
   useEffect(() => {
     if (!isAuthenticated || user?.roles.includes('Admin')) {
       seenIds.current.clear()
       queueRef.current = []
       setQueue([])
+      setVisibleCount(1)
       return
     }
 
