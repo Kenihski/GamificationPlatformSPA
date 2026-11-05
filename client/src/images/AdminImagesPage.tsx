@@ -239,6 +239,7 @@ const AdminImagesPage = () => {
           />
         </div>
 
+        <div className="px-2 py-2 text-break small">{image.name}</div>
         <Dropdown align="end" className="admin-image-options">
           <Dropdown.Toggle
             variant="light"
