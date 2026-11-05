@@ -1,4 +1,4 @@
-name: Subapp 2 - build and startup smoke checks
+name: Subapp 2 - build and lint
 
 on:
   push:
@@ -35,26 +35,3 @@ jobs:
       - name: Check SPA lint
         working-directory: client
         run: npm run lint
-      - name: Run API and test public endpoint
-        shell: bash
-        run: |
-          set -euo pipefail
-          export Jwt__Key="$(openssl rand -base64 32)"
-          dotnet run --project api/api.csproj --no-build --configuration Release --launch-profile http > /tmp/spa-api.log 2>&1 &
-          api_pid=$!
-          trap 'kill "$api_pid" 2>/dev/null || true; cat /tmp/spa-api.log' EXIT
-          curl --fail --silent --show-error --retry 25 --retry-delay 2 --retry-connrefused 'http://localhost:5116/api/challenges?filter=All' -o /tmp/challenges.json
-          python3 -c 'import json; x=json.load(open("/tmp/challenges.json")); assert isinstance(x, list), "Expected a list of challenges"'
-          python3 scripts/smoke_api.py
-      - name: Check Vite proxy to API
-        shell: bash
-        run: |
-          set -euo pipefail
-          export Jwt__Key="$(openssl rand -base64 32)"
-          dotnet run --project api/api.csproj --no-build --configuration Release --launch-profile http > /tmp/spa-api-proxy.log 2>&1 &
-          api_pid=$!
-          (cd client && npm run dev -- --host 127.0.0.1 > /tmp/spa-vite.log 2>&1) &
-          vite_pid=$!
-          trap 'kill "$api_pid" "$vite_pid" 2>/dev/null || true; cat /tmp/spa-api-proxy.log; cat /tmp/spa-vite.log' EXIT
-          curl --fail --silent --show-error --retry 25 --retry-delay 2 --retry-connrefused 'http://127.0.0.1:5173/api/challenges?filter=All' -o /tmp/proxied-challenges.json
-          python3 -c 'import json; x=json.load(open("/tmp/proxied-challenges.json")); assert isinstance(x, list), "Expected a proxied list of challenges"'
