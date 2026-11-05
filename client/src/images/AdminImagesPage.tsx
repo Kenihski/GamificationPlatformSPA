@@ -156,7 +156,7 @@ const AdminImagesPage = () => {
   const confirmDelete = () =>
     window.confirm(
       'Are you sure you want to permanently delete this image? ' +
-      'It will also be removed from any challenges or questions that use it.'
+      'Challenges and questions using it will show the Question 1 default image instead. This cannot be undone.'
     )
 
   const handleDeleteDefault = (id: number) => {
@@ -189,12 +189,13 @@ const AdminImagesPage = () => {
           />
         </div>
 
+        <div className="px-2 py-2 text-break small">{image.fileName}</div>
         <Dropdown align="end" className="admin-image-options">
           <Dropdown.Toggle
             variant="light"
             size="sm"
             className="admin-image-options-button"
-            aria-label="Image options"
+            aria-label={`Options for ${image.fileName}`}
           >
             &#8942;
           </Dropdown.Toggle>
@@ -243,7 +244,7 @@ const AdminImagesPage = () => {
             variant="light"
             size="sm"
             className="admin-image-options-button"
-            aria-label="Image options"
+            aria-label={`Options for ${image.name}`}
           >
             &#8942;
           </Dropdown.Toggle>
