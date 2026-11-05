@@ -91,9 +91,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <AuthModalProvider>
+        <a className="skip-to-main" href="#main-content">Skip to main content</a>
         <NavMenu />
         <AchievementNotifications />
 
+        <main id="main-content" tabIndex={-1}>
         <Suspense fallback={<p className="text-center mt-4">Loading...</p>}>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -168,6 +170,7 @@ const App = () => {
             </Route>
           </Routes>
         </Suspense>
+        </main>
       </AuthModalProvider>
     </BrowserRouter>
   )
