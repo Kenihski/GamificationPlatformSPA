@@ -242,3 +242,30 @@
     font-weight: 600;
   }
 }
+
+/* Keyboard-only skip link, presented before the shared navigation. */
+.skip-to-main {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.skip-to-main:focus {
+  position: relative;
+  z-index: 2000;
+  display: block;
+  width: auto;
+  height: auto;
+  margin: .5rem;
+  padding: .5rem 1rem;
+  overflow: visible;
+  clip-path: none;
+  white-space: normal;
+  background: #111833;
+  color: #fff;
+  outline: 2px solid #a5b4fc;
+  border-radius: 6px;
+}
