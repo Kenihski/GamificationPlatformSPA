@@ -81,8 +81,8 @@ In the Development environment, the database is seeded with an administrator acc
 - Check `api/Logs/log-*.txt` after the API starts. The folder is generated at runtime and intentionally not committed.
 - Check browser console/network and run desktop/mobile/keyboard-accessibility scenarios.
 
-## 6. Automated verification
+## 6. Build verification
 
-The repository workflow `.github/workflows/subapp2-ci.yml` builds the API, installs locked npm dependencies, builds/lints the SPA, checks an API endpoint and exercises Vite's development proxy. Review the **actual GitHub Actions result for the submitted commit**; the workflow definition alone is not evidence of a passing run.
+The repository workflow `.github/workflows/subapp2-ci.yml` checks that the API builds in Release mode, installs locked npm dependencies, builds the SPA and runs ESLint. These are build/code-quality checks, not automated application tests. Review the **actual GitHub Actions result for the submitted commit**; a workflow definition alone does not prove a successful build.
 
-This project does not claim to have the 12-backend-unit-test suite in Subapp 2; that exam requirement applies specifically to Subapp 1.
+**The exam requires at least 12 backend unit tests (6 positive, 6 negative) only for Subapp 1. Subapp 2 has no mandatory unit-test or smoke-test requirement.** The manual functional checks in Section 5 help verify that this application behaves as expected but are not a required automated test suite.
