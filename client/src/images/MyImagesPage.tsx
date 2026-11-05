@@ -52,7 +52,7 @@ const MyImagesPage = () => {
     mutationFn: ImageService.deleteImage,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['my-images'] })
-      setSuccessMessage('Image deleted successfully.')
+      setSuccessMessage('Image deleted. Challenges and questions using it now show the Question 1 default image.')
     },
     onError: (error: Error) => {
       setErrorMessage(error.message)
@@ -89,7 +89,7 @@ const MyImagesPage = () => {
   }
 
   const handleDelete = (id: number) => {
-    if (!window.confirm('Delete this image?')) {
+    if (!window.confirm('Permanently delete this image? Every challenge and question using it will show the Question 1 default image instead. This cannot be undone.')) {
       return
     }
 
