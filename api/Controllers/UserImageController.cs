@@ -125,7 +125,7 @@ namespace GamificationPlatform.Controllers
             var fallbackImage = await GetFallbackImageAsync();
             if (fallbackImage == null)
             {
-                return Conflict("Cannot delete this image because the Question 1 default image is unavailable.");
+                return Conflict(new { message = "Cannot delete this image because the Question 1 default image is unavailable." });
             }
 
             var challenges = await _context.Challenges
@@ -334,13 +334,13 @@ namespace GamificationPlatform.Controllers
             var fallbackImage = await GetFallbackImageAsync();
             if (fallbackImage == null)
             {
-                return Conflict("Cannot delete this image because the Question 1 default image is unavailable.");
+                return Conflict(new { message = "Cannot delete this image because the Question 1 default image is unavailable." });
             }
 
             if (image.DefaultImageId == fallbackImage.DefaultImageId ||
                 image.ImageUrl == "/images/Question_1.png")
             {
-                return Conflict("Question 1 is the fallback image and cannot be deleted.");
+                return Conflict(new { message = "Question 1 is the fallback image and cannot be deleted." });
             }
 
             var challenges = await _context.Challenges
