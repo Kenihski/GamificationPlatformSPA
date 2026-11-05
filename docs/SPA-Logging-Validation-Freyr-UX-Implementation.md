@@ -77,3 +77,29 @@
 
 ## Change history
 All implementation commits were made directly on the requested `Salman-branch`. Source MVC repository is unchanged.
+
+
+## Follow-up — Local API connection and Subapp 1-style Serilog (2026-11-05)
+
+### Observed issue
+The homepage displayed "Could not load featured challenges" on localhost. Source inspection found that `client/src/services/ApiClient.ts` and `client/src/services/AuthService.ts` interpolated `VITE_API_BASE_URL` without a fallback. The SPA repo had no tracked local `.env` file and its Vite server did not proxy API requests. Therefore a missing variable could produce requests to `undefined/api/...` instead of the ASP.NET Core backend. Browser network traces were not available to independently confirm the exact failing request.
+
+### Changes and commits
+- `c0a3034` — `fix(logging): align SPA Serilog file paths, output format and request IDs with MVC`. In `api/Program.cs`, log files now use the API content root's `Logs` directory, which is created explicitly, with timestamped per-run files. Console and file sink templates match Subapp 1 with timestamp, log level, source context, request ID, message, and exception. Middleware attaches `HttpContext.TraceIdentifier` to the log context.
+- `3a23bb5` — `chore(logging): set Serilog information level and suppress noisy framework logs`. Added the same informational level and Microsoft.AspNetCore / EF Core warning-level overrides to `api/appsettings.json`.
+- `497175c` — `fix(dev): proxy API and image requests from Vite to ASP.NET Core port 5116`. Vite dev server proxies `/api`, `/images`, and `/uploads` to `http://localhost:5116`, consistent with the API's `http` launch profile.
+- `4116aa1`, `1124ff2` — `fix(client): use Vite same-origin API proxy when no base URL is configured`. Both shared `ApiClient.ts` and `AuthService.ts` now fall back to the empty string when `VITE_API_BASE_URL` is absent.
+
+### Why
+The relative-path logging setup was already present but depended on the shell's working directory, and the generated `Logs` folder was ignored by Git (as it should be). This update makes its location predictable and correlates API requests, controller actions, and DAL events. The Vite proxy avoids requiring a separate local environment file and prevents undefined request URLs.
+
+### Local setup and verification
+1. Update your local checkout: `git pull origin Salman-branch`.
+2. If `client/.env` or `client/.env.local` already sets `VITE_API_BASE_URL`, ensure it uses the actual API address; for the new proxy setup, remove the variable for local development and restart Vite.
+3. In terminal 1, run `cd api` and `dotnet run --launch-profile http`. Confirm `http://localhost:5116`. The backend still requires existing JWT user-secrets/environment configuration.
+4. In terminal 2, run `cd client` and `npm run dev`. Visit `http://localhost:5173`.
+5. Open `http://localhost:5116/api/challenges?filter=All` directly to isolate API failures. If the browser returns an HTTP 500 or errors in the backend terminal, investigate server/database issues separately.
+6. Inspect `api/Logs/log-YYYYMMDD_HHMMSS.txt` after starting the backend and accessing an endpoint. `api/Logs` is ignored by Git and is intentionally not committed. Read it locally; avoid committing logs or secrets.
+
+### Verification status
+Repository modifications are committed. No local application instance, network trace, or build was executed through this GitHub connector. The user's previous successful builds were from before these new commits; rebuild and restart are required to verify this follow-up.
