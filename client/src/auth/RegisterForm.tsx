@@ -73,6 +73,7 @@ const RegisterForm = ({ onSuccess, modal = false }: RegisterFormProps) => {
 
   return (
     <Form onSubmit={handleSubmit}>
+      <p className="text-secondary">All fields are required.</p>
       {error && (
         <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">
           {error}
@@ -88,10 +89,12 @@ const RegisterForm = ({ onSuccess, modal = false }: RegisterFormProps) => {
             setFormData({ ...formData, username: event.target.value })
           }
           autoComplete="username"
+          aria-describedby="registerUsernameHelp"
           minLength={3}
           maxLength={50}
           required
         />
+        <Form.Text id="registerUsernameHelp" className="text-secondary">Use 3 to 50 characters.</Form.Text>
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="registerEmail">
@@ -103,9 +106,11 @@ const RegisterForm = ({ onSuccess, modal = false }: RegisterFormProps) => {
             setFormData({ ...formData, email: event.target.value })
           }
           autoComplete="email"
+          aria-describedby="registerEmailHelp"
           maxLength={100}
           required
         />
+        <Form.Text id="registerEmailHelp" className="text-secondary">Enter your email address (up to 100 characters).</Form.Text>
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="registerPassword">
@@ -117,9 +122,12 @@ const RegisterForm = ({ onSuccess, modal = false }: RegisterFormProps) => {
             setFormData({ ...formData, password: event.target.value })
           }
           autoComplete="new-password"
+          aria-describedby="registerPasswordHelp"
           minLength={6}
+          maxLength={100}
           required
         />
+        <Form.Text id="registerPasswordHelp" className="text-secondary">Use 6 to 100 characters with a lowercase letter and a number. The password must differ from the username.</Form.Text>
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="registerConfirmPassword">
@@ -134,8 +142,10 @@ const RegisterForm = ({ onSuccess, modal = false }: RegisterFormProps) => {
             })
           }
           autoComplete="new-password"
+          aria-describedby="registerConfirmPasswordHelp"
           required
         />
+        <Form.Text id="registerConfirmPasswordHelp" className="text-secondary">Repeat the same password.</Form.Text>
       </Form.Group>
 
       <Button
