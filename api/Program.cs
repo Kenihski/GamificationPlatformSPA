@@ -8,21 +8,32 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Serilog.Context;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure logging.
-var logFileName = $"Logs/log-{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+// Keep API logs in the API project's Logs directory, regardless of the
+// shell's current working directory. Like Subapp 1, create one file per run.
+var logsDirectory = Path.Combine(builder.Environment.ContentRootPath, "Logs");
+Directory.CreateDirectory(logsDirectory);
+var logFileName = Path.Combine(
+    logsDirectory,
+    $"log-{DateTime.Now:yyyyMMdd_HHmmss}.txt");
 
 builder.Host.UseSerilog((context, configuration) =>
 {
     configuration
         .ReadFrom.Configuration(context.Configuration)
         .Enrich.FromLogContext()
-        .WriteTo.Console()
-        .WriteTo.File(logFileName);
+        .WriteTo.Console(
+            outputTemplate:
+            "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] [{RequestId}] {Message:lj}{NewLine}{Exception}")
+        .WriteTo.File(
+            logFileName,
+            outputTemplate:
+            "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [{RequestId}] {Message:lj}{NewLine}{Exception}");
 });
 
 // Register API controllers.
@@ -135,6 +146,15 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+// Correlate request, controller, and DAL logs using the same trace identifier.
+app.Use(async (context, next) =>
+{
+    using (LogContext.PushProperty("RequestId", context.TraceIdentifier))
+    {
+        await next();
+    }
+});
 
 // Log unexpected failures without returning exception or database details to clients.
 app.UseExceptionHandler(errorApp =>
