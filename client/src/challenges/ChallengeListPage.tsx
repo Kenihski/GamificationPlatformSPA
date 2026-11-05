@@ -67,6 +67,7 @@ const ChallengeListPage = () => {
                 variant={filter === option ? 'primary' : 'outline-primary'}
                 onClick={() => setFilter(option)}
                 aria-pressed={filter === option}
+                aria-current={filter === option ? "true" : undefined}
               >
                 {option}
               </Button>
