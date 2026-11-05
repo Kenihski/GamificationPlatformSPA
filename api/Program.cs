@@ -196,7 +196,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Seed development data without deleting the existing database.
+// Development-only demo reset: DBInit deletes, migrates and reseeds the SQLite database.\n// All local Development data is lost on each API restart; see examiner setup guide.
 if (app.Environment.IsDevelopment())
 {
     await DBInit.SeedAsync(app);
