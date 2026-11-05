@@ -121,7 +121,13 @@ namespace GamificationPlatform.Controllers
                 return Forbid();
             }
 
-            // Clear image references before deleting the image.
+            // Deletion must keep existing challenge and question image references valid.
+            var fallbackImage = await GetFallbackImageAsync();
+            if (fallbackImage == null)
+            {
+                return Conflict("Cannot delete this image because the Question 1 default image is unavailable.");
+            }
+
             var challenges = await _context.Challenges
                 .Where(c => c.ImageUrl == image.ImageUrl)
                 .ToListAsync();
@@ -132,12 +138,12 @@ namespace GamificationPlatform.Controllers
 
             foreach (var challenge in challenges)
             {
-                challenge.ImageUrl = string.Empty;
+                challenge.ImageUrl = fallbackImage.ImageUrl;
             }
 
             foreach (var question in questions)
             {
-                question.ImageUrl = string.Empty;
+                question.ImageUrl = fallbackImage.ImageUrl;
             }
 
             _context.UserImages.Remove(image);
@@ -324,7 +330,19 @@ namespace GamificationPlatform.Controllers
                 return NotFound();
             }
 
-            // Clear references to the deleted default image.
+            // Keep the fallback image available for challenge and question content.
+            var fallbackImage = await GetFallbackImageAsync();
+            if (fallbackImage == null)
+            {
+                return Conflict("Cannot delete this image because the Question 1 default image is unavailable.");
+            }
+
+            if (image.DefaultImageId == fallbackImage.DefaultImageId ||
+                image.ImageUrl == "/images/Question_1.png")
+            {
+                return Conflict("Question 1 is the fallback image and cannot be deleted.");
+            }
+
             var challenges = await _context.Challenges
                 .Where(c => c.ImageUrl == image.ImageUrl)
                 .ToListAsync();
@@ -335,12 +353,12 @@ namespace GamificationPlatform.Controllers
 
             foreach (var challenge in challenges)
             {
-                challenge.ImageUrl = string.Empty;
+                challenge.ImageUrl = fallbackImage.ImageUrl;
             }
 
             foreach (var question in questions)
             {
-                question.ImageUrl = string.Empty;
+                question.ImageUrl = fallbackImage.ImageUrl;
             }
 
             _context.DefaultImages.Remove(image);
@@ -361,6 +379,29 @@ namespace GamificationPlatform.Controllers
                 id);
 
             return NoContent();
+        }
+
+        // Resolve the bundled fallback even when its display name was renamed.
+        // Refuse deletion rather than leave broken image references if it is missing.
+        private async Task<DefaultImage?> GetFallbackImageAsync()
+        {
+            var image = await _context.DefaultImages
+                .Where(candidate => candidate.Name == "Question 1" ||
+                                    candidate.ImageUrl == "/images/Question_1.png")
+                .OrderByDescending(candidate => candidate.Name == "Question 1")
+                .ThenBy(candidate => candidate.DefaultImageId)
+                .FirstOrDefaultAsync();
+
+            if (image == null || string.IsNullOrWhiteSpace(image.ImageUrl))
+            {
+                return null;
+            }
+
+            var filePath = Path.Combine(
+                _environment.WebRootPath,
+                image.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+            return System.IO.File.Exists(filePath) ? image : null;
         }
 
         private bool TryGetCurrentUserId(out int userId)
