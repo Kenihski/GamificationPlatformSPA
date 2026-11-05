@@ -8,7 +8,7 @@
 
 **Server-side (implemented).** ASP.NET Core API controllers use `[ApiController]`, DTOs and Data Annotations to reject invalid HTTP request bodies. `api/DTOs/RegisterDTO.cs` uses `[Required]`, `[EmailAddress]`, `[StringLength]`, `[Compare]` and `IValidatableObject` to enforce registration constraints. `api/Controllers/QuestionsController.cs` validates question types, option counts, duplicate/empty choices, correctness selections and accepted short answers before saving. `api/Controllers/ChallengesController.cs` checks allowed image ownership, challenge visibility/ownership, and prevents publishing a challenge without questions. `api/Controllers/AchievementController.cs` checks achievement type, point values, requirement boundaries, and blocks editing/deleting system goals. Unauthorized changes are rejected server-side even if frontend restrictions are bypassed.
 
-**Client-side (implemented).** React forms provide validation and submission feedback. The shared `client/src/services/ApiClient.ts` wraps `fetch`, sends JWT bearer tokens and extracts API `ValidationProblemDetails.errors` into readable messages. `client/src/services/AuthService.ts` handles registration/login responses. Client checks improve immediate feedback, while the API remains authoritative. Tests must ensure that a crafted HTTP request still fails when client-side checks are bypassed.
+**Client-side (implemented).** React forms provide validation and submission feedback. The shared `client/src/services/ApiClient.ts` wraps `fetch`, sends JWT bearer tokens and extracts API `ValidationProblemDetails.errors` into readable messages. `client/src/services/AuthService.ts` handles registration/login responses. Client checks improve immediate feedback, while the API remains authoritative. During functional verification, bypass the client-side restrictions and confirm the API still rejects invalid submissions.
 
 ### Error handling and resilience
 
@@ -24,9 +24,9 @@
 
 ### Verification and limitations
 
-The code features listed above are **implemented**. They are **not marked manually passed** here. The repository's automated workflow `.github/workflows/subapp2-ci.yml` adds Release API build, SPA production build, ESLint, a public endpoint startup probe, and Vite proxy smoke checks. Its actual status must be recorded for the final commit. The development database is recreated at every API startup by `api/DAL/DBInit.cs`; tests requiring persistent test changes across restarts must account for this.
+The code features listed above are **implemented**. They are **not marked manually passed** here. The repository workflow `.github/workflows/subapp2-ci.yml` runs the Release API build, SPA production build and ESLint. It performs no automated application tests. Record build output for the final commit. The development database is recreated at every API startup by `api/DAL/DBInit.cs`; tests requiring persistent test changes across restarts must account for this.
 
-## Subapp 2 manual test matrix — record before submission
+## Subapp 2 functional verification checklist — record before submission
 
 | ID | Scenario | Expected outcome | Result |
 | --- | --- | --- | --- |
@@ -50,7 +50,7 @@ The code features listed above are **implemented**. They are **not marked manual
 
 ### Evidence to add to the final team report
 
-For each executed test, record **date, tested commit/ZIP, account/role, expected result, actual result, Pass/Fail, and evidence reference** (screenshot, log excerpt or browser Network record). Report failures rather than replacing them with inferred success. Do not count these manual scenarios as backend unit tests; the mandatory 12 backend unit tests apply to Subapp 1 only.
+For each executed test, record **date, tested commit/ZIP, account/role, expected result, actual result, Pass/Fail, and evidence reference** (screenshot, log excerpt or browser Network record). Report failures rather than replacing them with inferred success. No automated tests are required for Subapp 2. The mandatory 12 backend unit tests apply exclusively to Subapp 1; the scenarios above are suggested manual functional verification, not a unit-test suite.
 
 ## Related references
 
