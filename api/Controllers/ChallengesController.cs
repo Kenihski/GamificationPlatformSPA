@@ -109,8 +109,10 @@ namespace GamificationPlatform.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ChallengeDTO>> GetChallenge(int id)
         {
+            // Load questions so the DTO includes the current question count
+            // and maximum possible score, even after question edits.
             var challenge =
-                await _challengeRepository.GetChallengeByIdAsync(id);
+                await _challengeRepository.GetChallengeWithQuestionsAsync(id);
 
             if (challenge == null)
             {
@@ -576,7 +578,7 @@ namespace GamificationPlatform.Controllers
                 IsCore = challenge.IsCore,
                 TimeLimitMinutes = challenge.TimeLimitMinutes,
                 ShowAnswersAfterCompletion = challenge.ShowAnswersAfterCompletion,
-                MaxPoints = challenge.MaxPoints,
+                MaxPoints = challenge.Questions?.Sum(q => q.Points) ?? 0,
                 QuestionCount = challenge.Questions?.Count ?? 0,
                 CreatedByUserId = challenge.CreatedByUserId
             };
