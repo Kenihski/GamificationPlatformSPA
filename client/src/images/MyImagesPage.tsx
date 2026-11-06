@@ -177,7 +177,7 @@ const MyImagesPage = () => {
                 <Card className="h-100 shadow-sm my-images-card">
                   <div className="ratio ratio-4x3">
                     <img
-                      src={`${import.meta.env.VITE_API_BASE_URL}${image.imageUrl}`}
+                      src={`${import.meta.env.VITE_API_BASE_URL ?? ''}${image.imageUrl}`}
                       alt={image.fileName}
                       className="w-100 h-100 object-fit-cover rounded-top"
                     />
