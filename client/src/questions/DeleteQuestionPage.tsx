@@ -121,25 +121,6 @@ const DeleteQuestionPage = () => {
       <h1 className="mb-4">Delete Question</h1>
       <p className="text-muted">Review the details and consequences before confirming deletion.</p>
 
-      <Alert variant="danger">
-        <strong>Warning:</strong> Deleting this question removes the challenge's attempt history, submitted answers and scores. This cannot be undone.
-      </Alert>
-
-      {isLastPublishedQuestion && (
-        <Alert variant="warning">
-          <strong>Note:</strong> This is the last question in a
-          published challenge. Deleting it will automatically
-          unpublish the challenge.
-        </Alert>
-      )}
-
-      {deleteMutation.isError && (
-        <Alert variant="danger" role="alert">
-          Could not delete question: {deleteMutation.error.message}
-        </Alert>
-      )}
-
-      
 
       <Card className="border-danger mb-4">
         <Card.Body>
@@ -222,6 +203,26 @@ const DeleteQuestionPage = () => {
               )}
             </dd>
           </dl>
+          <hr />
+          <Alert variant="danger">
+            <p className="mb-2">
+              <strong>Warning:</strong> This question will be permanently deleted.
+              All attempts, submitted answers and scores for the entire challenge
+              will also be permanently deleted, removing those results from the leaderboards.
+            </p>
+            {isLastPublishedQuestion && (
+              <>
+                <p className="mb-2"><strong>This is the last question in this published challenge.</strong></p>
+                <p className="mb-2">Deleting it will automatically unpublish the challenge.</p>
+              </>
+            )}
+            <p className="mb-0">Are you sure you want to delete this question?</p>
+          </Alert>
+          {deleteMutation.isError && (
+            <Alert variant="danger" role="alert">
+              Could not delete question: {deleteMutation.error.message}
+            </Alert>
+          )}
         </Card.Body>
       </Card>
 
