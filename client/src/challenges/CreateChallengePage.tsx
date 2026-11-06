@@ -11,6 +11,7 @@ import { useAuth } from '../auth/AuthContext'
 import './CreateChallengePage.css'
 
 type ImageCategory = 'upload' | 'my' | 'default'
+type FieldErrors = Partial<Record<'title' | 'description' | 'image', string>>
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
 
@@ -33,10 +34,13 @@ const CreateChallengePage = () => {
   const [isCore, setIsCore] = useState(false)
   const [uploadedPreviewUrl, setUploadedPreviewUrl] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const errorSummaryRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (errorMessage) errorSummaryRef.current?.focus()
-  }, [errorMessage])
+    if (errorMessage || Object.keys(fieldErrors).length > 0) {
+      errorSummaryRef.current?.focus()
+    }
+  }, [errorMessage, fieldErrors])
 
   // Create a local preview and release it when the file changes.
   useEffect(() => {
@@ -103,6 +107,7 @@ const CreateChallengePage = () => {
   })
 
   const handleCategoryChange = (category: ImageCategory) => {
+    setFieldErrors((current) => ({ ...current, image: undefined }))
     setImageCategory(category)
     setImageUrl(category === 'default' ? (defaultImagesQuery.data?.find(image => image.name === 'Question 1')?.imageUrl ?? '') : '')
     setImageFile(null)
@@ -113,35 +118,24 @@ const CreateChallengePage = () => {
     event.preventDefault()
     setErrorMessage(null)
 
-    if (!title.trim() || !description.trim()) {
-      setErrorMessage('Title and description are required.')
-      return
-    }
+    const errors: FieldErrors = {}
+    if (!title.trim()) errors.title = 'Challenge title is required.'
+    if (!description.trim()) errors.description = 'Description is required.'
 
     if (imageCategory === 'upload') {
       if (!imageFile) {
-        setErrorMessage('Please select an image.')
-        return
+        errors.image = 'Please select an image.'
+      } else if (imageFile.size > 5 * 1024 * 1024) {
+        errors.image = 'The image must be 5 MB or smaller.'
+      } else if (!['image/jpeg', 'image/png', 'image/webp'].includes(imageFile.type)) {
+        errors.image = 'Choose a JPG, PNG or WebP image.'
       }
-
-      if (imageFile.size > 5 * 1024 * 1024) {
-        setErrorMessage('The image must be 5 MB or smaller.')
-        return
-      }
-
-      if (!['image/jpeg', 'image/png', 'image/webp'].includes(imageFile.type)) {
-        setErrorMessage('Choose a JPG, PNG or WebP image.')
-        return
-      }
+    } else if (!imageUrl) {
+      errors.image = 'Please select an image.'
     }
 
-    if (
-      (imageCategory === 'my' || imageCategory === 'default') &&
-      !imageUrl
-    ) {
-      setErrorMessage('Please select an image.')
-      return
-    }
+    setFieldErrors(errors)
+    if (Object.keys(errors).length > 0) return
 
     createMutation.mutate()
   }
@@ -157,13 +151,21 @@ const CreateChallengePage = () => {
     <Container className="create-challenge-page py-4">
       <h2 className="create-challenge-title">Create New Challenge</h2>
 
-      {errorMessage && (
-        <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">
-          {errorMessage}
+      {(errorMessage || Object.keys(fieldErrors).length > 0) && (
+        <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert" aria-label="Validation summary">
+          <strong>Please correct the following errors:</strong>
+          {Object.keys(fieldErrors).length > 0 && (
+            <ul className="mb-0 mt-2">
+              {Object.entries(fieldErrors).map(([field, message]) => (
+                <li key={field}>{message}</li>
+              ))}
+            </ul>
+          )}
+          {errorMessage && <div className="mt-2">{errorMessage}</div>}
         </Alert>
       )}
 
-      <Form onSubmit={handleSubmit}>
+      <Form noValidate onSubmit={handleSubmit}>
         {isAdmin ? (
           <Form.Group className="mb-3" controlId="challengeType">
             <Form.Label>Challenge Type</Form.Label>
@@ -189,9 +191,19 @@ const CreateChallengePage = () => {
           <Form.Control
             required
             maxLength={100}
+            isInvalid={Boolean(fieldErrors.title)}
+            aria-describedby={fieldErrors.title ? 'challenge-title-error' : undefined}
             value={title}
-            onChange={(event) => setTitle(event.target.value)}
+            onChange={(event) => {
+              setTitle(event.target.value)
+              setFieldErrors((current) => ({ ...current, title: undefined }))
+            }}
           />
+          {fieldErrors.title && (
+            <Form.Control.Feedback type="invalid" id="challenge-title-error">
+              {fieldErrors.title}
+            </Form.Control.Feedback>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="challengeDescription">
@@ -201,9 +213,19 @@ const CreateChallengePage = () => {
           <Form.Control
             required
             maxLength={500}
+            isInvalid={Boolean(fieldErrors.description)}
+            aria-describedby={fieldErrors.description ? 'challenge-description-error' : undefined}
             value={description}
-            onChange={(event) => setDescription(event.target.value)}
+            onChange={(event) => {
+              setDescription(event.target.value)
+              setFieldErrors((current) => ({ ...current, description: undefined }))
+            }}
           />
+          {fieldErrors.description && (
+            <Form.Control.Feedback type="invalid" id="challenge-description-error">
+              {fieldErrors.description}
+            </Form.Control.Feedback>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="challengeTimeLimit">
@@ -263,6 +285,7 @@ const CreateChallengePage = () => {
                   const input = event.currentTarget as HTMLInputElement
                   setImageFile(input.files?.[0] ?? null)
                   setUploadedPreviewUrl(null)
+                  setFieldErrors((current) => ({ ...current, image: undefined }))
                 }}
               />
               <Form.Text className="text-secondary">
@@ -282,7 +305,10 @@ const CreateChallengePage = () => {
                 <Form.Select
                   id="myImageSelect"
                   value={imageUrl}
-                  onChange={(event) => setImageUrl(event.target.value)}
+                  onChange={(event) => {
+                    setImageUrl(event.target.value)
+                    setFieldErrors((current) => ({ ...current, image: undefined }))
+                  }
                 >
                   <option value="">-- Select your image --</option>
                   {myImagesQuery.data?.map((image) => (
@@ -308,7 +334,10 @@ const CreateChallengePage = () => {
                 <Form.Select
                   id="defaultImageSelect"
                   value={imageUrl}
-                  onChange={(event) => setImageUrl(event.target.value)}
+                  onChange={(event) => {
+                    setImageUrl(event.target.value)
+                    setFieldErrors((current) => ({ ...current, image: undefined }))
+                  }
                 >
                   <option value="">-- Select default image --</option>
                   {defaultImagesQuery.data?.map((image) => (
@@ -318,6 +347,12 @@ const CreateChallengePage = () => {
                   ))}
                 </Form.Select>
               )}
+            </div>
+          )}
+
+          {fieldErrors.image && (
+            <div className="invalid-feedback d-block" role="alert">
+              {fieldErrors.image}
             </div>
           )}
 
