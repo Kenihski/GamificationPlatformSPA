@@ -117,10 +117,11 @@ const DeleteQuestionPage = () => {
     challenge.isPublished && challenge.questionCount === 1
 
   return (
-    <Container className="question-form-page py-4">
-      <h2 className="my-4">Delete Question</h2>
+    <Container className="question-form-page management-page my-4">
+      <h1 className="mb-4">Delete Question</h1>
+      <p className="text-muted">Review the details and consequences before confirming deletion.</p>
 
-      <Alert variant="warning">
+      <Alert variant="danger">
         <strong>Warning:</strong> Deleting this question removes the challenge's attempt history, submitted answers and scores. This cannot be undone.
       </Alert>
 
@@ -138,11 +139,9 @@ const DeleteQuestionPage = () => {
         </Alert>
       )}
 
-      <h4 className="mb-3">
-        Are you sure you want to delete this question?
-      </h4>
+      
 
-      <Card className="mb-4">
+      <Card className="border-danger mb-4">
         <Card.Body>
           <dl className="row mb-0">
             <dt className="col-sm-3">Title</dt>
@@ -228,7 +227,7 @@ const DeleteQuestionPage = () => {
 
       <div className="d-flex gap-2">
         <Button
-          variant="danger"
+          variant="outline-danger"
           disabled={deleteMutation.isPending}
           onClick={() => deleteMutation.mutate()}
         >
@@ -239,7 +238,7 @@ const DeleteQuestionPage = () => {
 
         <Link
           to={`/challenges/${challengeId}`}
-          className="btn btn-secondary"
+          className="btn btn-outline-primary"
         >
           Cancel
         </Link>
