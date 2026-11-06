@@ -26,6 +26,9 @@ const CreateChallengePage = lazy(
 const EditChallengePage = lazy(
   () => import('./challenges/EditChallengePage')
 )
+const DeleteChallengePage = lazy(
+  () => import('./challenges/DeleteChallengePage')
+)
 
 const CreateQuestionPage = lazy(
   () => import('./questions/CreateQuestionPage')
@@ -120,6 +123,7 @@ const App = () => {
               <Route path="/my-images" element={<MyImagesPage />} />
               <Route path="/challenges/create" element={<CreateChallengePage />} />
               <Route path="/challenges/:id/edit" element={<EditChallengePage />} />
+              <Route path="/challenges/:id/delete" element={<DeleteChallengePage />} />
               <Route
                 path="/challenges/:id/questions/create"
                 element={<CreateQuestionPage />}
