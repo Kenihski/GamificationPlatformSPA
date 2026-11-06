@@ -176,7 +176,7 @@ const AdminImagesPage = () => {
   }
 
   const imageUrl = (url: string) =>
-    `${import.meta.env.VITE_API_BASE_URL}${url}`
+    `${import.meta.env.VITE_API_BASE_URL ?? ''}${url}`
 
   const renderUserImage = (image: AdminUserImage) => (
     <Col key={image.userImageId}>
