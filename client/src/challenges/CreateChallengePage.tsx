@@ -35,12 +35,27 @@ const CreateChallengePage = () => {
   const [uploadedPreviewUrl, setUploadedPreviewUrl] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+  const [validationSubmitCount, setValidationSubmitCount] = useState(0)
   const errorSummaryRef = useRef<HTMLDivElement>(null)
+
+  // Focus the summary only after a rejected submission or server error,
+  // not while typing into an input.
   useEffect(() => {
-    if (errorMessage || Object.keys(fieldErrors).length > 0) {
-      errorSummaryRef.current?.focus()
-    }
-  }, [errorMessage, fieldErrors])
+    if (validationSubmitCount > 0) errorSummaryRef.current?.focus()
+  }, [validationSubmitCount])
+
+  useEffect(() => {
+    if (errorMessage) errorSummaryRef.current?.focus()
+  }, [errorMessage])
+
+  const clearFieldError = (field: keyof FieldErrors) => {
+    setFieldErrors((current) => {
+      if (!current[field]) return current
+      const next = { ...current }
+      delete next[field]
+      return next
+    })
+  }
 
   // Create a local preview and release it when the file changes.
   useEffect(() => {
@@ -107,7 +122,7 @@ const CreateChallengePage = () => {
   })
 
   const handleCategoryChange = (category: ImageCategory) => {
-    setFieldErrors((current) => ({ ...current, image: undefined }))
+    clearFieldError('image')
     setImageCategory(category)
     setImageUrl(category === 'default' ? (defaultImagesQuery.data?.find(image => image.name === 'Question 1')?.imageUrl ?? '') : '')
     setImageFile(null)
@@ -135,7 +150,10 @@ const CreateChallengePage = () => {
     }
 
     setFieldErrors(errors)
-    if (Object.keys(errors).length > 0) return
+    if (Object.keys(errors).length > 0) {
+      setValidationSubmitCount((count) => count + 1)
+      return
+    }
 
     createMutation.mutate()
   }
@@ -156,7 +174,7 @@ const CreateChallengePage = () => {
           <strong>Please correct the following errors:</strong>
           {Object.keys(fieldErrors).length > 0 && (
             <ul className="mb-0 mt-2">
-              {Object.entries(fieldErrors).map(([field, message]) => (
+              {Object.entries(fieldErrors).filter(([, message]) => Boolean(message)).map(([field, message]) => (
                 <li key={field}>{message}</li>
               ))}
             </ul>
@@ -196,7 +214,7 @@ const CreateChallengePage = () => {
             value={title}
             onChange={(event) => {
               setTitle(event.target.value)
-              setFieldErrors((current) => ({ ...current, title: undefined }))
+              clearFieldError('title')
             }}
           />
           {fieldErrors.title && (
@@ -218,7 +236,7 @@ const CreateChallengePage = () => {
             value={description}
             onChange={(event) => {
               setDescription(event.target.value)
-              setFieldErrors((current) => ({ ...current, description: undefined }))
+              clearFieldError('description')
             }}
           />
           {fieldErrors.description && (
@@ -285,7 +303,7 @@ const CreateChallengePage = () => {
                   const input = event.currentTarget as HTMLInputElement
                   setImageFile(input.files?.[0] ?? null)
                   setUploadedPreviewUrl(null)
-                  setFieldErrors((current) => ({ ...current, image: undefined }))
+                  clearFieldError('image')
                 }}
               />
               <Form.Text className="text-secondary">
@@ -307,7 +325,7 @@ const CreateChallengePage = () => {
                   value={imageUrl}
                   onChange={(event) => {
                     setImageUrl(event.target.value)
-                    setFieldErrors((current) => ({ ...current, image: undefined }))
+                    clearFieldError('image')
                   }}
                 >
                   <option value="">-- Select your image --</option>
@@ -336,7 +354,7 @@ const CreateChallengePage = () => {
                   value={imageUrl}
                   onChange={(event) => {
                     setImageUrl(event.target.value)
-                    setFieldErrors((current) => ({ ...current, image: undefined }))
+                    clearFieldError('image')
                   }}
                 >
                   <option value="">-- Select default image --</option>
