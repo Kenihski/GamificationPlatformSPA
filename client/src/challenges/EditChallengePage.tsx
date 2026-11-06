@@ -7,6 +7,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import ChallengeService from '../services/ChallengeService'
 import type { ChallengeSaveRequest } from '../services/ChallengeService'
 import ImageService from '../services/ImageService'
+import { useAuth } from '../auth/AuthContext'
 import type { Challenge } from '../types/Challenge'
 import './CreateChallengePage.css'
 
@@ -390,6 +391,7 @@ const EditForm = ({ challenge }: EditFormProps) => {
 }
 
 const EditChallengePage = () => {
+  const { user } = useAuth()
   const { id } = useParams()
   const challengeId = Number(id)
   const validId = Number.isInteger(challengeId) && challengeId > 0
@@ -432,6 +434,26 @@ const EditChallengePage = () => {
     return (
       <Container className="mt-4">
         <Alert variant="info">Challenge not found.</Alert>
+      </Container>
+    )
+  }
+
+  const canManage = Boolean(
+    user && (
+      user.roles.includes('Admin') ||
+      user.userId === challenge.createdByUserId
+    )
+  )
+
+  if (!canManage) {
+    return (
+      <Container className="mt-4">
+        <Alert variant="danger" role="alert">
+          You do not have permission to edit this challenge.
+        </Alert>
+        <Link to={`/challenges/${challenge.challengeId}`}>
+          Back to challenge
+        </Link>
       </Container>
     )
   }
