@@ -308,7 +308,7 @@ const CreateChallengePage = () => {
                   onChange={(event) => {
                     setImageUrl(event.target.value)
                     setFieldErrors((current) => ({ ...current, image: undefined }))
-                  }
+                  }}
                 >
                   <option value="">-- Select your image --</option>
                   {myImagesQuery.data?.map((image) => (
@@ -337,7 +337,7 @@ const CreateChallengePage = () => {
                   onChange={(event) => {
                     setImageUrl(event.target.value)
                     setFieldErrors((current) => ({ ...current, image: undefined }))
-                  }
+                  }}
                 >
                   <option value="">-- Select default image --</option>
                   {defaultImagesQuery.data?.map((image) => (
