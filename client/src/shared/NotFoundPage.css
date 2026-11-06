@@ -1,0 +1,14 @@
+.not-found-page {
+  max-width: 960px;
+  color: #f5f7ff;
+}
+
+.not-found-page .btn-primary {
+  background: linear-gradient(135deg, #3159cf, #6540c5);
+  border-color: #6d83ff;
+}
+
+.not-found-page .btn-primary:hover {
+  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  border-color: #9eabff;
+}
