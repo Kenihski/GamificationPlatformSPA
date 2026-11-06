@@ -75,9 +75,21 @@ const CreateQuestionPage = () => {
   const [uploadedPreviewUrl, setUploadedPreviewUrl] =
     useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [showValidation, setShowValidation] = useState(false)
+  const [invalidSubmitCount, setInvalidSubmitCount] = useState(0)
   const errorSummaryRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (errorMessage) errorSummaryRef.current?.focus()
+    if (invalidSubmitCount > 0) {
+      errorSummaryRef.current?.focus()
+      errorSummaryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [invalidSubmitCount])
+
+  useEffect(() => {
+    if (errorMessage) {
+      errorSummaryRef.current?.focus()
+      errorSummaryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
   }, [errorMessage])
 
   useEffect(() => {
@@ -272,6 +284,40 @@ const CreateQuestionPage = () => {
     return null
   }
 
+  // Compute errors from the current values so the summary updates as fields are fixed.
+  const validationErrors: { field: string; message: string }[] = []
+  if (!title.trim()) {
+    validationErrors.push({ field: 'title', message: 'Question title is required.' })
+  }
+  if (
+    points.trim() === '' ||
+    !Number.isInteger(Number(points)) ||
+    Number(points) < 1 ||
+    Number(points) > 100
+  ) {
+    validationErrors.push({ field: 'points', message: 'Points must be between 1 and 100.' })
+  }
+
+  const answerError = validateAnswers()
+  if (answerError) {
+    validationErrors.push({ field: 'answers', message: answerError })
+  }
+
+  if (imageCategory === 'upload') {
+    if (!imageFile) {
+      validationErrors.push({ field: 'image', message: 'Please select an image.' })
+    } else if (imageFile.size > 5 * 1024 * 1024) {
+      validationErrors.push({ field: 'image', message: 'The image must be 5 MB or smaller.' })
+    } else if (!['image/jpeg', 'image/png', 'image/webp'].includes(imageFile.type)) {
+      validationErrors.push({ field: 'image', message: 'Choose a JPG, PNG or WebP image.' })
+    }
+  } else if ((imageCategory === 'my' || imageCategory === 'default') && !imageUrl) {
+    validationErrors.push({ field: 'image', message: 'Please select an image.' })
+  }
+
+  const errorFor = (field: string) =>
+    showValidation ? validationErrors.find((error) => error.field === field)?.message : undefined
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setErrorMessage(null)
@@ -281,54 +327,9 @@ const CreateQuestionPage = () => {
       return
     }
 
-    if (!title.trim()) {
-      setErrorMessage('Question title is required.')
-      return
-    }
-
-    if (
-      points.trim() === '' ||
-      !Number.isInteger(Number(points)) ||
-      Number(points) < 1 ||
-      Number(points) > 100
-    ) {
-      setErrorMessage('Points must be between 1 and 100.')
-      return
-    }
-
-    const answerError = validateAnswers()
-
-    if (answerError) {
-      setErrorMessage(answerError)
-      return
-    }
-
-    if (imageCategory === 'upload') {
-      if (!imageFile) {
-        setErrorMessage('Please select an image.')
-        return
-      }
-
-      if (imageFile.size > 5 * 1024 * 1024) {
-        setErrorMessage('The image must be 5 MB or smaller.')
-        return
-      }
-
-      if (
-        !['image/jpeg', 'image/png', 'image/webp'].includes(
-          imageFile.type
-        )
-      ) {
-        setErrorMessage('Choose a JPG, PNG or WebP image.')
-        return
-      }
-    }
-
-    if (
-      (imageCategory === 'my' || imageCategory === 'default') &&
-      !imageUrl
-    ) {
-      setErrorMessage('Please select an image.')
+    setShowValidation(true)
+    if (validationErrors.length > 0) {
+      setInvalidSubmitCount((count) => count + 1)
       return
     }
 
@@ -378,13 +379,21 @@ const CreateQuestionPage = () => {
         previous attempts and scores for this challenge.
       </Alert>
 
-      {errorMessage && (
-        <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">
-          {errorMessage}
+      {(errorMessage || (showValidation && validationErrors.length > 0)) && (
+        <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert" aria-label="Validation summary">
+          <strong>Please correct the following errors:</strong>
+          {showValidation && validationErrors.length > 0 && (
+            <ul className="mb-0 mt-2">
+              {validationErrors.map(({ field, message }) => (
+                <li key={field}>{message}</li>
+              ))}
+            </ul>
+          )}
+          {errorMessage && <div className="mt-2">{errorMessage}</div>}
         </Alert>
       )}
 
-      <Form onSubmit={handleSubmit}>
+      <Form noValidate onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="questionTitle">
           <Form.Label>
             Title <span className="text-danger">*</span>
@@ -392,9 +401,16 @@ const CreateQuestionPage = () => {
           <Form.Control
             required
             maxLength={150}
+            isInvalid={Boolean(errorFor('title'))}
+            aria-describedby={errorFor('title') ? 'question-title-error' : undefined}
             value={title}
             onChange={(event) => setTitle(event.target.value)}
           />
+          {errorFor('title') && (
+            <Form.Control.Feedback id="question-title-error" type="invalid">
+              {errorFor('title')}
+            </Form.Control.Feedback>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="questionType">
@@ -487,9 +503,16 @@ const CreateQuestionPage = () => {
             max={100}
             step={1}
             placeholder="0"
+            isInvalid={Boolean(errorFor('points'))}
+            aria-describedby={errorFor('points') ? 'question-points-error' : undefined}
             value={points}
             onChange={(event) => setPoints(event.target.value)}
           />
+          {errorFor('points') && (
+            <Form.Control.Feedback id="question-points-error" type="invalid">
+              {errorFor('points')}
+            </Form.Control.Feedback>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="imageCategory">
@@ -618,6 +641,11 @@ const CreateQuestionPage = () => {
               />
             </div>
           )}
+          {errorFor('image') && (
+            <div className="invalid-feedback d-block" role="alert">
+              {errorFor('image')}
+            </div>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="challengeTitle">
@@ -633,6 +661,9 @@ const CreateQuestionPage = () => {
         {questionType === 'ShortAnswer' ? (
           <fieldset>
             <legend className="fs-4">Accepted Answers</legend>
+            {errorFor('answers') && (
+              <div className="invalid-feedback d-block" role="alert">{errorFor('answers')}</div>
+            )}
             <p className="text-muted">
               Enter between 1 and 4 accepted answers.
             </p>
@@ -663,6 +694,9 @@ const CreateQuestionPage = () => {
         ) : (
           <fieldset>
             <legend className="fs-4">Answer Options</legend>
+            {errorFor('answers') && (
+              <div className="invalid-feedback d-block" role="alert">{errorFor('answers')}</div>
+            )}
             <p className="text-muted">
               Enter between 2 and 4 answer options.
             </p>
