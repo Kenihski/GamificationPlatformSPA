@@ -8,6 +8,7 @@ import { AuthModalProvider } from './auth/AuthModalContext'
 // Load pages only when they are needed.
 const HomePage = lazy(() => import('./home/HomePage'))
 const AboutPage = lazy(() => import('./home/AboutPage'))
+const NotFoundPage = lazy(() => import('./shared/NotFoundPage'))
 const LoginPage = lazy(() => import('./auth/LoginPage'))
 const RegisterPage = lazy(() => import('./auth/RegisterPage'))
 
@@ -172,6 +173,8 @@ const App = () => {
               />
               <Route path="/admin/images" element={<AdminImagesPage />} />
             </Route>
+
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
         </main>
