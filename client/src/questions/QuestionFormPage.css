@@ -12,3 +12,45 @@
   object-fit: contain;
   border-radius: 6px;
 }
+
+
+/* Match the MVC management/delete views rather than Bootstrap's white cards.
+   Scoped to management pages so the rest of the SPA retains its own styling. */
+.management-page .card {
+  --bs-card-bg: var(--content-card-bg, #111833);
+  --bs-card-color: var(--home-text, #edf1ff);
+  --bs-card-border-color: var(--content-card-border, rgba(125, 151, 230, 0.55));
+  background: var(--content-card-bg, #111833);
+  color: var(--home-text, #edf1ff);
+  border: 1px solid var(--content-card-border, rgba(125, 151, 230, 0.55));
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+}
+
+.management-page .card.border-danger {
+  --bs-card-border-color: var(--danger-border, #ff756b);
+  border-color: var(--danger-border, #ff756b) !important;
+}
+
+.management-page .card-body,
+.management-page .card-title,
+.management-page .card h2,
+.management-page .card dt,
+.management-page .card dd {
+  color: var(--home-text, #edf1ff);
+}
+
+.management-page .card-text {
+  color: var(--home-muted, #b9c4df);
+}
+
+.management-page .card hr {
+  border-color: var(--home-border, rgba(125, 151, 230, 0.45));
+  opacity: 1;
+}
+
+.management-page .card .alert-danger {
+  color: #ffe2de;
+  background-color: #602932;
+  border-color: #ff756b;
+}
