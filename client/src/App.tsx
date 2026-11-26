@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { lazy, Suspense, useLayoutEffect } from 'react'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import NavMenu from './shared/NavMenu'
 import AchievementNotifications from './achievements/AchievementNotifications'
 import ProtectedRoute from './auth/ProtectedRoute'
@@ -91,9 +91,21 @@ const AdminUserDetailsPage = lazy(
   () => import('./users/AdminUserDetailsPage')
 )
 
+// Reset document scroll on page changes, not on query or hash changes.
+const ScrollToTop = () => {
+  const { pathname } = useLocation()
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+  }, [pathname])
+
+  return null
+}
+
 const App = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AuthModalProvider>
         <a className="skip-to-main" href="#main-content">Skip to main content</a>
         <NavMenu />
