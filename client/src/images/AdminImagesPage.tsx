@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
@@ -36,6 +36,8 @@ const AdminImagesPage = () => {
   const [file, setFile] = useState<File | null>(null)
   const [renamedImages, setRenamedImages] = useState<Record<number, string>>({})
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [successCount, setSuccessCount] = useState(0)
+  const successRef = useRef<HTMLDivElement>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [blockingQuestions, setBlockingQuestions] = useState<ImageDeletionImpact['questions']>([])
 
@@ -49,6 +51,18 @@ const AdminImagesPage = () => {
     queryFn: ImageService.getAdminImages,
   })
 
+  const showConfirmationAtTop = () => {
+    successRef.current?.focus({ preventScroll: true })
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+  }
+
+  useLayoutEffect(() => {
+    if (successCount > 0) {
+      successRef.current?.focus({ preventScroll: true })
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    }
+  }, [successCount])
+
   const refreshImages = async () => {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: ['admin-images'] }),
@@ -59,7 +73,11 @@ const AdminImagesPage = () => {
 
   const showSuccess = (message: string) => {
     setErrorMessage(null)
+    setBlockingQuestions([])
+    setRenamedImages({})
+    setActiveTab('default')
     setSuccessMessage(message)
+    setSuccessCount((count) => count + 1)
   }
 
   const showError = (error: Error) => {
@@ -75,7 +93,7 @@ const AdminImagesPage = () => {
       setShowModal(false)
       setImageName('')
       setFile(null)
-      showSuccess('Image uploaded successfully.')
+      showSuccess('Default image uploaded successfully.')
     },
     onError: showError,
   })
@@ -94,7 +112,7 @@ const AdminImagesPage = () => {
     mutationFn: ImageService.deleteDefaultImage,
     onSuccess: async () => {
       await refreshImages()
-      showSuccess('Image deleted successfully.')
+      showSuccess('Default image deleted successfully.')
     },
     onError: showError,
   })
@@ -103,7 +121,6 @@ const AdminImagesPage = () => {
     mutationFn: ImageService.deleteImage,
     onSuccess: async () => {
       await refreshImages()
-      setActiveTab('default')
       showSuccess('Image deleted successfully.')
     },
     onError: showError,
@@ -211,7 +228,7 @@ const AdminImagesPage = () => {
         </div>
 
         <div className="px-2 py-2 text-break small">{image.fileName}</div>
-        <Dropdown align="end" className="admin-image-options">
+        <Dropdown key={successCount} align="end" className="admin-image-options">
           <Dropdown.Toggle
             variant="light"
             size="sm"
@@ -261,7 +278,7 @@ const AdminImagesPage = () => {
         </div>
 
         <div className="px-2 py-2 text-break small">{image.name}</div>
-        <Dropdown align="end" className="admin-image-options">
+        <Dropdown key={successCount} align="end" className="admin-image-options">
           <Dropdown.Toggle
             variant="light"
             size="sm"
@@ -370,7 +387,7 @@ const AdminImagesPage = () => {
       </div>
 
       {successMessage && (
-        <Alert variant="success">
+        <Alert ref={successRef} tabIndex={-1} variant="success" role="status">
           {successMessage}
         </Alert>
       )}
@@ -451,6 +468,9 @@ const AdminImagesPage = () => {
         show={showModal}
         onHide={() => {
           if (!uploadMutation.isPending) setShowModal(false)
+        }}
+        onExited={() => {
+          if (successMessage) showConfirmationAtTop()
         }}
         data-bs-theme="dark"
         className="admin-images-modal"
