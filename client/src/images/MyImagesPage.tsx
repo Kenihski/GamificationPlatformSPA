@@ -13,6 +13,7 @@ import {
 } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import ImageService from '../services/ImageService'
+import type { ImageDeletionImpact } from '../services/ImageService'
 import './MyImagesPage.css'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
@@ -24,6 +25,7 @@ const MyImagesPage = () => {
   const [fileInputKey, setFileInputKey] = useState(0)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [blockingQuestions, setBlockingQuestions] = useState<ImageDeletionImpact['questions']>([])
 
   const {
     data: images = [],
@@ -52,7 +54,8 @@ const MyImagesPage = () => {
     mutationFn: ImageService.deleteImage,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['my-images'] })
-      setSuccessMessage('Image deleted. Challenges and questions using it now show the Question 1 default image.')
+      setBlockingQuestions([])
+      setSuccessMessage('Image deleted. Any challenge covers that used it now show Question 1.')
     },
     onError: (error: Error) => {
       setErrorMessage(error.message)
@@ -88,14 +91,26 @@ const MyImagesPage = () => {
     uploadMutation.mutate(file)
   }
 
-  const handleDelete = (id: number) => {
-    if (!window.confirm('Permanently delete this image? Every challenge and question using it will show the Question 1 default image instead. This cannot be undone.')) {
-      return
-    }
-
+  const handleDelete = async (id: number) => {
     setErrorMessage(null)
     setSuccessMessage(null)
-    deleteMutation.mutate(id)
+    setBlockingQuestions([])
+    try {
+      const impact = await ImageService.getImageDeletionImpact(id)
+      if (impact.questions.length > 0) {
+        setBlockingQuestions(impact.questions)
+        setErrorMessage('This image is used by questions. Replace it in the questions below before deleting it.')
+        return
+      }
+      const affected = impact.challenges.map((challenge) => challenge.title).join(', ')
+      const warning = affected
+        ? `This image is used as a cover by: ${affected}. Those covers will be replaced with Question 1. `
+        : ''
+      if (!window.confirm(`${warning}Permanently delete ${impact.imageName}? This cannot be undone.`)) return
+      deleteMutation.mutate(id)
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Could not check image usage.')
+    }
   }
 
   return (
@@ -122,6 +137,17 @@ const MyImagesPage = () => {
       {errorMessage && (
         <Alert variant="danger" dismissible onClose={() => setErrorMessage(null)}>
           {errorMessage}
+          {blockingQuestions.length > 0 && (
+            <ul className="mt-2 mb-0">
+              {blockingQuestions.map((question) => (
+                <li key={question.questionId}>
+                  <Link to={`/challenges/${question.challengeId}/questions/${question.questionId}/edit`}>
+                    Edit question: {question.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </Alert>
       )}
 
