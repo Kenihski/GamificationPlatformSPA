@@ -23,6 +23,17 @@ export interface AdminImages {
   defaultImages: DefaultImage[]
 }
 
+export interface ImageDeletionImpact {
+  imageName: string
+  challenges: { challengeId: number; title: string }[]
+  questions: { questionId: number; challengeId: number; title: string }[]
+}
+
+export interface DefaultImageDeletionImpact {
+  protectedFallback: boolean
+  impact: ImageDeletionImpact
+}
+
 const getDefaultImages = async (): Promise<DefaultImage[]> => {
   const response = await apiFetch('/api/images/default')
   return response.json() as Promise<DefaultImage[]>
@@ -46,8 +57,13 @@ const uploadImage = async (file: File): Promise<string> => {
   return result.imageUrl
 }
 
+const getImageDeletionImpact = async (id: number): Promise<ImageDeletionImpact> => {
+  const response = await apiFetch(`/api/images/${id}/deletion-impact`)
+  return response.json() as Promise<ImageDeletionImpact>
+}
+
 const deleteImage = async (id: number): Promise<void> => {
-  await apiFetch(`/api/images/${id}`, {
+  await apiFetch(`/api/images/${id}?confirmed=true`, {
     method: 'DELETE',
   })
 }
@@ -83,8 +99,13 @@ const renameDefaultImage = async (
   })
 }
 
+const getDefaultImageDeletionImpact = async (id: number): Promise<DefaultImageDeletionImpact> => {
+  const response = await apiFetch(`/api/images/default/${id}/deletion-impact`)
+  return response.json() as Promise<DefaultImageDeletionImpact>
+}
+
 const deleteDefaultImage = async (id: number): Promise<void> => {
-  await apiFetch(`/api/images/default/${id}`, {
+  await apiFetch(`/api/images/default/${id}?confirmed=true`, {
     method: 'DELETE',
   })
 }
@@ -94,10 +115,12 @@ const ImageService = {
   getMyImages,
   uploadImage,
   deleteImage,
+  getImageDeletionImpact,
   getAdminImages,
   uploadDefaultImage,
   renameDefaultImage,
   deleteDefaultImage,
+  getDefaultImageDeletionImpact,
 }
 
 export default ImageService
