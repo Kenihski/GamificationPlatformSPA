@@ -63,6 +63,7 @@ const LoginForm = ({
           value={usernameOrEmail}
           onChange={(event) => setUsernameOrEmail(event.target.value)}
           autoComplete="username"
+          autoFocus
           required
         />
       </Form.Group>
