@@ -4,6 +4,7 @@ import LoginForm from './LoginForm'
 
 interface LoginLocationState {
   message?: string
+  username?: string
   from?: string
 }
 
@@ -14,7 +15,11 @@ const LoginPage = () => {
   const state = location.state as LoginLocationState | null
 
   const handleLoginSuccess = () => {
-    navigate(state?.from ?? '/challenges', { replace: true })
+    const from = state?.from
+    const destination = from?.startsWith('/') && !from.startsWith('//') && !from.includes('\\')
+      ? from
+      : '/challenges'
+    navigate(destination, { replace: true })
   }
 
   return (
@@ -33,7 +38,7 @@ const LoginPage = () => {
         </Alert>
       )}
 
-      <LoginForm onSuccess={handleLoginSuccess} />
+      <LoginForm onSuccess={handleLoginSuccess} initialUsername={state?.username ?? ''} />
 
       <p className="mt-3">
         Don't have an account?{' '}

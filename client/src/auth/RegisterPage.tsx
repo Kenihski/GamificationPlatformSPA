@@ -13,8 +13,21 @@ const RegisterPage = () => {
   const state = location.state as RegisterLocationState | null
 
   const handleSuccess = (username: string) => {
+    const from = state?.from
+    if (from?.startsWith('/') && !from.startsWith('//') && !from.includes('\\')) {
+      navigate('/login', {
+        replace: true,
+        state: {
+          from,
+          username,
+          message: 'Registration successful! Your account has been created. You can now log in.',
+        },
+      })
+      return
+    }
+
     navigate('/', { replace: true })
-    openLoginAfterRegistration(username, state?.from)
+    openLoginAfterRegistration(username)
   }
 
   return (
