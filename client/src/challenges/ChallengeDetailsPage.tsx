@@ -33,12 +33,18 @@ const getImageUrl = (imageUrl: string | null) => {
 
 const ChallengeDetailsPage = () => {
   const { id } = useParams()
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const fromMyChallenges = searchParams.get('fromMyChallenges') === 'true'
   const { user } = useAuth()
   const queryClient = useQueryClient()
 
-  const [showQuestions, setShowQuestions] = useState(false)
+  const showQuestions = searchParams.get('showQuestions') === 'true'
+  const toggleQuestions = () => {
+    const next = new URLSearchParams(searchParams)
+    if (showQuestions) next.delete('showQuestions')
+    else next.set('showQuestions', 'true')
+    setSearchParams(next, { replace: true })
+  }
   const [managementError, setManagementError] = useState<string | null>(null)
   const [managementSuccess, setManagementSuccess] = useState<string | null>(null)
 
@@ -407,7 +413,7 @@ const ChallengeDetailsPage = () => {
                 type="button"
                 aria-expanded={showQuestions}
                 aria-controls="questionOverview"
-                onClick={() => setShowQuestions((previous) => !previous)}
+                onClick={toggleQuestions}
               >
                 Questions ({challenge.questionCount})
               </Button>
