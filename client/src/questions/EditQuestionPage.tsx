@@ -87,6 +87,7 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
   const [uploadedPreviewUrl, setUploadedPreviewUrl] =
     useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const errorSummaryRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (errorMessage) errorSummaryRef.current?.focus()
@@ -194,7 +195,8 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
     },
     onSuccess: async (changed) => {
       if (!changed) {
-        setErrorMessage('No changes were made. Previous attempts and scores are preserved.')
+        setErrorMessage(null)
+        setSuccessMessage('No changes were made. Previous attempts and scores are preserved.')
         return
       }
       await Promise.all([
@@ -273,6 +275,7 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setErrorMessage(null)
+    setSuccessMessage(null)
 
     if (!title.trim()) {
       setErrorMessage('Question title is required.')
@@ -397,6 +400,7 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
         all previous attempts and scores for this challenge.
       </Alert>
 
+      {successMessage && <Alert variant="success" role="status">{successMessage}</Alert>}
       {errorMessage && (
         <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">
           {errorMessage}
