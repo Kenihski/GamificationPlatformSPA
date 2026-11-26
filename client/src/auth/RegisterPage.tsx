@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import RegisterForm from './RegisterForm'
+import { useAuthModal } from './AuthModalContext'
 
 interface RegisterLocationState {
   from?: string
@@ -7,17 +8,13 @@ interface RegisterLocationState {
 
 const RegisterPage = () => {
   const navigate = useNavigate()
+  const { openLoginAfterRegistration } = useAuthModal()
   const location = useLocation()
   const state = location.state as RegisterLocationState | null
 
-  const handleSuccess = () => {
-    navigate('/login', {
-      replace: true,
-      state: {
-        from: state?.from,
-        message: 'Registration successful. Please log in.',
-      },
-    })
+  const handleSuccess = (username: string) => {
+    navigate('/', { replace: true })
+    openLoginAfterRegistration(username, state?.from)
   }
 
   return (

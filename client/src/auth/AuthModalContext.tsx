@@ -4,6 +4,8 @@ import type { ReactNode } from 'react'
 interface AuthModalContextType {
   showLogin: boolean
   showRegister: boolean
+  registration: { username: string; from?: string } | null
+  openLoginAfterRegistration: (username: string, from?: string) => void
   openLogin: () => void
   openRegister: () => void
   closeLogin: () => void
@@ -15,18 +17,30 @@ const AuthModalContext = createContext<AuthModalContextType | null>(null)
 export const AuthModalProvider = ({ children }: { children: ReactNode }) => {
   const [showLogin, setShowLogin] = useState(false)
   const [showRegister, setShowRegister] = useState(false)
+  const [registration, setRegistration] = useState<{ username: string; from?: string } | null>(null)
 
   const openLogin = () => {
+    setRegistration(null)
+    setShowRegister(false)
+    setShowLogin(true)
+  }
+
+  const openLoginAfterRegistration = (username: string, from?: string) => {
+    setRegistration({ username, from })
     setShowRegister(false)
     setShowLogin(true)
   }
 
   const openRegister = () => {
+    setRegistration(null)
     setShowLogin(false)
     setShowRegister(true)
   }
 
-  const closeLogin = () => setShowLogin(false)
+  const closeLogin = () => {
+    setShowLogin(false)
+    setRegistration(null)
+  }
   const closeRegister = () => setShowRegister(false)
 
   return (
@@ -34,6 +48,8 @@ export const AuthModalProvider = ({ children }: { children: ReactNode }) => {
       value={{
         showLogin,
         showRegister,
+        registration,
+        openLoginAfterRegistration,
         openLogin,
         openRegister,
         closeLogin,

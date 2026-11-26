@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
+  Alert,
   Button,
   Container,
   Modal,
@@ -17,11 +18,12 @@ import './NavMenu.css'
 
 const NavMenu = () => {
   const [showMenu, setShowMenu] = useState(false)
-  const [registeredUsername, setRegisteredUsername] = useState('')
 
   const {
     showLogin,
     showRegister,
+    registration,
+    openLoginAfterRegistration,
     openLogin,
     openRegister,
     closeLogin,
@@ -52,14 +54,8 @@ const NavMenu = () => {
 
   const closeMenu = () => setShowMenu(false)
 
-  const handleRegistrationSuccess = (_username: string) => {
-    closeRegister()
-    setRegisteredUsername('')
-    navigate('/login', {
-      state: {
-        message: 'Registration successful! Your account has been created. You can now log in.',
-      },
-    })
+  const handleRegistrationSuccess = (username: string) => {
+    openLoginAfterRegistration(username)
   }
 
   const handleLogout = () => {
@@ -122,7 +118,6 @@ const NavMenu = () => {
                   variant="primary"
                   className="d-flex align-items-center gap-2"
                   onClick={() => {
-                    setRegisteredUsername('')
                     openLogin()
                   }}
                 >
@@ -328,12 +323,20 @@ const NavMenu = () => {
         </Modal.Header>
 
         <Modal.Body>
+          {registration && (
+            <Alert variant="success" role="status">
+              Registration successful! Your account has been created. You can now log in.
+            </Alert>
+          )}
           <LoginForm
             modal
-            initialUsername={registeredUsername}
+            initialUsername={registration?.username ?? ''}
             onSuccess={() => {
+              const from = registration?.from
               closeLogin()
-              setRegisteredUsername('')
+              if (from?.startsWith('/') && !from.startsWith('//') && !from.includes('\\')) {
+                navigate(from, { replace: true })
+              }
             }}
           />
 
@@ -372,7 +375,6 @@ const NavMenu = () => {
               type="button"
               className="btn btn-link p-0"
               onClick={() => {
-                setRegisteredUsername('')
                 openLogin()
               }}
             >
