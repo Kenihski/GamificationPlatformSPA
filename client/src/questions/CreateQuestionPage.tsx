@@ -174,7 +174,7 @@ const CreateQuestionPage = () => {
         }),
       ])
 
-      navigate(`/challenges/${challengeId}`)
+      navigate(`/challenges/${challengeId}?showQuestions=true`)
     },
     onError: (error: Error) => {
       setErrorMessage(error.message)
