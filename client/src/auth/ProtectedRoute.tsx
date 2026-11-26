@@ -13,16 +13,11 @@ const ProtectedRoute = ({ requiredRole }: ProtectedRouteProps) => {
 
   if (!isAuthenticated) {
     return (
-      <Container className="mt-4">
-        <Alert variant="warning">
-          You must be logged in to access this page.
-        </Alert>
-        <Navigate
-          to="/"
-          replace
-          state={{ from: location }}
-        />
-      </Container>
+      <Navigate
+        to="/login"
+        replace
+        state={{ from: location.pathname + location.search + location.hash }}
+      />
     )
   }
 
