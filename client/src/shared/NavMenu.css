@@ -7,6 +7,11 @@
   border-bottom: 1px solid rgba(111, 132, 255, 0.35);
 }
 
+/* Provide room for focus indicators if navigation controls wrap. */
+.site-navbar > .container-fluid {
+  row-gap: 0.75rem;
+}
+
 .site-navbar .navbar-brand {
   color: #ffffff;
   font-size: 1.25rem;
@@ -66,8 +71,9 @@
   align-items: center;
   justify-content: center;
   width: 44px;
-  height: 44px;
-  padding: 0;
+  box-sizing: content-box;
+  height: calc(1em * var(--bs-btn-line-height));
+  padding: var(--bs-btn-padding-y) 0;
 }
 
 .matrix-toggle:hover {
@@ -77,7 +83,7 @@
 .matrix-tooltip {
   display: none;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 12px);
   right: 0;
   z-index: 1080;
   width: max-content;
@@ -90,8 +96,17 @@
   font-size: 0.875rem;
 }
 
+.matrix-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 12px;
+}
+
 .matrix-control:not(.tooltip-dismissed):hover .matrix-tooltip,
-.matrix-control:not(.tooltip-dismissed):focus-within .matrix-tooltip {
+.matrix-control:not(.tooltip-dismissed):has(.matrix-toggle:focus-visible) .matrix-tooltip {
   display: block;
 }
 
