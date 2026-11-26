@@ -21,6 +21,17 @@ dotnet user-secrets set "Jwt:Key" "$key"
 dotnet user-secrets list
 ```
 
+If the first command fails with `does not contain a method named 'GetBytes'`, you may be using an older version of Windows PowerShell that does not support that method. Use this variant instead:
+
+```powershell
+cd api
+$bytes = New-Object byte[] 32
+[System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+$key = [Convert]::ToBase64String($bytes)
+dotnet user-secrets set "Jwt:Key" "$key"
+dotnet user-secrets list
+```
+
 **macOS / Linux (requires OpenSSL):**
 
 ```bash
