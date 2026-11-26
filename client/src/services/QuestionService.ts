@@ -49,14 +49,15 @@ const updateQuestion = async (
   challengeId: number,
   questionId: number,
   data: QuestionSaveRequest
-): Promise<void> => {
-  await apiFetch(
+): Promise<boolean> => {
+  const response = await apiFetch(
     `/api/challenges/${challengeId}/questions/${questionId}`,
     {
       method: 'PUT',
       body: JSON.stringify(data),
     }
   )
+  return response.status === 204
 }
 
 const deleteQuestion = async (
