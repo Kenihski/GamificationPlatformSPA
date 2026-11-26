@@ -154,13 +154,13 @@
 }
 
 .achievement-admin-page .btn-primary {
-  background: linear-gradient(135deg, #3159cf, #6540c5);
+  background: linear-gradient(135deg, #3d65d9, #7957d8);
   border-color: #6d83ff;
   color: #ffffff;
 }
 
 .achievement-admin-page .btn-primary:hover {
-  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  background: linear-gradient(135deg, #4269dc, #7d5bdb);
   border-color: #9eabff;
   color: #ffffff;
 }
@@ -192,21 +192,6 @@
 
 .achievement-admin-list .achievement-row:last-child {
   margin-bottom: 0;
-}
-
-/* Delete button */
-.achievement-admin-page .achievement-admin-actions .btn-outline-danger {
-  color: #ffb3bf;
-  border-color: #ffb3bf;
-  background: transparent;
-}
-
-/* Match Subapp 1 hover */
-.achievement-admin-page .achievement-admin-actions .btn-outline-danger:hover {
-  background: #dc3545;
-  border-color: #dc3545;
-  color: #ffffff;
-  box-shadow: none;
 }
 
 /* Match Publish button in Subapp 1 */

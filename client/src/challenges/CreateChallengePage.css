@@ -58,13 +58,13 @@
 
 /* Match the Create and Cancel buttons in Subapp 1. */
 .create-challenge-page .btn-primary {
-  background: linear-gradient(135deg, #3159cf, #6540c5);
+  background: linear-gradient(135deg, #3d65d9, #7957d8);
   border-color: #6d83ff;
   color: #ffffff;
 }
 
 .create-challenge-page .btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  background: linear-gradient(135deg, #4269dc, #7d5bdb);
   border-color: #9eabff;
   color: #ffffff;
 }
@@ -91,7 +91,3 @@
   border-radius: 8px;
 }
 
-/* Use the same required-field color as Subapp 1. */
-.create-challenge-page .text-danger {
-  color: #ffb3bf !important;
-}

@@ -1,7 +1,4 @@
 
-.question-form-page {
-  max-width: 960px;
-}
 
 .question-image-preview {
   display: block;
@@ -50,7 +47,7 @@
 }
 
 .management-page .card .alert-danger {
-  color: #ffe2de;
-  background-color: #602932;
-  border-color: #ff756b;
+  color: #fff1ef;
+  background-color: #421b1b;
+  border-color: var(--danger-border);
 }

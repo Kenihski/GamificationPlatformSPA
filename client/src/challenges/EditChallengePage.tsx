@@ -199,7 +199,7 @@ const EditForm = ({ challenge }: EditFormProps) => {
         : null
 
   return (
-    <Container className="create-challenge-page py-4">
+    <Container className="create-challenge-page management-page py-4">
       <h2 className="my-4">Update Challenge</h2>
       <Alert variant="warning" role="status">
         Updating this challenge keeps its questions, completed attempts and scores.

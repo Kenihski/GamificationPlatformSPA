@@ -392,7 +392,7 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
         : null
 
   return (
-    <Container className="question-form-page py-4">
+    <Container className="question-form-page management-page py-4">
       <h2 className="my-4">Update Question</h2>
 
       <Alert variant="warning">

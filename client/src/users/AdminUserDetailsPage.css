@@ -68,11 +68,6 @@
   border-color: #ffc107;
 }
 
-.admin-user-details .btn-outline-danger {
-  --bs-btn-color: #ffb3bf;
-  --bs-btn-border-color: #ffb3bf;
-}
-
 .admin-user-details .btn-outline-success {
   --bs-btn-color: #91efc4;
   --bs-btn-border-color: #91efc4;

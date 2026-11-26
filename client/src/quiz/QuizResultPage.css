@@ -222,7 +222,7 @@
 
 .quiz-result-status-wrong {
   background: rgba(239, 68, 68, 0.12);
-  color: #fca5a5;
+  color: var(--text-error);
 }
 
 .quiz-result-status-unanswered {

@@ -224,17 +224,6 @@
     border-color: #ffc107;
 }
 
-.questions-table-actions .btn-outline-danger {
-    color: #ffb5bd;
-    border-color: #ffb5bd;
-}
-
-.questions-table-actions .btn-outline-danger:hover {
-    color: #121a36;
-    background-color: #ffb5bd;
-    border-color: #ffb5bd;
-}
-
 /* Responsive layout */
 @media (max-width: 991px) {
     .questions-navigation-grid {

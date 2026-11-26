@@ -4,9 +4,8 @@
   --home-blue: #91adff;
   --content-card-bg: #121a36;
   --content-card-border: rgba(125, 151, 230, 0.55);
-  --primary-gradient: linear-gradient(135deg, #3159cf, #6540c5);
-  --primary-gradient-hover: linear-gradient(135deg, #3d65d9, #714bd1);
-  --text-error: #ffb3bf;
+  --primary-gradient: linear-gradient(135deg, #3d65d9, #7957d8);
+  --primary-gradient-hover: linear-gradient(135deg, #4269dc, #7d5bdb);
   padding: 15px 0 65px;
 }
 
@@ -252,11 +251,6 @@
   background: rgba(67, 106, 230, 0.25);
   color: #c8d6ff;
 }
-.challenge-details-page .btn-outline-danger {
-  --bs-btn-color: var(--text-error);
-  --bs-btn-border-color: var(--text-error);
-}
-
 /* Tables from Subapp 1 site.css */
 .challenge-details-panel .table-responsive { max-width: 100%; }
 .challenge-details-panel .table {

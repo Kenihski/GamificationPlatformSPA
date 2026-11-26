@@ -101,11 +101,6 @@
   --bs-btn-border-color: #91efc4;
 }
 
-.my-challenges-page .btn-outline-danger {
-  --bs-btn-color: #ffb3bf;
-  --bs-btn-border-color: #ffb3bf;
-}
-
 .my-challenges-page .btn-outline-secondary {
   --bs-btn-color: #d1d9ee;
   --bs-btn-border-color: #91a5df;
@@ -149,13 +144,13 @@
 
 /* Create New Challenge */
 .my-challenges-page .btn-primary {
-  background: linear-gradient(135deg, #3159cf, #6540c5);
+  background: linear-gradient(135deg, #3d65d9, #7957d8);
   border-color: #6d83ff;
   color: #ffffff;
 }
 
 .my-challenges-page .btn-primary:hover {
-  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  background: linear-gradient(135deg, #4269dc, #7d5bdb);
   border-color: #9eabff;
   color: #ffffff;
 }

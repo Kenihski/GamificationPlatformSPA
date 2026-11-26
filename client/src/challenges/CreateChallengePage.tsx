@@ -162,7 +162,7 @@ const CreateChallengePage = () => {
         : null
 
   return (
-    <Container className="create-challenge-page py-4">
+    <Container className="create-challenge-page management-page py-4">
       <h2 className="create-challenge-title">Create New Challenge</h2>
 
       {(errorMessage || Object.keys(fieldErrors).length > 0) && (
@@ -186,12 +186,13 @@ const CreateChallengePage = () => {
             <Form.Select
               value={isCore ? 'core' : 'community'}
               onChange={(event) => setIsCore(event.target.value === 'core')}
+              aria-describedby="challengeTypeHelp"
             >
               <option value="community">Community</option>
               <option value="core">Core</option>
             </Form.Select>
-            <Form.Text className="text-secondary">
-              You can change the type later only for challenges you created.
+            <Form.Text id="challengeTypeHelp" className="text-secondary">
+              You can change the type later.
             </Form.Text>
           </Form.Group>
         ) : (

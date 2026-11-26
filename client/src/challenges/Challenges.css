@@ -3,8 +3,8 @@
   --home-blue: #91adff;
   --content-card-bg: #121a36;
   --content-card-border: rgba(125, 151, 230, 0.55);
-  --primary-gradient: linear-gradient(135deg, #3159cf, #6540c5);
-  --primary-gradient-hover: linear-gradient(135deg, #3d65d9, #714bd1);
+  --primary-gradient: linear-gradient(135deg, #3d65d9, #7957d8);
+  --primary-gradient-hover: linear-gradient(135deg, #4269dc, #7d5bdb);
 }
 
 .challenge-list-description {

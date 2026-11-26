@@ -6,8 +6,8 @@
   --auth-input-focus: #2d3c65;
   --auth-text: #ffffff;
   --auth-muted: #d1d9ee;
-  --auth-gradient: linear-gradient(135deg, #3159cf, #6540c5);
-  --auth-gradient-hover: linear-gradient(135deg, #3d65d9, #714bd1);
+  --auth-gradient: linear-gradient(135deg, #3d65d9, #7957d8);
+  --auth-gradient-hover: linear-gradient(135deg, #4269dc, #7d5bdb);
 }
 
 /* Login and registration form fields */
@@ -141,13 +141,19 @@ main a:not(.btn):hover {
 
 /* Error messages */
 .alert-danger {
-  --bs-alert-bg: #4a222b;
-  --bs-alert-border-color: #c35b69;
-  --bs-alert-color: #ffe1e5;
+  --bs-alert-bg: #421b1b;
+  --bs-alert-border-color: var(--danger-border);
+  --bs-alert-color: #fff1ef;
 
-  background-color: #4a222b;
-  border-color: #c35b69;
-  color: #ffe1e5;
+  padding: 0.75rem 1rem;
+  background-color: #421b1b;
+  border-color: var(--danger-border);
+  color: #fff1ef;
+}
+
+.alert-danger ul {
+  margin-block: 0;
+  padding-inline-start: 1.25rem;
 }
 
 /* Warning messages */

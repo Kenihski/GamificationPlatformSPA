@@ -112,7 +112,7 @@ const EditAchievementPage = () => {
   }
 
   return (
-    <Container className="achievement-form-page mt-4 mb-5">
+    <Container className="achievement-form-page management-page mt-4 mb-5">
       <div className="mb-4">
         <h1>Edit Achievement</h1>
         <p className="text-muted">
