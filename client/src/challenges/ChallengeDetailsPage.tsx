@@ -7,7 +7,7 @@ import {
   Spinner,
   Table,
 } from 'react-bootstrap'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import ChallengeService from '../services/ChallengeService'
 import QuestionService from '../services/QuestionService'
@@ -33,6 +33,8 @@ const getImageUrl = (imageUrl: string | null) => {
 
 const ChallengeDetailsPage = () => {
   const { id } = useParams()
+  const [searchParams] = useSearchParams()
+  const fromMyChallenges = searchParams.get('fromMyChallenges') === 'true'
   const { user } = useAuth()
   const queryClient = useQueryClient()
 
@@ -186,8 +188,8 @@ const ChallengeDetailsPage = () => {
           </Alert>
         )}
 
-        <Link to="/challenges" className="challenge-details-back">
-          <span aria-hidden="true">←</span> Back to Challenges
+        <Link to={fromMyChallenges ? '/my-challenges' : '/challenges'} className="challenge-details-back">
+          <span aria-hidden="true">←</span> {fromMyChallenges ? 'Back to My Challenges' : 'Back to Challenges'}
         </Link>
 
         <section
