@@ -204,7 +204,7 @@ const MyImagesPage = () => {
                   <div className="ratio ratio-4x3">
                     <img
                       src={`${import.meta.env.VITE_API_BASE_URL ?? ''}${image.imageUrl}`}
-                      alt={image.fileName}
+                      alt=""
                       className="w-100 h-100 object-fit-cover rounded-top"
                     />
                   </div>

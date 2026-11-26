@@ -158,7 +158,7 @@ const DeleteQuestionPage = () => {
                 <dd className="col-sm-9">
                   <img
                     src={getImageSource(question.imageUrl)}
-                    alt="Question"
+                    alt=""
                     className="question-image-preview"
                   />
                 </dd>

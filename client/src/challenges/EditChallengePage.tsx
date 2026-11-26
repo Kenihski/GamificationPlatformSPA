@@ -163,12 +163,8 @@ const EditForm = ({ challenge }: EditFormProps) => {
       return
     }
 
-    if (imageCategory === 'upload') {
-      if (!imageFile) {
-        setErrorMessage('Please select an image.')
-        return
-      }
-
+    // An empty image selection falls back to Question 1, as in Subapp 1.
+    if (imageCategory === 'upload' && imageFile) {
       if (imageFile.size > 5 * 1024 * 1024) {
         setErrorMessage('The image must be 5 MB or smaller.')
         return
@@ -180,23 +176,16 @@ const EditForm = ({ challenge }: EditFormProps) => {
       }
     }
 
-    if (
-      (imageCategory === 'my' || imageCategory === 'default') &&
-      !imageUrl
-    ) {
-      setErrorMessage('Please select an image.')
-      return
-    }
-
     updateMutation.mutate()
   }
 
+  const fallbackPreviewUrl = fallbackImage ? getImageSource(fallbackImage) : null
   const previewUrl =
     imageCategory === 'upload'
-      ? uploadedPreviewUrl
+      ? uploadedPreviewUrl || fallbackPreviewUrl
       : imageUrl
         ? getImageSource(imageUrl)
-        : null
+        : fallbackPreviewUrl
 
   return (
     <Container className="create-challenge-page management-page py-4">
@@ -281,7 +270,7 @@ const EditForm = ({ challenge }: EditFormProps) => {
             <option value="default">Default Images</option>
           </Form.Select>
           <Form.Text className="text-secondary">
-            Question 1 is the fallback image when none is selected.
+            If no image is selected, Question 1 will be used. You can choose another image.
           </Form.Text>
 
           {imageCategory === 'upload' && (
@@ -324,20 +313,6 @@ const EditForm = ({ challenge }: EditFormProps) => {
                       </option>
                     ))}
                   </Form.Select>
-
-                  {imageUrl && (
-                    <div className="text-end mt-1">
-                      <Button
-                        type="button"
-                        variant="link"
-                        size="sm"
-                        className="text-secondary text-decoration-none"
-                        onClick={() => setImageUrl('')}
-                      >
-                        Remove image
-                      </Button>
-                    </div>
-                  )}
                 </>
               )}
             </div>

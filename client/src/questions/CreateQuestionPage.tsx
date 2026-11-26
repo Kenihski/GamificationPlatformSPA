@@ -621,17 +621,6 @@ const CreateQuestionPage = () => {
             </div>
           )}
 
-          {imageCategory === 'my' && imageUrl && (
-            <Button
-              variant="link"
-              size="sm"
-              className="text-secondary text-decoration-none mt-2"
-              onClick={() => setImageUrl('')}
-            >
-              Remove image
-            </Button>
-          )}
-
           {previewUrl && (
             <div className="mt-3">
               <img

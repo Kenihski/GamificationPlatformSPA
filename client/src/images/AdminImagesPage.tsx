@@ -222,7 +222,7 @@ const AdminImagesPage = () => {
         <div className="ratio ratio-4x3 bg-light rounded overflow-hidden">
           <img
             src={imageUrl(image.imageUrl)}
-            alt={image.fileName}
+            alt=""
             className="w-100 h-100 object-fit-cover"
           />
         </div>
@@ -272,7 +272,7 @@ const AdminImagesPage = () => {
         <div className="ratio ratio-4x3 bg-light rounded overflow-hidden">
           <img
             src={imageUrl(image.imageUrl)}
-            alt={image.name}
+            alt=""
             className="w-100 h-100 object-fit-cover"
           />
         </div>

@@ -90,7 +90,7 @@ const NavMenu = () => {
           </Navbar.Brand>
 
           <Nav className="site-navbar-primary d-none d-xl-flex align-items-center gap-3 mx-auto">
-            <Nav.Link as={NavLink} to="/challenges">Challenges</Nav.Link>
+            <Nav.Link as={NavLink} to="/challenges" end>Challenges</Nav.Link>
             <Nav.Link as={NavLink} to="/hall-of-fame">Hall of Fame</Nav.Link>
             <Nav.Link as={NavLink} to="/leaderboard">Core Leaderboard</Nav.Link>
           </Nav>
@@ -172,6 +172,7 @@ const NavMenu = () => {
             <Nav.Link
               as={NavLink}
               to="/challenges"
+              end
               onClick={closeMenu}
             >
               Challenges

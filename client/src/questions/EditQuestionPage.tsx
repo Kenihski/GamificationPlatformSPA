@@ -396,8 +396,10 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
       <h2 className="my-4">Update Question</h2>
 
       <Alert variant="warning">
-        <strong>Warning:</strong> Updating this question will reset
-        all previous attempts and scores for this challenge.
+        <strong>Warning:</strong> Saving changes to this question permanently deletes all
+        attempts, submitted answers and scores for the entire challenge, even if you only
+        change the text or image. This also removes those results from the leaderboards.
+        Saving without changes keeps all results.
       </Alert>
 
       {successMessage && <Alert variant="success" role="status">{successMessage}</Alert>}
