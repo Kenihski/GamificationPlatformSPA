@@ -35,10 +35,8 @@ const validate = (data: RegisterRequest): FieldErrors => {
   else {
     if (data.password.length < 6 || data.password.length > 100)
       add('password', 'Password must be between 6 and 100 characters.')
-    if (!/[a-z]/.test(data.password))
-      add('password', "Passwords must have at least one lowercase ('a'-'z').")
-    if (!/[0-9]/.test(data.password))
-      add('password', "Passwords must have at least one digit ('0'-'9').")
+    if (!/[A-Z]/.test(data.password) || !/[0-9]/.test(data.password))
+      add('password', 'Password must contain at least one uppercase letter and one number.')
     if (username && username.toLowerCase() === data.password.toLowerCase())
       add('password', 'Username and password cannot be the same.')
   }
@@ -203,7 +201,7 @@ const RegisterForm = ({ onSuccess, modal = false }: RegisterFormProps) => {
             {fieldErrors.password.map((message) => <div key={message}>{message}</div>)}
           </Form.Control.Feedback>
         )}
-        <Form.Text id="registerPasswordHelp" className="text-secondary">Use 6 to 100 characters with a lowercase letter and a number. The password must differ from the username.</Form.Text>
+        <Form.Text id="registerPasswordHelp" className="text-secondary">Use 6 to 100 characters, including at least one uppercase letter and one number. Your password must be different from your username.</Form.Text>
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="registerConfirmPassword">
