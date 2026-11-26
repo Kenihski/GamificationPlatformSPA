@@ -16,9 +16,11 @@ import {
   Tabs,
 } from 'react-bootstrap'
 import ImageService from '../services/ImageService'
+import { Link } from 'react-router-dom'
 import type {
   AdminUserImage,
   DefaultImage,
+  ImageDeletionImpact,
 } from '../services/ImageService'
 import './AdminImagesPage.css'
 
@@ -35,6 +37,7 @@ const AdminImagesPage = () => {
   const [renamedImages, setRenamedImages] = useState<Record<number, string>>({})
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [blockingQuestions, setBlockingQuestions] = useState<ImageDeletionImpact['questions']>([])
 
   const {
     data,
@@ -153,26 +156,44 @@ const AdminImagesPage = () => {
     renameMutation.mutate({ id: image.defaultImageId, name })
   }
 
-  const confirmDelete = () =>
-    window.confirm(
-      'Are you sure you want to permanently delete this image? ' +
-      'Challenges and questions using it will show the Question 1 default image instead. This cannot be undone.'
-    )
-
-  const handleDeleteDefault = (id: number) => {
-    if (!confirmDelete()) return
-
-    setErrorMessage(null)
-    setSuccessMessage(null)
-    deleteDefaultMutation.mutate(id)
+  const confirmImpact = (impact: ImageDeletionImpact) => {
+    setBlockingQuestions([])
+    if (impact.questions.length > 0) {
+      setBlockingQuestions(impact.questions)
+      setErrorMessage('This image is used by questions. Replace it in those questions before deleting it.')
+      return false
+    }
+    const covers = impact.challenges.map((challenge) => challenge.title).join(', ')
+    const warning = covers
+      ? `Affected challenge covers: ${covers}. They will use Question 1 instead. `
+      : ''
+    return window.confirm(`${warning}Permanently delete ${impact.imageName}? This cannot be undone.`)
   }
 
-  const handleDeleteUser = (id: number) => {
-    if (!confirmDelete()) return
-
+  const handleDeleteDefault = async (id: number) => {
     setErrorMessage(null)
     setSuccessMessage(null)
-    deleteUserMutation.mutate(id)
+    try {
+      const info = await ImageService.getDefaultImageDeletionImpact(id)
+      if (info.protectedFallback) {
+        setErrorMessage('Question 1 is the protected fallback image and cannot be deleted.')
+        return
+      }
+      if (confirmImpact(info.impact)) deleteDefaultMutation.mutate(id)
+    } catch (error) {
+      showError(error instanceof Error ? error : new Error('Could not check image usage.'))
+    }
+  }
+
+  const handleDeleteUser = async (id: number) => {
+    setErrorMessage(null)
+    setSuccessMessage(null)
+    try {
+      const impact = await ImageService.getImageDeletionImpact(id)
+      if (confirmImpact(impact)) deleteUserMutation.mutate(id)
+    } catch (error) {
+      showError(error instanceof Error ? error : new Error('Could not check image usage.'))
+    }
   }
 
   const imageUrl = (url: string) =>
@@ -357,6 +378,17 @@ const AdminImagesPage = () => {
       {errorMessage && (
         <Alert variant="danger">
           {errorMessage}
+          {blockingQuestions.length > 0 && (
+            <ul className="mt-2 mb-0">
+              {blockingQuestions.map((question) => (
+                <li key={question.questionId}>
+                  <Link to={`/challenges/${question.challengeId}/questions/${question.questionId}/edit`}>
+                    Edit question: {question.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </Alert>
       )}
 
