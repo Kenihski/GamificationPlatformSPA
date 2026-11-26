@@ -11,7 +11,7 @@ import { useAuth } from '../auth/AuthContext'
 import type { Challenge } from '../types/Challenge'
 import './CreateChallengePage.css'
 
-type ImageCategory = 'none' | 'current' | 'upload' | 'my' | 'default'
+type ImageCategory = 'current' | 'upload' | 'my' | 'default'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
 
@@ -60,7 +60,8 @@ const EditForm = ({ challenge }: EditFormProps) => {
   const defaultImages = defaultImagesQuery.data ?? []
   const myImages = myImagesQuery.data ?? []
 
-  const currentImage = challenge.imageUrl ?? ''
+  const fallbackImage = defaultImages.find(image => image.name === 'Question 1' || image.imageUrl === '/images/Question_1.png')?.imageUrl ?? ''
+  const currentImage = challenge.imageUrl || fallbackImage
   const isMyImage = myImages.some((image) => image.imageUrl === currentImage)
   const isDefaultImage = defaultImages.some(
     (image) => image.imageUrl === currentImage
@@ -78,8 +79,9 @@ const EditForm = ({ challenge }: EditFormProps) => {
       return
     }
 
-    if (!currentImage) {
-      setImageCategory('none')
+    if (!challenge.imageUrl) {
+      setImageUrl(fallbackImage)
+      setImageCategory('default')
     } else if (isMyImage) {
       setImageCategory('my')
     } else if (isDefaultImage) {
@@ -94,6 +96,7 @@ const EditForm = ({ challenge }: EditFormProps) => {
     defaultImagesQuery.isPending,
     myImagesQuery.isPending,
     currentImage,
+    fallbackImage,
     isMyImage,
     isDefaultImage,
   ])
@@ -123,7 +126,7 @@ const EditForm = ({ challenge }: EditFormProps) => {
       const data: ChallengeSaveRequest = {
         title: title.trim(),
         description: description.trim(),
-        imageUrl: selectedImageUrl,
+        imageUrl: selectedImageUrl || fallbackImage,
         timeLimitMinutes: timeLimit === '' ? null : Number(timeLimit),
         showAnswersAfterCompletion: showAnswers,
       }
@@ -146,7 +149,7 @@ const EditForm = ({ challenge }: EditFormProps) => {
 
   const handleCategoryChange = (category: ImageCategory) => {
     setImageCategory(category)
-    setImageUrl(category === 'current' ? currentImage : '')
+    setImageUrl(category === 'current' ? currentImage : category === 'default' ? fallbackImage : '')
     setImageFile(null)
     setUploadedPreviewUrl(null)
   }
@@ -269,7 +272,7 @@ const EditForm = ({ challenge }: EditFormProps) => {
               handleCategoryChange(event.target.value as ImageCategory)
             }
           >
-            <option value="none">No image</option>
+
             {isOtherImage && (
               <option value="current">Current image</option>
             )}
@@ -277,6 +280,9 @@ const EditForm = ({ challenge }: EditFormProps) => {
             <option value="my">My Images</option>
             <option value="default">Default Images</option>
           </Form.Select>
+          <Form.Text className="text-secondary">
+            Question 1 is the fallback image when none is selected.
+          </Form.Text>
 
           {imageCategory === 'upload' && (
             <div className="mt-3">
