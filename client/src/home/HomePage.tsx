@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Card, Col, Container, Row, Spinner } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Alert, Card, Col, Container, Row, Spinner } from 'react-bootstrap'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { useAuthModal } from '../auth/AuthModalContext'
 import ChallengeService from '../services/ChallengeService'
@@ -82,6 +82,24 @@ const FeatureCard = ({
 
 const HomePage = () => {
   const { user } = useAuth()
+  const location = useLocation()
+  const message = location.state?.message === 'You have been logged out successfully.'
+    ? location.state.message as string
+    : null
+
+  // Consume the flash message from the history entry, while keeping it
+  // visible for this visit. Refresh and Back must not replay the message.
+  useEffect(() => {
+    if (message && window.history.state?.key === location.key) {
+      const historyState = window.history.state
+      const remainingState = { ...historyState.usr }
+      delete remainingState.message
+      window.history.replaceState({
+        ...historyState,
+        usr: Object.keys(remainingState).length ? remainingState : null,
+      }, '')
+    }
+  }, [location.key, message])
   const { openRegister } = useAuthModal()
 
   const {
@@ -107,6 +125,11 @@ const HomePage = () => {
 
   return (
     <Container className="home-page">
+      {message && (
+        <Alert variant="success" role="status" className="mt-3">
+          {message}
+        </Alert>
+      )}
       <section className="home-hero text-center">
         <p className="home-subtitle">
           LEARN • CHALLENGE • IMPROVE
