@@ -76,14 +76,11 @@ const CreateChallengePage = () => {
     queryFn: ImageService.getDefaultImages,
   })
 
-  // Preselect Freyr's Question 1 image once defaults are available.
-  useEffect(() => {
-    if (imageCategory !== 'default' || imageUrl) return
-    const firstImage = defaultImagesQuery.data?.find(
-      (image) => image.name === 'Question 1'
-    )
-    if (firstImage) setImageUrl(firstImage.imageUrl)
-  }, [defaultImagesQuery.data, imageCategory, imageUrl])
+  // Use the same fallback as the MVC form and API when no image is selected.
+  const fallbackImageUrl = defaultImagesQuery.data?.find(
+    (image) => image.name === 'Question 1'
+  )?.imageUrl ?? ''
+  const selectedImageUrl = imageUrl || fallbackImageUrl
 
   const myImagesQuery = useQuery({
     queryKey: ['my-images'],
@@ -92,16 +89,16 @@ const CreateChallengePage = () => {
 
   const createMutation = useMutation({
     mutationFn: async () => {
-      let selectedImageUrl = imageCategory === 'upload' ? '' : imageUrl
+      let submittedImageUrl = imageCategory === 'upload' ? fallbackImageUrl : selectedImageUrl
 
       if (imageCategory === 'upload' && imageFile) {
-        selectedImageUrl = await ImageService.uploadImage(imageFile)
+        submittedImageUrl = await ImageService.uploadImage(imageFile)
       }
 
       const data: ChallengeSaveRequest = {
         title: title.trim(),
         description: description.trim(),
-        imageUrl: selectedImageUrl,
+        imageUrl: submittedImageUrl,
         timeLimitMinutes: timeLimit === '' ? null : Number(timeLimit),
         showAnswersAfterCompletion: showAnswers,
         isCore: isAdmin && isCore,
@@ -124,7 +121,7 @@ const CreateChallengePage = () => {
   const handleCategoryChange = (category: ImageCategory) => {
     clearFieldError('image')
     setImageCategory(category)
-    setImageUrl(category === 'default' ? (defaultImagesQuery.data?.find(image => image.name === 'Question 1')?.imageUrl ?? '') : '')
+    setImageUrl('')
     setImageFile(null)
     setUploadedPreviewUrl(null)
   }
@@ -137,15 +134,13 @@ const CreateChallengePage = () => {
     if (!title.trim()) errors.title = 'Challenge title is required.'
     if (!description.trim()) errors.description = 'Description is required.'
 
-    if (imageCategory === 'upload') {
-      if (!imageFile) {
-        errors.image = 'Please select an image.'
-      } else if (imageFile.size > 5 * 1024 * 1024) {
+    if (imageCategory === 'upload' && imageFile) {
+      if (imageFile.size > 5 * 1024 * 1024) {
         errors.image = 'The image must be 5 MB or smaller.'
       } else if (!['image/jpeg', 'image/png', 'image/webp'].includes(imageFile.type)) {
         errors.image = 'Choose a JPG, PNG or WebP image.'
       }
-    } else if (!imageUrl) {
+    } else if (!selectedImageUrl) {
       errors.image = 'Please select an image.'
     }
 
@@ -158,11 +153,12 @@ const CreateChallengePage = () => {
     createMutation.mutate()
   }
 
+  const fallbackPreviewUrl = fallbackImageUrl ? getImageSource(fallbackImageUrl) : null
   const previewUrl =
     imageCategory === 'upload'
-      ? uploadedPreviewUrl
-      : imageUrl
-        ? getImageSource(imageUrl)
+      ? uploadedPreviewUrl || fallbackPreviewUrl
+      : selectedImageUrl
+        ? getImageSource(selectedImageUrl)
         : null
 
   return (
@@ -289,7 +285,8 @@ const CreateChallengePage = () => {
           </Form.Select>
           <Form.Text className="text-secondary" role="status">
             Question 1 is selected by default. Choose another default image,
-            one of your images, or upload a new one.
+            one of your images, or upload a new one. If you leave the image selection empty,
+            the default will be used.
           </Form.Text>
 
           {imageCategory === 'upload' && (
@@ -351,7 +348,7 @@ const CreateChallengePage = () => {
               ) : (
                 <Form.Select
                   id="defaultImageSelect"
-                  value={imageUrl}
+                  value={selectedImageUrl}
                   onChange={(event) => {
                     setImageUrl(event.target.value)
                     clearFieldError('image')
