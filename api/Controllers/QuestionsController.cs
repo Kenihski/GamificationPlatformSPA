@@ -217,7 +217,16 @@ namespace GamificationPlatform.Controllers
                 return ValidationProblem(ModelState);
             }
 
-            // Changing quiz content resets previous attempts and scores.
+            // An unchanged save must preserve completed attempts, scores and leaderboards.
+            if (!HasQuestionChanges(question, dto))
+            {
+                _logger.LogInformation(
+                    "User {UserId} saved unchanged question {QuestionId} in challenge {ChallengeId}; history preserved.",
+                    userId.Value, id, challengeId);
+                return Ok(new { changed = false, message = "No changes were made." });
+            }
+
+            // Only genuine content changes reset previous attempts and scores.
             await _attemptRepository.DeleteChallengeHistoryAsync(challengeId);
 
             ApplyChanges(question, dto);
@@ -452,6 +461,37 @@ namespace GamificationPlatform.Controllers
             }
 
             return ModelState.IsValid;
+        }
+
+        // Mirror MVC change detection, including line-ending normalization and trimmed answers.
+        private static bool HasQuestionChanges(Question question, QuestionSaveDTO dto)
+        {
+            static string Normalize(string? text) => (text ?? string.Empty).ReplaceLineEndings("\n");
+
+            if (question.Title != dto.Title ||
+                Normalize(question.Description) != Normalize(dto.Description) ||
+                Normalize(question.Explanation) != Normalize(dto.Explanation) ||
+                question.Points != dto.Points ||
+                (question.ImageUrl ?? string.Empty) != (dto.ImageUrl ?? string.Empty) ||
+                question.QuestionType != dto.QuestionType)
+            {
+                return true;
+            }
+
+            if (dto.QuestionType == "ShortAnswer")
+            {
+                var submitted = (dto.AcceptedAnswers ?? new List<string>())
+                    .Where(a => !string.IsNullOrWhiteSpace(a))
+                    .Select(a => a.Trim());
+                return !question.AcceptedAnswers.Select(a => a.Text)
+                    .SequenceEqual(submitted);
+            }
+
+            var submittedOptions = (dto.Options ?? new List<QuestionOptionSaveDTO>())
+                .Where(o => !string.IsNullOrWhiteSpace(o.Text))
+                .Select(o => (Text: o.Text.Trim(), o.IsCorrect));
+            return !question.Options.Select(o => (o.Text, o.IsCorrect))
+                .SequenceEqual(submittedOptions);
         }
 
         private static void ApplyChanges(
