@@ -119,9 +119,7 @@ const MyChallengesPage = () => {
                 <th className="text-center">Questions</th>
                 <th className="text-center">Max Points</th>
                 <th className="text-center">Status</th>
-                {isAdmin && (
-                  <th className="text-center">Type</th>
-                )}
+                <th className="text-center">Type</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -156,19 +154,17 @@ const MyChallengesPage = () => {
                       </span>
                     </td>
 
-                    {isAdmin && (
-                      <td className="text-center">
-                        <span
-                          className={
-                            challenge.isCore
-                              ? 'featured-badge featured-badge-core challenge-table-badge'
-                              : 'featured-badge featured-badge-community challenge-table-badge'
-                          }
-                        >
-                          {challenge.isCore ? 'CORE' : 'COMMUNITY'}
-                        </span>
-                      </td>
-                    )}
+                    <td className="text-center">
+                      <span
+                        className={
+                          challenge.isCore
+                            ? 'featured-badge featured-badge-core challenge-table-badge'
+                            : 'featured-badge featured-badge-community challenge-table-badge'
+                        }
+                      >
+                        {challenge.isCore ? 'CORE' : 'COMMUNITY'}
+                      </span>
+                    </td>
 
                     <td>
                       <div className="d-flex flex-nowrap gap-1 align-items-center my-challenges-actions">
