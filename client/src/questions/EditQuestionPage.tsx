@@ -186,13 +186,17 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
             : [],
       }
 
-      await QuestionService.updateQuestion(
+      return QuestionService.updateQuestion(
         challengeId,
         question.questionId,
         data
       )
     },
-    onSuccess: async () => {
+    onSuccess: async (changed) => {
+      if (!changed) {
+        setErrorMessage('No changes were made. Previous attempts and scores are preserved.')
+        return
+      }
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: ['questions', challengeId],
