@@ -2,7 +2,7 @@ name: Subapp 2 - build and lint
 
 on:
   push:
-    branches: [exam-readiness-audit-fixes, Salman-branch, main]
+    branches: [exam-readiness-audit-fixes, subapp1-main-parity-spa, Salman-branch, main]
   pull_request:
     branches: [main]
   workflow_dispatch:
