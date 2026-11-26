@@ -344,6 +344,21 @@ namespace GamificationPlatform.Controllers
                 return Forbid();
             }
 
+            // Keep MVC's Question 1 fallback when an edit leaves the image empty.
+            if (string.IsNullOrWhiteSpace(dto.ImageUrl))
+            {
+                var defaults = await _imageService.GetDefaultImagesAsync();
+                dto.ImageUrl = defaults
+                    .FirstOrDefault(image => image.Name == "Question 1" ||
+                        image.ImageUrl == "/images/Question_1.png")?.ImageUrl ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(dto.ImageUrl))
+                {
+                    ModelState.AddModelError(nameof(dto.ImageUrl),
+                        "The default image is unavailable. Please choose another image.");
+                    return ValidationProblem(ModelState);
+                }
+            }
+
             // Admins may retain an existing image owned by another user.
             bool keepingExistingImage =
                 dto.ImageUrl == challenge.ImageUrl;
