@@ -125,7 +125,7 @@ const HomePage = () => {
 
   return (
     <Container className="home-page">
-      {message && (
+      {!user && message && (
         <Alert variant="success" role="status" className="mt-3">
           {message}
         </Alert>
