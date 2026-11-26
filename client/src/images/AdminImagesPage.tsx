@@ -227,7 +227,9 @@ const AdminImagesPage = () => {
           />
         </div>
 
-        <div className="px-2 py-2 text-break small">{image.fileName}</div>
+        <Card.Body>
+          <p className="card-text text-break mb-0">{image.fileName}</p>
+        </Card.Body>
         <Dropdown key={successCount} align="end" className="admin-image-options">
           <Dropdown.Toggle
             variant="light"
@@ -277,7 +279,9 @@ const AdminImagesPage = () => {
           />
         </div>
 
-        <div className="px-2 py-2 text-break small">{image.name}</div>
+        <Card.Body>
+          <p className="card-text text-break mb-0">{image.name}</p>
+        </Card.Body>
         <Dropdown key={successCount} align="end" className="admin-image-options">
           <Dropdown.Toggle
             variant="light"
@@ -378,7 +382,7 @@ const AdminImagesPage = () => {
   const defaultImages = data?.defaultImages ?? []
 
   return (
-    <Container className="admin-images-page mt-3">
+    <Container className="admin-images-page mt-4">
       <div className="mb-4">
         <h1 className="h2 mb-1">Manage Images</h1>
         <p className="text-secondary mb-0">

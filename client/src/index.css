@@ -92,6 +92,7 @@ body {
 .btn-close {
   --bs-btn-close-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 0 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
   --bs-btn-close-white-filter: none;
+  --bs-btn-close-filter: none; /* Bootstrap 5.3.8: .btn-close-white would invert the white icon. */
   --bs-btn-close-opacity: 0.8;
   --bs-btn-close-hover-opacity: 1;
 }
@@ -125,9 +126,9 @@ body {
 
 /* All create, edit and delete form pages share one centred width (Subapp 1: .management-page). */
 .management-page {
-  max-width: 960px;
+  /* 960px of content plus the Bootstrap container's 12px side padding, as in Subapp 1. */
+  max-width: calc(960px + var(--bs-gutter-x, 1.5rem));
   margin-inline: auto;
-  padding-inline: clamp(12px, 3vw, 24px);
 }
 .question-form-page img, .achievement-form-page img, .create-challenge-page img {
   max-width: 100%;

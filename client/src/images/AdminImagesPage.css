@@ -34,6 +34,16 @@
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
 }
 
+/* Image names use the light card text colours from Subapp 1. */
+.admin-images-page .admin-image-card {
+  --bs-card-color: #ffffff;
+  color: #ffffff;
+}
+
+.admin-images-page .admin-image-card .card-text {
+  color: var(--home-muted);
+}
+
 .admin-images-page .admin-image-card .ratio {
   overflow: hidden;
   border-radius: 6px;

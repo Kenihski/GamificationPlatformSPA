@@ -2,7 +2,8 @@
 
 .about-page {
   max-width: 1100px;
-  margin: 0 auto;
+  /* Subapp 1 gets the extra 1rem from the navbar's bottom margin. */
+  margin: 1rem auto 0;
   padding: 3rem 0 4rem;
 }
 

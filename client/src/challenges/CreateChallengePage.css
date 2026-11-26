@@ -1,11 +1,11 @@
 .create-challenge-page {
   color: #f5f7ff;
-  padding-top: 16px !important;
+  padding-top: 0 !important;
 }
 
 /* Match the heading spacing in Subapp 1. */
 .create-challenge-page > h2 {
-  margin-top: 0 !important;
+  margin-top: 1.5rem !important;
   margin-bottom: 20px !important;
 }
 

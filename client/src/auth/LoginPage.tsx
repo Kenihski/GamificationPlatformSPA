@@ -23,8 +23,8 @@ const LoginPage = () => {
   }
 
   return (
-    <Container className="auth-page">
-      <h2>Login</h2>
+    <Container className="auth-page management-page">
+      <h1 className="h2 my-4">Login</h1>
 
       {state?.message && (
         <Alert variant="success" role="status">

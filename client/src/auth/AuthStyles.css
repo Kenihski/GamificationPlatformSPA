@@ -178,7 +178,7 @@ main a:not(.btn):hover {
 
 /* Standalone Login and Register pages */
 .auth-page {
-  padding-top: 1rem;
+  /* The heading margin sets the 24px gap below the navbar, as on other pages. */
   padding-bottom: 1.5rem;
 }
 

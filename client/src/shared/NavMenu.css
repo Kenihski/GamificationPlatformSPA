@@ -12,6 +12,25 @@
   row-gap: 0.75rem;
 }
 
+/* From 1200px the main links stay in the exact centre: the left and right
+   columns are always equally wide, whatever the right side contains. */
+@media (min-width: 1200px) {
+  .site-navbar > .container-fluid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    column-gap: 1rem;
+  }
+
+  .site-navbar-start {
+    justify-self: start;
+  }
+
+  .site-navbar-end {
+    justify-self: end;
+  }
+}
+
 .site-navbar .navbar-brand {
   color: #ffffff;
   font-size: 1.25rem;
@@ -51,6 +70,12 @@
 .site-navbar .nav-link {
   color: #edf1ff;
   text-decoration: none;
+}
+
+/* Welcome text and Logout sit 16px apart with no extra side padding, as in Subapp 1. */
+.site-navbar .site-navbar-end .nav-link {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .site-navbar .nav-link:hover,
@@ -127,7 +152,7 @@
 
 .site-sidebar .offcanvas-title {
   color: #ffffff;
-  font-size: 1.05rem;
+  font-size: 1.25rem;
   font-weight: 700;
 }
 
@@ -160,7 +185,6 @@
   padding: 11px 16px;
   border-radius: 9px;
   color: #edf1ff;
-  font-size: 0.95rem;
   font-weight: 500;
   text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -252,9 +276,10 @@
     min-width: 0;
   }
 
+  /* Same link size as Subapp 1, which also sets the navbar height. */
   .site-navbar .site-navbar-primary .nav-link {
     white-space: nowrap;
-    font-weight: 600;
+    padding: 10px 8px;
   }
 }
 

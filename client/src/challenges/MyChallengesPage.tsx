@@ -87,7 +87,7 @@ const MyChallengesPage = () => {
   }
 
   return (
-    <Container className="my-challenges-page py-4">
+    <Container className="my-challenges-page pb-4">
       <div className="my-4">
         <h1 className="fw-bold mb-1">My Challenges</h1>
         <p className="text-secondary mb-0">
