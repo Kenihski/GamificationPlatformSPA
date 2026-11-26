@@ -10,7 +10,6 @@ import {
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import ChallengeService from '../services/ChallengeService'
 import QuestionService from '../services/QuestionService'
-import './QuestionFormPage.css'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
 
@@ -116,94 +115,81 @@ const DeleteQuestionPage = () => {
   const isLastPublishedQuestion =
     challenge.isPublished && challenge.questionCount === 1
 
+  const questionTypeLabel =
+    question.questionType === 'MultipleChoice'
+      ? 'Multiple Choice'
+      : question.questionType === 'ShortAnswer'
+        ? 'Short Answer'
+        : 'Single Choice'
+
   return (
     <Container className="question-form-page management-page my-4">
       <h1 className="mb-4">Delete Question</h1>
       <p className="text-muted">Review the details and consequences before confirming deletion.</p>
 
-
-      <Card className="border-danger mb-4">
+      <Card className="border-danger">
         <Card.Body>
-          <dl className="row mb-0">
-            <dt className="col-sm-3">Title</dt>
-            <dd className="col-sm-9">{question.title}</dd>
+          <div className="mb-4">
+            <h2 className="h4 card-title">{question.title}</h2>
 
             {question.description && (
-              <>
-                <dt className="col-sm-3">Description</dt>
-                <dd className="col-sm-9">
-                  {question.description}
-                </dd>
-              </>
+              <p className="card-text">{question.description}</p>
             )}
 
-            <dt className="col-sm-3">Challenge</dt>
-            <dd className="col-sm-9">{challenge.title}</dd>
+            <p>
+              <strong>Challenge:</strong> {challenge.title}
+            </p>
 
-            <dt className="col-sm-3">Question Type</dt>
-            <dd className="col-sm-9">
-              {question.questionType === 'SingleChoice'
-                ? 'Single Choice'
-                : question.questionType === 'MultipleChoice'
-                  ? 'Multiple Choice'
-                  : 'Short Answer'}
-            </dd>
+            <p>
+              <strong>Question Type:</strong> {questionTypeLabel}
+            </p>
 
-            <dt className="col-sm-3">Points</dt>
-            <dd className="col-sm-9">{question.points}</dd>
+            <p>
+              <strong>Points:</strong> {question.points}
+            </p>
 
             {question.imageUrl && (
-              <>
-                <dt className="col-sm-3">Image</dt>
-                <dd className="col-sm-9">
-                  <img
-                    src={getImageSource(question.imageUrl)}
-                    alt=""
-                    className="question-image-preview"
-                  />
-                </dd>
-              </>
+              <div className="mb-3">
+                <strong>Image:</strong>
+                <br />
+                <img
+                  src={getImageSource(question.imageUrl)}
+                  alt=""
+                  className="img-fluid mt-2"
+                  style={{ maxWidth: 250 }}
+                />
+              </div>
             )}
 
-            <dt className="col-sm-3">
-              {question.questionType === 'ShortAnswer'
-                ? 'Accepted Answers'
-                : 'Answer Options'}
-            </dt>
+            <hr />
 
-            <dd className="col-sm-9">
-              {question.questionType === 'ShortAnswer' ? (
-                question.acceptedAnswers.length > 0 ? (
-                  question.acceptedAnswers.map((answer, index) => (
-                    <div key={index}>
-                      ✓ <strong>{answer}</strong>
-                    </div>
-                  ))
-                ) : (
-                  <span className="text-muted">
-                    No accepted answers.
-                  </span>
-                )
-              ) : question.options.length > 0 ? (
-                question.options.map((option, index) => (
-                  <div key={option.questionOptionId ?? index}>
+            {question.questionType === 'ShortAnswer' ? (
+              <>
+                <h3 className="h5">Accepted Answers</h3>
+                {question.acceptedAnswers.map((answer, index) => (
+                  <div key={index} className="mb-1">
+                    ✓ <strong>{answer}</strong>
+                  </div>
+                ))}
+              </>
+            ) : (
+              <>
+                <h3 className="h5">Answer Options</h3>
+                {question.options.map((option, index) => (
+                  <div key={option.questionOptionId ?? index} className="mb-1">
                     {option.isCorrect ? (
                       <>
-                        ✓ <strong>{option.text}</strong>
+                        ✓ <strong>{option.text}</strong> (Correct)
                       </>
                     ) : (
                       <>○ {option.text}</>
                     )}
                   </div>
-                ))
-              ) : (
-                <span className="text-muted">
-                  No answer options.
-                </span>
-              )}
-            </dd>
-          </dl>
-          <hr />
+                ))}
+              </>
+            )}
+          </div>
+
           <Alert variant="danger">
             <p className="mb-2">
               <strong>Warning:</strong> This question will be permanently deleted.
@@ -218,32 +204,31 @@ const DeleteQuestionPage = () => {
             )}
             <p className="mb-0">Are you sure you want to delete this question?</p>
           </Alert>
+
           {deleteMutation.isError && (
             <Alert variant="danger" role="alert">
               Could not delete question: {deleteMutation.error.message}
             </Alert>
           )}
+
+          <div className="d-flex flex-wrap gap-2 mt-2">
+            <Button
+              variant="outline-danger"
+              disabled={deleteMutation.isPending}
+              onClick={() => deleteMutation.mutate()}
+            >
+              {deleteMutation.isPending ? 'Deleting...' : 'Confirm deletion'}
+            </Button>
+
+            <Link
+              to={`/challenges/${challengeId}`}
+              className="btn btn-outline-primary"
+            >
+              Cancel
+            </Link>
+          </div>
         </Card.Body>
       </Card>
-
-      <div className="d-flex gap-2">
-        <Button
-          variant="outline-danger"
-          disabled={deleteMutation.isPending}
-          onClick={() => deleteMutation.mutate()}
-        >
-          {deleteMutation.isPending
-            ? 'Deleting...'
-            : 'Confirm deletion'}
-        </Button>
-
-        <Link
-          to={`/challenges/${challengeId}`}
-          className="btn btn-outline-primary"
-        >
-          Cancel
-        </Link>
-      </div>
     </Container>
   )
 }

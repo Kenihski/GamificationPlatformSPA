@@ -91,7 +91,7 @@ const DeleteChallengePage = () => {
             <Alert variant="danger" role="alert">Could not delete challenge: {deleteMutation.error.message}</Alert>
           )}
 
-          <div className="d-flex flex-wrap gap-2">
+          <div className="d-flex flex-wrap gap-2 mt-2">
             <Button variant="outline-danger" disabled={deleteMutation.isPending} onClick={() => deleteMutation.mutate()}>
               {deleteMutation.isPending ? 'Deleting...' : 'Confirm deletion'}
             </Button>

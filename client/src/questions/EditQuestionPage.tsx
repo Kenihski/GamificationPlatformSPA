@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Alert, Button, Container, Form, Spinner } from 'react-bootstrap'
+import { Alert, Button, Card, Container, Form, Spinner } from 'react-bootstrap'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import ChallengeService from '../services/ChallengeService'
 import QuestionService from '../services/QuestionService'
@@ -392,331 +392,335 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
         : null
 
   return (
-    <Container className="question-form-page management-page py-4">
-      <h2 className="my-4">Update Question</h2>
+    <Container className="question-form-page management-page my-4">
+      <h1 className="mb-4">Update Question</h1>
 
-      <Alert variant="warning">
-        <strong>Warning:</strong> Saving changes to this question permanently deletes all
-        attempts, submitted answers and scores for the entire challenge, even if you only
-        change the text or image. This also removes those results from the leaderboards.
-        Saving without changes keeps all results.
-      </Alert>
+      <Card className="border-warning">
+        <Card.Body>
+          <Alert variant="warning">
+            <strong>Warning:</strong> Saving changes to this question permanently deletes all
+            attempts, submitted answers and scores for the entire challenge, even if you only
+            change the text or image. This also removes those results from the leaderboards.
+            Saving without changes keeps all results.
+          </Alert>
 
-      {successMessage && <Alert variant="success" role="status">{successMessage}</Alert>}
-      {errorMessage && (
-        <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">
-          {errorMessage}
-        </Alert>
-      )}
-
-      <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3" controlId="questionTitle">
-          <Form.Label>
-            Title <span className="text-danger">*</span>
-          </Form.Label>
-          <Form.Control
-            required
-            maxLength={150}
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="questionType">
-          <Form.Label>Question Type</Form.Label>
-          <Form.Select
-            value={questionType}
-            onChange={(event) =>
-              handleQuestionTypeChange(
-                event.target.value as QuestionType
-              )
-            }
-          >
-            <option value="SingleChoice">Single Choice</option>
-            <option value="MultipleChoice">Multiple Choice</option>
-            <option value="ShortAnswer">Short Answer</option>
-          </Form.Select>
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="descriptionSelect">
-          <Form.Label>Description</Form.Label>
-          <Form.Select
-            value={descriptionChoice}
-            onChange={(event) =>
-              setDescriptionChoice(event.target.value)
-            }
-          >
-            <option value="">-- No description --</option>
-            {descriptionChoices.map((choice) => (
-              <option key={choice} value={choice}>
-                {choice}
-              </option>
-            ))}
-            <option value="custom">Custom description...</option>
-          </Form.Select>
-
-          {descriptionChoice === 'custom' && (
-            <Form.Control
-              className="mt-2"
-              maxLength={500}
-              value={customDescription}
-              onChange={(event) =>
-                setCustomDescription(event.target.value)
-              }
-              placeholder="Enter description"
-            />
+          {successMessage && <Alert variant="success" role="status">{successMessage}</Alert>}
+          {errorMessage && (
+            <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">
+              {errorMessage}
+            </Alert>
           )}
-        </Form.Group>
 
-        <Form.Group className="mb-3" controlId="questionExplanation">
-          <Form.Label>Explanation (optional)</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            maxLength={1000}
-            value={explanation}
-            onChange={(event) =>
-              setExplanation(event.target.value)
-            }
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="questionPoints">
-          <Form.Label>Points</Form.Label>
-          <Form.Control
-            type="number"
-            required
-            min={1}
-            max={100}
-            step={1}
-            value={points}
-            onChange={(event) => setPoints(event.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="imageCategory">
-          <Form.Label>Image</Form.Label>
-          <Form.Select
-            value={imageCategory}
-            onChange={(event) =>
-              handleCategoryChange(
-                event.target.value as ImageCategory
-              )
-            }
-          >
-            <option value="none">No image</option>
-            {isOtherImage && (
-              <option value="current">Current image</option>
-            )}
-            <option value="upload">Upload new image...</option>
-            <option value="my">My Images</option>
-            <option value="default">Default Images</option>
-          </Form.Select>
-
-          {imageCategory === 'upload' && (
-            <div className="mt-3">
-              <Form.Label htmlFor="questionImageUpload">
-                Choose image
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="questionTitle">
+              <Form.Label>
+                Title <span className="text-danger">*</span>
               </Form.Label>
               <Form.Control
-                id="questionImageUpload"
-                type="file"
-                accept=".jpg,.jpeg,.png,.webp"
-                onChange={(event) => {
-                  const input =
-                    event.currentTarget as HTMLInputElement
-                  setImageFile(input.files?.[0] ?? null)
-                  setUploadedPreviewUrl(null)
-                }}
+                required
+                maxLength={150}
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
               />
-              <Form.Text>
-                JPG, PNG or WebP. Maximum 5 MB.
-              </Form.Text>
-            </div>
-          )}
+            </Form.Group>
 
-          {imageCategory === 'my' && (
-            <div className="mt-3">
-              <Form.Label htmlFor="myImageSelect">
-                My Images
-              </Form.Label>
-              {myImagesQuery.isPending ? (
-                <Spinner animation="border" size="sm" />
-              ) : myImagesQuery.isError ? (
-                <Alert variant="danger">
-                  Could not load your images.
-                </Alert>
-              ) : (
-                <Form.Select
-                  id="myImageSelect"
-                  value={imageUrl}
-                  onChange={(event) =>
-                    setImageUrl(event.target.value)
-                  }
-                >
-                  <option value="">-- Select image --</option>
-                  {myImages.map((image) => (
-                    <option
-                      key={image.userImageId}
-                      value={image.imageUrl}
-                    >
-                      {image.fileName}
-                    </option>
-                  ))}
-                </Form.Select>
-              )}
-            </div>
-          )}
-
-          {imageCategory === 'default' && (
-            <div className="mt-3">
-              <Form.Label htmlFor="defaultImageSelect">
-                Default Images
-              </Form.Label>
-              {defaultImagesQuery.isPending ? (
-                <Spinner animation="border" size="sm" />
-              ) : defaultImagesQuery.isError ? (
-                <Alert variant="danger">
-                  Could not load default images.
-                </Alert>
-              ) : (
-                <Form.Select
-                  id="defaultImageSelect"
-                  value={imageUrl}
-                  onChange={(event) =>
-                    setImageUrl(event.target.value)
-                  }
-                >
-                  <option value="">-- Select image --</option>
-                  {defaultImages.map((image) => (
-                    <option
-                      key={image.defaultImageId}
-                      value={image.imageUrl}
-                    >
-                      {image.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              )}
-            </div>
-          )}
-
-          {previewUrl && (
-            <div className="mt-3">
-              <img
-                src={previewUrl}
-                alt="Selected question preview"
-                className="question-image-preview"
-              />
-            </div>
-          )}
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="challengeTitle">
-          <Form.Label>Challenge</Form.Label>
-          <Form.Control readOnly value={challengeTitle} />
-        </Form.Group>
-
-        <hr />
-
-        {questionType === 'ShortAnswer' ? (
-          <fieldset>
-            <legend className="fs-4">Accepted Answers</legend>
-            <p className="text-muted">
-              Enter between 1 and 4 accepted answers.
-            </p>
-
-            {acceptedAnswers.map((answer, index) => (
-              <Form.Group
-                className="mb-3"
-                key={index}
-                controlId={`acceptedAnswer${index}`}
+            <Form.Group className="mb-3" controlId="questionType">
+              <Form.Label>Question Type</Form.Label>
+              <Form.Select
+                value={questionType}
+                onChange={(event) =>
+                  handleQuestionTypeChange(
+                    event.target.value as QuestionType
+                  )
+                }
               >
-                <Form.Label>
-                  Accepted Answer {index + 1}
-                </Form.Label>
+                <option value="SingleChoice">Single Choice</option>
+                <option value="MultipleChoice">Multiple Choice</option>
+                <option value="ShortAnswer">Short Answer</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="descriptionSelect">
+              <Form.Label>Description</Form.Label>
+              <Form.Select
+                value={descriptionChoice}
+                onChange={(event) =>
+                  setDescriptionChoice(event.target.value)
+                }
+              >
+                <option value="">-- No description --</option>
+                {descriptionChoices.map((choice) => (
+                  <option key={choice} value={choice}>
+                    {choice}
+                  </option>
+                ))}
+                <option value="custom">Custom description...</option>
+              </Form.Select>
+
+              {descriptionChoice === 'custom' && (
                 <Form.Control
-                  maxLength={200}
-                  value={answer}
+                  className="mt-2"
+                  maxLength={500}
+                  value={customDescription}
                   onChange={(event) =>
-                    handleAcceptedAnswerChange(
-                      index,
-                      event.target.value
-                    )
+                    setCustomDescription(event.target.value)
                   }
+                  placeholder="Enter description"
                 />
-              </Form.Group>
-            ))}
-          </fieldset>
-        ) : (
-          <fieldset>
-            <legend className="fs-4">Answer Options</legend>
-            <p className="text-muted">
-              Enter between 2 and 4 answer options.
-            </p>
+              )}
+            </Form.Group>
 
-            {options.map((option, index) => (
-              <Form.Group className="mb-3" key={index}>
-                <Form.Label htmlFor={`option${index}`}>
-                  Option {index + 1}
-                </Form.Label>
-                <Form.Control
-                  id={`option${index}`}
-                  maxLength={200}
-                  value={option.text}
-                  onChange={(event) =>
-                    handleOptionTextChange(
-                      index,
-                      event.target.value
-                    )
-                  }
-                />
-                <Form.Check
-                  className="mt-1"
-                  id={`correctOption${index}`}
-                  type={
-                    questionType === 'SingleChoice'
-                      ? 'radio'
-                      : 'checkbox'
-                  }
-                  name={
-                    questionType === 'SingleChoice'
-                      ? 'correctOption'
-                      : undefined
-                  }
-                  label={`Correct answer for Option ${index + 1}`}
-                  checked={option.isCorrect}
-                  onChange={(event) =>
-                    handleCorrectChange(
-                      index,
-                      event.target.checked
-                    )
-                  }
-                />
-              </Form.Group>
-            ))}
-          </fieldset>
-        )}
+            <Form.Group className="mb-3" controlId="questionExplanation">
+              <Form.Label>Explanation (optional)</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                maxLength={1000}
+                value={explanation}
+                onChange={(event) =>
+                  setExplanation(event.target.value)
+                }
+              />
+            </Form.Group>
 
-        <div className="d-flex gap-2 mt-4">
-          <Button
-            type="submit"
-            variant="outline-warning"
-            disabled={updateMutation.isPending}
-          >
-            {updateMutation.isPending
-              ? 'Saving...'
-              : 'Update Question'}
-          </Button>
+            <Form.Group className="mb-3" controlId="questionPoints">
+              <Form.Label>Points</Form.Label>
+              <Form.Control
+                type="number"
+                required
+                min={1}
+                max={100}
+                step={1}
+                value={points}
+                onChange={(event) => setPoints(event.target.value)}
+              />
+            </Form.Group>
 
-          <Link
-            to={`/challenges/${challengeId}`}
-            className="btn btn-secondary"
-          >
-            Cancel
-          </Link>
-        </div>
-      </Form>
+            <Form.Group className="mb-3" controlId="imageCategory">
+              <Form.Label>Image</Form.Label>
+              <Form.Select
+                value={imageCategory}
+                onChange={(event) =>
+                  handleCategoryChange(
+                    event.target.value as ImageCategory
+                  )
+                }
+              >
+                <option value="none">No image</option>
+                {isOtherImage && (
+                  <option value="current">Current image</option>
+                )}
+                <option value="upload">Upload new image...</option>
+                <option value="my">My Images</option>
+                <option value="default">Default Images</option>
+              </Form.Select>
+
+              {imageCategory === 'upload' && (
+                <div className="mt-3">
+                  <Form.Label htmlFor="questionImageUpload">
+                    Choose image
+                  </Form.Label>
+                  <Form.Control
+                    id="questionImageUpload"
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.webp"
+                    onChange={(event) => {
+                      const input =
+                        event.currentTarget as HTMLInputElement
+                      setImageFile(input.files?.[0] ?? null)
+                      setUploadedPreviewUrl(null)
+                    }}
+                  />
+                  <Form.Text>
+                    JPG, PNG or WebP. Maximum 5 MB.
+                  </Form.Text>
+                </div>
+              )}
+
+              {imageCategory === 'my' && (
+                <div className="mt-3">
+                  <Form.Label htmlFor="myImageSelect">
+                    My Images
+                  </Form.Label>
+                  {myImagesQuery.isPending ? (
+                    <Spinner animation="border" size="sm" />
+                  ) : myImagesQuery.isError ? (
+                    <Alert variant="danger">
+                      Could not load your images.
+                    </Alert>
+                  ) : (
+                    <Form.Select
+                      id="myImageSelect"
+                      value={imageUrl}
+                      onChange={(event) =>
+                        setImageUrl(event.target.value)
+                      }
+                    >
+                      <option value="">-- Select image --</option>
+                      {myImages.map((image) => (
+                        <option
+                          key={image.userImageId}
+                          value={image.imageUrl}
+                        >
+                          {image.fileName}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  )}
+                </div>
+              )}
+
+              {imageCategory === 'default' && (
+                <div className="mt-3">
+                  <Form.Label htmlFor="defaultImageSelect">
+                    Default Images
+                  </Form.Label>
+                  {defaultImagesQuery.isPending ? (
+                    <Spinner animation="border" size="sm" />
+                  ) : defaultImagesQuery.isError ? (
+                    <Alert variant="danger">
+                      Could not load default images.
+                    </Alert>
+                  ) : (
+                    <Form.Select
+                      id="defaultImageSelect"
+                      value={imageUrl}
+                      onChange={(event) =>
+                        setImageUrl(event.target.value)
+                      }
+                    >
+                      <option value="">-- Select image --</option>
+                      {defaultImages.map((image) => (
+                        <option
+                          key={image.defaultImageId}
+                          value={image.imageUrl}
+                        >
+                          {image.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  )}
+                </div>
+              )}
+
+              {previewUrl && (
+                <div className="mt-3">
+                  <img
+                    src={previewUrl}
+                    alt="Selected question preview"
+                    className="question-image-preview"
+                  />
+                </div>
+              )}
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="challengeTitle">
+              <Form.Label>Challenge</Form.Label>
+              <Form.Control readOnly value={challengeTitle} />
+            </Form.Group>
+
+            <hr />
+
+            {questionType === 'ShortAnswer' ? (
+              <fieldset>
+                <legend className="fs-4">Accepted Answers</legend>
+                <p className="text-muted">
+                  Enter between 1 and 4 accepted answers.
+                </p>
+
+                {acceptedAnswers.map((answer, index) => (
+                  <Form.Group
+                    className="mb-3"
+                    key={index}
+                    controlId={`acceptedAnswer${index}`}
+                  >
+                    <Form.Label>
+                      Accepted Answer {index + 1}
+                    </Form.Label>
+                    <Form.Control
+                      maxLength={200}
+                      value={answer}
+                      onChange={(event) =>
+                        handleAcceptedAnswerChange(
+                          index,
+                          event.target.value
+                        )
+                      }
+                    />
+                  </Form.Group>
+                ))}
+              </fieldset>
+            ) : (
+              <fieldset>
+                <legend className="fs-4">Answer Options</legend>
+                <p className="text-muted">
+                  Enter between 2 and 4 answer options.
+                </p>
+
+                {options.map((option, index) => (
+                  <Form.Group className="mb-3" key={index}>
+                    <Form.Label htmlFor={`option${index}`}>
+                      Option {index + 1}
+                    </Form.Label>
+                    <Form.Control
+                      id={`option${index}`}
+                      maxLength={200}
+                      value={option.text}
+                      onChange={(event) =>
+                        handleOptionTextChange(
+                          index,
+                          event.target.value
+                        )
+                      }
+                    />
+                    <Form.Check
+                      className="mt-1"
+                      id={`correctOption${index}`}
+                      type={
+                        questionType === 'SingleChoice'
+                          ? 'radio'
+                          : 'checkbox'
+                      }
+                      name={
+                        questionType === 'SingleChoice'
+                          ? 'correctOption'
+                          : undefined
+                      }
+                      label={`Correct answer for Option ${index + 1}`}
+                      checked={option.isCorrect}
+                      onChange={(event) =>
+                        handleCorrectChange(
+                          index,
+                          event.target.checked
+                        )
+                      }
+                    />
+                  </Form.Group>
+                ))}
+              </fieldset>
+            )}
+
+            <div className="d-flex gap-2 mt-4">
+              <Button
+                type="submit"
+                variant="outline-warning"
+                disabled={updateMutation.isPending}
+              >
+                {updateMutation.isPending
+                  ? 'Saving...'
+                  : 'Save Changes'}
+              </Button>
+
+              <Link
+                to={`/challenges/${challengeId}`}
+                className="btn btn-secondary"
+              >
+                Cancel
+              </Link>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
     </Container>
   )
 }

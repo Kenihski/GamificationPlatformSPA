@@ -120,8 +120,15 @@ const EditAchievementPage = () => {
         </p>
       </div>
 
-      <Card>
+      <Card className="border-warning">
         <Card.Body>
+          <Alert variant="warning">
+            <strong>Before saving:</strong> Existing unlocks are kept, even if requirements change.
+            Changing Achievement Points changes the AP awarded to users who already unlocked it
+            and may affect Hall of Fame rankings. Active achievements are checked again for
+            all users and may unlock for additional users. Publishing status is unchanged.
+          </Alert>
+
           <Form onSubmit={handleSubmit}>
             {error && <Alert variant="danger">{error}</Alert>}
 

@@ -88,7 +88,7 @@ const DeleteAchievementPage = () => {
 
       <Card className="border-danger">
         <Card.Body>
-          <Card.Title as="h4">{achievement.name}</Card.Title>
+          <Card.Title as="h2" className="h4">{achievement.name}</Card.Title>
           <Card.Text>{achievement.description}</Card.Text>
 
           <div className="achievement-admin-badges mb-3">
@@ -106,7 +106,9 @@ const DeleteAchievementPage = () => {
           </div>
 
           <Alert variant="danger">
-            Deleting this achievement removes existing unlocks and their AP contributions, which may change the Hall of Fame rankings.
+            This achievement will be permanently deleted. Deleting this achievement will also remove it
+            from users who have already unlocked it. Its Achievement Points will no longer
+            count toward their totals, which may affect Hall of Fame rankings.
           </Alert>
 
           {error && <Alert variant="danger" role="alert">{error}</Alert>}

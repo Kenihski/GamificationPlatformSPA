@@ -14,6 +14,10 @@ body {
 /* Shared colours matching Subapp 1 (site.css). */
 :root {
   --home-muted: #d1d9ee;
+  --home-text: #ffffff;
+  --home-border: rgba(111, 132, 255, 0.35);
+  --content-card-bg: #121a36;
+  --content-card-border: rgba(125, 151, 230, 0.55);
   --primary-gradient: linear-gradient(135deg, #3d65d9, #7957d8);
   --primary-gradient-hover: linear-gradient(135deg, #4269dc, #7d5bdb);
   --text-error: #ff756b;
@@ -31,6 +35,11 @@ body {
   color: var(--home-muted) !important;
 }
 
+/* Bootstrap's form help text is dark grey; Subapp 1 uses form-text with text-muted. */
+.form-text {
+  color: var(--home-muted);
+}
+
 .text-danger {
   color: var(--text-error) !important;
 }
@@ -43,6 +52,19 @@ body {
 :where(a, button, input, select, textarea, [role="button"]):focus-visible {
   outline: 3px solid var(--focus-ring);
   outline-offset: 3px;
+}
+
+/* Secondary buttons matching Subapp 1 (Bootstrap's grey is replaced by dark blue). */
+.btn-secondary {
+  background: #303b65;
+  border-color: #56669b;
+  color: #ffffff;
+}
+
+.btn-secondary:hover {
+  background: #425184;
+  border-color: #7185c3;
+  color: #ffffff;
 }
 
 /* Outline buttons matching Subapp 1. */
@@ -130,7 +152,60 @@ body {
   max-width: calc(960px + var(--bs-gutter-x, 1.5rem));
   margin-inline: auto;
 }
-.question-form-page img, .achievement-form-page img, .create-challenge-page img {
+
+/* Form page cards, matching Subapp 1 (site.css .card and challenge-management.css). */
+.management-page .card {
+  --bs-card-bg: var(--content-card-bg);
+  --bs-card-color: var(--home-text);
+  --bs-card-border-color: var(--content-card-border);
+  background: var(--content-card-bg);
+  color: var(--home-text);
+  border: 1px solid var(--content-card-border);
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+}
+
+.management-page .card-body {
+  padding: clamp(16px, 3vw, 28px);
+  overflow-wrap: anywhere;
+}
+
+.management-page .card-body,
+.management-page .card-title,
+.management-page .card h2,
+.management-page .card dt,
+.management-page .card dd {
+  color: var(--home-text);
+}
+
+.management-page .card-text {
+  color: var(--home-muted);
+}
+
+.management-page .card hr {
+  border-color: var(--home-border);
+  opacity: 1;
+}
+
+/* Border colour shows the risk: neutral for create, yellow for update, red for delete. */
+.management-page .card.border-danger {
+  --bs-card-border-color: var(--danger-border);
+  border-color: var(--danger-border) !important;
+}
+
+.management-page .card.border-warning {
+  --bs-card-border-color: #d4a72c;
+  border-color: #d4a72c !important;
+}
+
+.management-page .alert {
+  margin-block: 20px;
+}
+
+.management-page form > .btn {
+  margin-top: 8px;
+}
+.management-page img {
   max-width: 100%;
   height: auto;
 }

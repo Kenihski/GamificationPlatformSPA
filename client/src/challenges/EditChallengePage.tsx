@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Alert, Button, Container, Form, Spinner } from 'react-bootstrap'
+import { Alert, Button, Card, Container, Form, Spinner } from 'react-bootstrap'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import ChallengeService from '../services/ChallengeService'
 import type { ChallengeSaveRequest } from '../services/ChallengeService'
@@ -188,185 +188,191 @@ const EditForm = ({ challenge }: EditFormProps) => {
         : fallbackPreviewUrl
 
   return (
-    <Container className="create-challenge-page management-page py-4">
-      <h2 className="my-4">Update Challenge</h2>
-      <Alert variant="warning" role="status">
-        Updating this challenge keeps its questions, completed attempts and scores.
-        Changing answer-review settings also affects access to earlier attempt reviews.
-      </Alert>
+    <Container className="create-challenge-page management-page my-4">
+      <h1 className="mb-4">Update Challenge</h1>
 
-      {errorMessage && (
-        <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">{errorMessage}</Alert>
-      )}
+      <Card className="border-warning">
+        <Card.Body>
+          <Alert variant="warning">
+            <strong>Before saving:</strong> Changes update this challenge's details and settings.
+            Existing questions, attempts and scores are kept. Changing answer review settings
+            also affects access to answers from previous attempts.
+          </Alert>
 
-      <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3" controlId="challengeTitle">
-          <Form.Label>
-            Title <span className="text-danger">*</span>
-          </Form.Label>
-          <Form.Control
-            required
-            maxLength={100}
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
-        </Form.Group>
+          {errorMessage && (
+            <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">{errorMessage}</Alert>
+          )}
 
-        <Form.Group className="mb-3" controlId="challengeDescription">
-          <Form.Label>
-            Description <span className="text-danger">*</span>
-          </Form.Label>
-          <Form.Control
-            required
-            maxLength={500}
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="challengeTimeLimit">
-          <Form.Label>Time Limit</Form.Label>
-          <Form.Select
-            value={timeLimit}
-            onChange={(event) => setTimeLimit(event.target.value)}
-          >
-            <option value="">Unlimited</option>
-            {[10, 20, 30, 60, 90, 120].map((minutes) => (
-              <option key={minutes} value={minutes}>
-                {minutes} minutes
-              </option>
-            ))}
-          </Form.Select>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Check
-            id="showAnswers"
-            type="checkbox"
-            label="Show answers after completion"
-            checked={showAnswers}
-            onChange={(event) => setShowAnswers(event.target.checked)}
-          />
-          <Form.Text className="text-secondary">
-            Allow participants to review their answers, correct answers
-            and explanations after completing the challenge.
-          </Form.Text>
-        </Form.Group>
-
-        <Form.Group className="mb-4" controlId="imageCategory">
-          <Form.Label>Image</Form.Label>
-          <Form.Select
-            value={imageCategory}
-            onChange={(event) =>
-              handleCategoryChange(event.target.value as ImageCategory)
-            }
-          >
-
-            {isOtherImage && (
-              <option value="current">Current image</option>
-            )}
-            <option value="upload">Upload new image...</option>
-            <option value="my">My Images</option>
-            <option value="default">Default Images</option>
-          </Form.Select>
-          <Form.Text className="text-secondary">
-            If no image is selected, Question 1 will be used. You can choose another image.
-          </Form.Text>
-
-          {imageCategory === 'upload' && (
-            <div className="mt-3">
-              <Form.Label htmlFor="imageUpload">Choose image</Form.Label>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="challengeTitle">
+              <Form.Label>
+                Title <span className="text-danger">*</span>
+              </Form.Label>
               <Form.Control
-                id="imageUpload"
-                type="file"
-                accept=".jpg,.jpeg,.png,.webp"
-                onChange={(event) => {
-                  const input = event.currentTarget as HTMLInputElement
-                  setImageFile(input.files?.[0] ?? null)
-                  setUploadedPreviewUrl(null)
-                }}
+                required
+                maxLength={100}
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="challengeDescription">
+              <Form.Label>
+                Description <span className="text-danger">*</span>
+              </Form.Label>
+              <Form.Control
+                required
+                maxLength={500}
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="challengeTimeLimit">
+              <Form.Label>Time Limit</Form.Label>
+              <Form.Select
+                value={timeLimit}
+                onChange={(event) => setTimeLimit(event.target.value)}
+              >
+                <option value="">Unlimited</option>
+                {[10, 20, 30, 60, 90, 120].map((minutes) => (
+                  <option key={minutes} value={minutes}>
+                    {minutes} minutes
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Check
+                id="showAnswers"
+                type="checkbox"
+                label="Show answers after completion"
+                checked={showAnswers}
+                onChange={(event) => setShowAnswers(event.target.checked)}
               />
               <Form.Text className="text-secondary">
-                JPG, PNG or WebP. Maximum 5 MB.
+                Allow participants to review their answers, correct answers
+                and explanations after completing the challenge.
               </Form.Text>
-            </div>
-          )}
+            </Form.Group>
 
-          {imageCategory === 'my' && (
-            <div className="mt-3">
-              <Form.Label htmlFor="myImageSelect">My Images</Form.Label>
-              {myImagesQuery.isPending ? (
-                <Spinner animation="border" size="sm" />
-              ) : myImagesQuery.isError ? (
-                <Alert variant="danger">Could not load your images.</Alert>
-              ) : (
-                <>
-                  <Form.Select
-                    id="myImageSelect"
-                    value={imageUrl}
-                    onChange={(event) => setImageUrl(event.target.value)}
-                  >
-                    <option value="">-- Select your image --</option>
-                    {myImages.map((image) => (
-                      <option key={image.userImageId} value={image.imageUrl}>
-                        {image.fileName}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </>
+            <Form.Group className="mb-4" controlId="imageCategory">
+              <Form.Label>Image</Form.Label>
+              <Form.Select
+                value={imageCategory}
+                onChange={(event) =>
+                  handleCategoryChange(event.target.value as ImageCategory)
+                }
+              >
+
+                {isOtherImage && (
+                  <option value="current">Current image</option>
+                )}
+                <option value="upload">Upload new image...</option>
+                <option value="my">My Images</option>
+                <option value="default">Default Images</option>
+              </Form.Select>
+              <Form.Text className="text-secondary">
+                If no image is selected, Question 1 will be used. You can choose another image.
+              </Form.Text>
+
+              {imageCategory === 'upload' && (
+                <div className="mt-3">
+                  <Form.Label htmlFor="imageUpload">Choose image</Form.Label>
+                  <Form.Control
+                    id="imageUpload"
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.webp"
+                    onChange={(event) => {
+                      const input = event.currentTarget as HTMLInputElement
+                      setImageFile(input.files?.[0] ?? null)
+                      setUploadedPreviewUrl(null)
+                    }}
+                  />
+                  <Form.Text className="text-secondary">
+                    JPG, PNG or WebP. Maximum 5 MB.
+                  </Form.Text>
+                </div>
               )}
-            </div>
-          )}
 
-          {imageCategory === 'default' && (
-            <div className="mt-3">
-              <Form.Label htmlFor="defaultImageSelect">
-                Default Images
-              </Form.Label>
-              {defaultImagesQuery.isPending ? (
-                <Spinner animation="border" size="sm" />
-              ) : defaultImagesQuery.isError ? (
-                <Alert variant="danger">Could not load default images.</Alert>
-              ) : (
-                <Form.Select
-                  id="defaultImageSelect"
-                  value={imageUrl}
-                  onChange={(event) => setImageUrl(event.target.value)}
-                >
-                  <option value="">-- Select default image --</option>
-                  {defaultImages.map((image) => (
-                    <option key={image.defaultImageId} value={image.imageUrl}>
-                      {image.name}
-                    </option>
-                  ))}
-                </Form.Select>
+              {imageCategory === 'my' && (
+                <div className="mt-3">
+                  <Form.Label htmlFor="myImageSelect">My Images</Form.Label>
+                  {myImagesQuery.isPending ? (
+                    <Spinner animation="border" size="sm" />
+                  ) : myImagesQuery.isError ? (
+                    <Alert variant="danger">Could not load your images.</Alert>
+                  ) : (
+                    <>
+                      <Form.Select
+                        id="myImageSelect"
+                        value={imageUrl}
+                        onChange={(event) => setImageUrl(event.target.value)}
+                      >
+                        <option value="">-- Select your image --</option>
+                        {myImages.map((image) => (
+                          <option key={image.userImageId} value={image.imageUrl}>
+                            {image.fileName}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </>
+                  )}
+                </div>
               )}
+
+              {imageCategory === 'default' && (
+                <div className="mt-3">
+                  <Form.Label htmlFor="defaultImageSelect">
+                    Default Images
+                  </Form.Label>
+                  {defaultImagesQuery.isPending ? (
+                    <Spinner animation="border" size="sm" />
+                  ) : defaultImagesQuery.isError ? (
+                    <Alert variant="danger">Could not load default images.</Alert>
+                  ) : (
+                    <Form.Select
+                      id="defaultImageSelect"
+                      value={imageUrl}
+                      onChange={(event) => setImageUrl(event.target.value)}
+                    >
+                      <option value="">-- Select default image --</option>
+                      {defaultImages.map((image) => (
+                        <option key={image.defaultImageId} value={image.imageUrl}>
+                          {image.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  )}
+                </div>
+              )}
+
+              {previewUrl && (
+                <img
+                  src={previewUrl}
+                  alt=""
+                  className="challenge-image-preview mt-3"
+                />
+              )}
+            </Form.Group>
+
+            <div className="d-flex flex-wrap gap-2 mt-2">
+              <Button
+                type="submit"
+                variant="outline-warning"
+                disabled={updateMutation.isPending}
+              >
+                {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+              </Button>
+
+              <Link to="/my-challenges" className="btn btn-outline-primary">
+                Cancel
+              </Link>
             </div>
-          )}
-
-          {previewUrl && (
-            <img
-              src={previewUrl}
-              alt="Selected challenge preview"
-              className="challenge-image-preview mt-3"
-            />
-          )}
-        </Form.Group>
-
-        <div className="d-flex gap-2">
-          <Button
-            type="submit"
-            variant="outline-warning"
-            disabled={updateMutation.isPending}
-          >
-            {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
-          </Button>
-
-          <Link to="/my-challenges" className="btn btn-outline-primary">
-            Cancel
-          </Link>
-        </div>
-      </Form>
+          </Form>
+        </Card.Body>
+      </Card>
     </Container>
   )
 }
