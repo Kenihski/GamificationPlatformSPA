@@ -23,7 +23,7 @@ namespace GamificationPlatform.DTOs
             100,
             MinimumLength = 6,
             ErrorMessage = "Password must be between 6 and 100 characters.")]
-        [RegularExpression(@"(?s)^(?=.*[A-Z])(?=.*[0-9]).+$",
+        [RegularExpression(@"^(?=[\s\S]*[A-Z])(?=[\s\S]*[0-9])[\s\S]+$",
             ErrorMessage = "Password must contain at least one uppercase letter and one number.")]
         public string Password { get; set; } = string.Empty;
 
