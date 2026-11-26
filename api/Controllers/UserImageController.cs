@@ -101,8 +101,19 @@ namespace GamificationPlatform.Controllers
             });
         }
 
+        // Preview impact before confirming deletion in the React SPA.
+        [HttpGet("{id:int}/deletion-impact")]
+        public async Task<IActionResult> GetImageDeletionImpact(int id)
+        {
+            if (!TryGetCurrentUserId(out int userId)) return Unauthorized();
+            var image = await _imageRepository.GetImageByIdAsync(id);
+            if (image == null) return NotFound();
+            if (image.UserId != userId && !User.IsInRole("Admin")) return Forbid();
+            return Ok(await BuildDeletionImpactAsync(image.ImageUrl, image.FileName));
+        }
+
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteImage(int id)
+        public async Task<IActionResult> DeleteImage(int id, [FromQuery] bool confirmed = false)
         {
             if (!TryGetCurrentUserId(out int userId))
             {
@@ -132,18 +143,29 @@ namespace GamificationPlatform.Controllers
                 .Where(c => c.ImageUrl == image.ImageUrl)
                 .ToListAsync();
 
-            var questions = await _context.Questions
+            var questionUsage = await _context.Questions
                 .Where(q => q.ImageUrl == image.ImageUrl)
+                .Select(q => new { q.QuestionId, q.ChallengeId, q.Title })
                 .ToListAsync();
+
+            if (questionUsage.Count > 0)
+            {
+                return Conflict(new
+                {
+                    message = "This image is used by questions. Replace it in those questions before deleting it.",
+                    questions = questionUsage
+                });
+            }
+
+            if (!confirmed)
+            {
+                return Conflict(new { message = "Confirm deletion before removing this image.",
+                    challenges = challenges.Select(c => new { c.ChallengeId, c.Title }) });
+            }
 
             foreach (var challenge in challenges)
             {
                 challenge.ImageUrl = fallbackImage.ImageUrl;
-            }
-
-            foreach (var question in questions)
-            {
-                question.ImageUrl = fallbackImage.ImageUrl;
             }
 
             _context.UserImages.Remove(image);
@@ -319,9 +341,24 @@ namespace GamificationPlatform.Controllers
             return NoContent();
         }
 
+        [HttpGet("default/{id:int}/deletion-impact")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetDefaultImageDeletionImpact(int id)
+        {
+            var image = await _context.DefaultImages.FindAsync(id);
+            if (image == null) return NotFound();
+            var fallback = await GetFallbackImageAsync();
+            return Ok(new
+            {
+                protectedFallback = fallback == null || image.DefaultImageId == fallback.DefaultImageId ||
+                    image.ImageUrl == "/images/Question_1.png",
+                impact = await BuildDeletionImpactAsync(image.ImageUrl, image.Name)
+            });
+        }
+
         [HttpDelete("default/{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteDefaultImage(int id)
+        public async Task<IActionResult> DeleteDefaultImage(int id, [FromQuery] bool confirmed = false)
         {
             var image = await _context.DefaultImages.FindAsync(id);
 
@@ -347,18 +384,29 @@ namespace GamificationPlatform.Controllers
                 .Where(c => c.ImageUrl == image.ImageUrl)
                 .ToListAsync();
 
-            var questions = await _context.Questions
+            var questionUsage = await _context.Questions
                 .Where(q => q.ImageUrl == image.ImageUrl)
+                .Select(q => new { q.QuestionId, q.ChallengeId, q.Title })
                 .ToListAsync();
+
+            if (questionUsage.Count > 0)
+            {
+                return Conflict(new
+                {
+                    message = "This image is used by questions. Replace it in those questions before deleting it.",
+                    questions = questionUsage
+                });
+            }
+
+            if (!confirmed)
+            {
+                return Conflict(new { message = "Confirm deletion before removing this default image.",
+                    challenges = challenges.Select(c => new { c.ChallengeId, c.Title }) });
+            }
 
             foreach (var challenge in challenges)
             {
                 challenge.ImageUrl = fallbackImage.ImageUrl;
-            }
-
-            foreach (var question in questions)
-            {
-                question.ImageUrl = fallbackImage.ImageUrl;
             }
 
             _context.DefaultImages.Remove(image);
@@ -379,6 +427,19 @@ namespace GamificationPlatform.Controllers
                 id);
 
             return NoContent();
+        }
+
+        private async Task<object> BuildDeletionImpactAsync(string imageUrl, string imageName)
+        {
+            var challenges = await _context.Challenges
+                .Where(c => c.ImageUrl == imageUrl)
+                .Select(c => new { c.ChallengeId, c.Title })
+                .ToListAsync();
+            var questions = await _context.Questions
+                .Where(q => q.ImageUrl == imageUrl)
+                .Select(q => new { q.QuestionId, q.ChallengeId, q.Title })
+                .ToListAsync();
+            return new { imageName, challenges, questions };
         }
 
         // Resolve the bundled fallback even when its display name was renamed.
