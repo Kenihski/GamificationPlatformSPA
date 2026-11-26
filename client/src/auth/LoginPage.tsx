@@ -26,15 +26,15 @@ const LoginPage = () => {
     <Container className="auth-page">
       <h2>Login</h2>
 
-      {state?.from && (
-        <Alert variant="info">
-          You must be logged in to access this page.
-        </Alert>
-      )}
-
       {state?.message && (
         <Alert variant="success" role="status">
           {state.message}
+        </Alert>
+      )}
+
+      {state?.from && (
+        <Alert variant="info">
+          You must be logged in to access this page.
         </Alert>
       )}
 
