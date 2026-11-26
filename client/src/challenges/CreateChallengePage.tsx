@@ -109,12 +109,12 @@ const CreateChallengePage = () => {
 
       return ChallengeService.createChallenge(data)
     },
-    onSuccess: async () => {
+    onSuccess: async (challenge) => {
       await queryClient.invalidateQueries({
         queryKey: ['my-challenges'],
       })
 
-      navigate('/my-challenges')
+      navigate(`/challenges/${challenge.challengeId}`)
     },
     onError: (error: Error) => {
       setErrorMessage(error.message)
