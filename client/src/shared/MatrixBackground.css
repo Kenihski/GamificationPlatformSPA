@@ -35,14 +35,18 @@ main {
 
 .matrix-toggle {
   width: 44px;
-  height: 44px;
-  padding: 0;
+  box-sizing: content-box;
+  height: calc(1em * var(--bs-btn-line-height));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--bs-btn-padding-y) 0;
 }
 
 .matrix-tooltip {
   display: none;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 12px);
   right: 0;
   z-index: 1080;
   width: max-content;
@@ -55,8 +59,18 @@ main {
   font-size: 0.875rem;
 }
 
+/* Allow the pointer to cross the tooltip gap without closing it. */
+.matrix-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 12px;
+}
+
 .matrix-control:not(.tooltip-dismissed):hover .matrix-tooltip,
-.matrix-control:not(.tooltip-dismissed):focus-within .matrix-tooltip {
+.matrix-control:not(.tooltip-dismissed):has(.matrix-toggle:focus-visible) .matrix-tooltip {
   display: block;
 }
 
