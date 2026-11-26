@@ -173,7 +173,7 @@ const MyChallengesPage = () => {
                     <td>
                       <div className="d-flex flex-nowrap gap-1 align-items-center my-challenges-actions">
                         <Link
-                          to={`/challenges/${challenge.challengeId}`}
+                          to={`/challenges/${challenge.challengeId}?fromMyChallenges=true`}
                           className="btn btn-sm btn-outline-primary"
                         >
                           View
