@@ -1,6 +1,10 @@
 /* Quiz Result and Attempt Details */
 .quiz-result-page {
-  padding: 24px 0 60px;
+  /* Subapp 1 gets the 1rem margin from the navbar (mb-3). */
+  margin-top: 1rem;
+  /* Vertical only, so the container keeps its side padding. */
+  padding-top: 24px;
+  padding-bottom: 60px;
 }
 
 /* Back navigation */
@@ -178,6 +182,15 @@
   overflow-wrap: anywhere;
 }
 
+/* Answer labels stay together on the right, also when they wrap. */
+.quiz-result-labels {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-left: auto;
+}
+
 /* Answer labels */
 .quiz-result-selected-label,
 .quiz-result-correct-label {
@@ -190,7 +203,6 @@
 }
 
 .quiz-result-selected-label {
-  margin-left: auto;
   background: rgba(96, 165, 250, 0.12);
   color: #93c5fd;
 }

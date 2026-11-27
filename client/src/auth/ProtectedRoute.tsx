@@ -1,7 +1,7 @@
 
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { Alert, Container } from 'react-bootstrap'
 import { useAuth } from './AuthContext'
+import AccessDeniedPage from '../shared/AccessDeniedPage'
 
 interface ProtectedRouteProps {
   requiredRole?: string
@@ -22,13 +22,7 @@ const ProtectedRoute = ({ requiredRole }: ProtectedRouteProps) => {
   }
 
   if (requiredRole && !user?.roles.includes(requiredRole)) {
-    return (
-      <Container className="mt-4">
-        <Alert variant="danger">
-          You do not have permission to access this page.
-        </Alert>
-      </Container>
-    )
+    return <AccessDeniedPage />
   }
 
   return <Outlet />

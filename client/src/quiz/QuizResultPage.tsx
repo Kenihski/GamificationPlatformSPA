@@ -142,11 +142,15 @@ const QuizResultPage = () => {
                           aria-label={option.text}
                         />
                         <span className="quiz-result-option-text">{option.text}</span>
-                        {option.isSelected && (
-                          <span className="quiz-result-selected-label">Your answer</span>
-                        )}
-                        {option.isCorrect && (
-                          <span className="quiz-result-correct-label">Correct answer</span>
+                        {(option.isSelected || option.isCorrect) && (
+                          <span className="quiz-result-labels">
+                            {option.isSelected && (
+                              <span className="quiz-result-selected-label">Your answer</span>
+                            )}
+                            {option.isCorrect && (
+                              <span className="quiz-result-correct-label">Correct answer</span>
+                            )}
+                          </span>
                         )}
                       </div>
                     ))}

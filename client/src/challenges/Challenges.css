@@ -257,12 +257,10 @@
 
 .challenge-list-page .challenge-table a {
   color: #a9bfff;
-  text-decoration: none;
 }
 
 .challenge-list-page .challenge-table a:hover {
   color: #d0dcff;
-  text-decoration: underline;
 }
 
 /* Table badges - matches Subapp 1 */
