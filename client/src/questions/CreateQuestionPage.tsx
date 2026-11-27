@@ -413,6 +413,7 @@ const CreateQuestionPage = () => {
                 required
                 maxLength={150}
                 isInvalid={Boolean(errorFor('title'))}
+                aria-invalid={Boolean(errorFor('title'))}
                 aria-describedby={errorFor('title') ? 'question-title-error' : undefined}
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
@@ -515,6 +516,7 @@ const CreateQuestionPage = () => {
                 step={1}
                 placeholder="0"
                 isInvalid={Boolean(errorFor('points'))}
+                aria-invalid={Boolean(errorFor('points'))}
                 aria-describedby={errorFor('points') ? 'question-points-error' : undefined}
                 value={points}
                 onChange={(event) => setPoints(event.target.value)}
@@ -730,7 +732,13 @@ const CreateQuestionPage = () => {
                           ? 'correctOption'
                           : undefined
                       }
-                      label={`Correct answer for Option ${index + 1}`}
+                      // Screen readers hear "Mark option N as correct answer"; the visible text stays short.
+                      label={
+                        <>
+                          <span className="visually-hidden">Mark option {index + 1} as </span>
+                          Correct answer
+                        </>
+                      }
                       checked={option.isCorrect}
                       onChange={(event) =>
                         handleCorrectChange(

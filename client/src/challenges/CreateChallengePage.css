@@ -26,12 +26,6 @@
 }
 
 /* Match the visible keyboard focus ring in Subapp 1. */
-.create-challenge-page .form-control:focus-visible,
-.create-challenge-page .form-select:focus-visible {
-  outline: 3px solid #b8c8ff;
-  outline-offset: 3px;
-}
-
 .create-challenge-page .form-label,
 .create-challenge-page .form-check-label {
   color: #edf1ff;

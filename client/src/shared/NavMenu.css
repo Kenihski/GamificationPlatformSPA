@@ -57,8 +57,19 @@
   height: 1.5em;
 }
 
+/* Mouse focus keeps the soft glow; keyboard focus gets the shared light ring below. */
 .site-navbar .navbar-toggler:focus {
   box-shadow: 0 0 0 0.2rem rgba(111, 132, 255, 0.2);
+}
+
+.site-navbar .navbar-toggler:focus-visible {
+  box-shadow: 0 0 0 2px var(--focus-ring);
+}
+
+/* Rounded corners so the focus ring matches the rest of the navbar. */
+.site-navbar .nav-link,
+.site-navbar .navbar-brand {
+  border-radius: 8px;
 }
 
 /* Navbar links and welcome text */
@@ -306,6 +317,7 @@
   white-space: normal;
   background: #111833;
   color: #fff;
-  outline: 2px solid #a5b4fc;
+  /* Same as the Subapp 1 skip link: light border plus the shared focus outline. */
+  border: 2px solid var(--focus-ring);
   border-radius: 6px;
 }

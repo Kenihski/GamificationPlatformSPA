@@ -16,6 +16,7 @@ import type { Challenge } from '../types/Challenge'
 import './CreateChallengePage.css'
 
 type ImageCategory = 'current' | 'upload' | 'my' | 'default'
+type FieldErrors = Partial<Record<'title' | 'description' | 'image', string>>
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
 
@@ -69,7 +70,24 @@ const EditForm = ({ challenge }: EditFormProps) => {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [uploadedPreviewUrl, setUploadedPreviewUrl] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+  const [validationSubmitCount, setValidationSubmitCount] = useState(0)
   const errorSummaryRef = useRef<HTMLDivElement>(null)
+
+  // Same validation as Create Challenge: focus the summary only after a
+  // rejected submission or a server error, not while typing.
+  useEffect(() => {
+    if (validationSubmitCount > 0) errorSummaryRef.current?.focus()
+  }, [validationSubmitCount])
+
+  const clearFieldError = (field: keyof FieldErrors) => {
+    setFieldErrors((current) => {
+      if (!current[field]) return current
+      const next = { ...current }
+      delete next[field]
+      return next
+    })
+  }
   useEffect(() => {
     if (errorMessage) errorSummaryRef.current?.focus()
   }, [errorMessage])
@@ -177,6 +195,7 @@ const EditForm = ({ challenge }: EditFormProps) => {
   })
 
   const handleCategoryChange = (category: ImageCategory) => {
+    clearFieldError('image')
     setImageCategory(category)
     setImageUrl(category === 'current' ? currentImage : category === 'default' ? fallbackImage : '')
     setImageFile(null)
@@ -187,22 +206,23 @@ const EditForm = ({ challenge }: EditFormProps) => {
     event.preventDefault()
     setErrorMessage(null)
 
-    if (!title.trim() || !description.trim()) {
-      setErrorMessage('Title and description are required.')
-      return
-    }
+    const errors: FieldErrors = {}
+    if (!title.trim()) errors.title = 'Challenge title is required.'
+    if (!description.trim()) errors.description = 'Description is required.'
 
     // An empty image selection falls back to Question 1, as in Subapp 1.
     if (imageCategory === 'upload' && imageFile) {
       if (imageFile.size > 5 * 1024 * 1024) {
-        setErrorMessage('The image must be 5 MB or smaller.')
-        return
+        errors.image = 'The image must be 5 MB or smaller.'
+      } else if (!['image/jpeg', 'image/png', 'image/webp'].includes(imageFile.type)) {
+        errors.image = 'Choose a JPG, PNG or WebP image.'
       }
+    }
 
-      if (!['image/jpeg', 'image/png', 'image/webp'].includes(imageFile.type)) {
-        setErrorMessage('Choose a JPG, PNG or WebP image.')
-        return
-      }
+    setFieldErrors(errors)
+    if (Object.keys(errors).length > 0) {
+      setValidationSubmitCount((count) => count + 1)
+      return
     }
 
     updateMutation.mutate()
@@ -230,11 +250,21 @@ const EditForm = ({ challenge }: EditFormProps) => {
             also affects access to answers from previous attempts.
           </Alert>
 
-          {errorMessage && (
-            <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">{errorMessage}</Alert>
+          {(errorMessage || Object.keys(fieldErrors).length > 0) && (
+            <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert" aria-label="Validation summary">
+              <strong>Please correct the following errors:</strong>
+              {Object.keys(fieldErrors).length > 0 && (
+                <ul className="mb-0 mt-2">
+                  {Object.entries(fieldErrors).filter(([, message]) => Boolean(message)).map(([field, message]) => (
+                    <li key={field}>{message}</li>
+                  ))}
+                </ul>
+              )}
+              {errorMessage && <div className="mt-2">{errorMessage}</div>}
+            </Alert>
           )}
 
-          <Form onSubmit={handleSubmit}>
+          <Form noValidate onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="challengeTitle">
               <Form.Label>
                 Title <span className="text-danger">*</span>
@@ -243,8 +273,19 @@ const EditForm = ({ challenge }: EditFormProps) => {
                 required
                 maxLength={100}
                 value={title}
-                onChange={(event) => setTitle(event.target.value)}
+                isInvalid={Boolean(fieldErrors.title)}
+                aria-invalid={Boolean(fieldErrors.title)}
+                aria-describedby={fieldErrors.title ? 'challenge-title-error' : undefined}
+                onChange={(event) => {
+                  setTitle(event.target.value)
+                  clearFieldError('title')
+                }}
               />
+              {fieldErrors.title && (
+                <Form.Control.Feedback type="invalid" id="challenge-title-error">
+                  {fieldErrors.title}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="challengeDescription">
@@ -255,8 +296,19 @@ const EditForm = ({ challenge }: EditFormProps) => {
                 required
                 maxLength={500}
                 value={description}
-                onChange={(event) => setDescription(event.target.value)}
+                isInvalid={Boolean(fieldErrors.description)}
+                aria-invalid={Boolean(fieldErrors.description)}
+                aria-describedby={fieldErrors.description ? 'challenge-description-error' : undefined}
+                onChange={(event) => {
+                  setDescription(event.target.value)
+                  clearFieldError('description')
+                }}
               />
+              {fieldErrors.description && (
+                <Form.Control.Feedback type="invalid" id="challenge-description-error">
+                  {fieldErrors.description}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="challengeTimeLimit">
@@ -319,6 +371,7 @@ const EditForm = ({ challenge }: EditFormProps) => {
                       const input = event.currentTarget as HTMLInputElement
                       setImageFile(input.files?.[0] ?? null)
                       setUploadedPreviewUrl(null)
+                      clearFieldError('image')
                     }}
                   />
                   <Form.Text className="text-secondary">
@@ -376,6 +429,12 @@ const EditForm = ({ challenge }: EditFormProps) => {
                       ))}
                     </Form.Select>
                   )}
+                </div>
+              )}
+
+              {fieldErrors.image && (
+                <div className="invalid-feedback d-block" role="alert">
+                  {fieldErrors.image}
                 </div>
               )}
 

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useLayoutEffect } from 'react'
+import { lazy, Suspense, useLayoutEffect, useRef } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import NavMenu from './shared/NavMenu'
 import AchievementNotifications from './achievements/AchievementNotifications'
@@ -92,15 +92,27 @@ const AdminUserDetailsPage = lazy(
   () => import('./users/AdminUserDetailsPage')
 )
 
-// Reset document scroll on page changes, not on query or hash changes.
+// Reset scroll and keyboard focus on page changes, not on query or hash changes.
+// A full page load in Subapp 1 starts at the top, so the next Tab reaches the
+// skip link; without this, focus would stay on the link that was clicked.
 const ScrollToTop = () => {
   const { pathname } = useLocation()
+  const focusStartRef = useRef<HTMLDivElement>(null)
+  const isFirstRender = useRef(true)
 
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+
+    // Pages that focus a message or error summary do so afterwards and win.
+    focusStartRef.current?.focus({ preventScroll: true })
   }, [pathname])
 
-  return null
+  return <div ref={focusStartRef} tabIndex={-1} className="route-focus-start" />
 }
 
 const App = () => {

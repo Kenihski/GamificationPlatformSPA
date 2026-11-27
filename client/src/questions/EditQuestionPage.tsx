@@ -92,10 +92,20 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
   const [uploadedPreviewUrl, setUploadedPreviewUrl] =
     useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [showValidation, setShowValidation] = useState(false)
+  const [invalidSubmitCount, setInvalidSubmitCount] = useState(0)
   const errorSummaryRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (errorMessage) errorSummaryRef.current?.focus()
   }, [errorMessage])
+
+  // Same as Create Question: move to the summary after a rejected submission.
+  useEffect(() => {
+    if (invalidSubmitCount > 0) {
+      errorSummaryRef.current?.focus()
+      errorSummaryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [invalidSubmitCount])
 
   const defaultImagesQuery = useQuery({
     queryKey: ['default-images'],
@@ -280,111 +290,95 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
     setUploadedPreviewUrl(null)
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setErrorMessage(null)
-
-    if (!title.trim()) {
-      setErrorMessage('Question title is required.')
-      return
-    }
-
-    if (
-      !Number.isInteger(Number(points)) ||
-      Number(points) < 1 ||
-      Number(points) > 100
-    ) {
-      setErrorMessage('Points must be between 1 and 100.')
-      return
-    }
-
+  const validateAnswers = (): string | null => {
     if (questionType === 'ShortAnswer') {
       const answers = acceptedAnswers
         .map((answer) => answer.trim())
         .filter(Boolean)
 
       if (answers.length === 0) {
-        setErrorMessage('Enter between 1 and 4 accepted answers.')
-        return
+        return 'Enter between 1 and 4 accepted answers.'
       }
 
       if (
         new Set(answers.map((answer) => answer.toLowerCase())).size !==
         answers.length
       ) {
-        setErrorMessage('Accepted answers must be different.')
-        return
-      }
-    } else {
-      const filledOptions = options.filter((option) =>
-        option.text.trim()
-      )
-
-      if (filledOptions.length < 2) {
-        setErrorMessage('Enter between 2 and 4 answer options.')
-        return
+        return 'Accepted answers must be different.'
       }
 
-      if (
-        new Set(
-          filledOptions.map((option) =>
-            option.text.trim().toLowerCase()
-          )
-        ).size !== filledOptions.length
-      ) {
-        setErrorMessage('Answer options must be different.')
-        return
-      }
-
-      const correctCount = filledOptions.filter(
-        (option) => option.isCorrect
-      ).length
-
-      if (
-        questionType === 'SingleChoice' &&
-        correctCount !== 1
-      ) {
-        setErrorMessage(
-          'Single-choice questions must have exactly one correct answer.'
-        )
-        return
-      }
-
-      if (
-        questionType === 'MultipleChoice' &&
-        correctCount === 0
-      ) {
-        setErrorMessage('Select at least one correct answer.')
-        return
-      }
+      return null
     }
 
-    if (imageCategory === 'upload') {
-      if (!imageFile) {
-        setErrorMessage('Please select an image.')
-        return
-      }
+    const filledOptions = options.filter((option) => option.text.trim())
 
-      if (imageFile.size > 5 * 1024 * 1024) {
-        setErrorMessage('The image must be 5 MB or smaller.')
-        return
-      }
-
-      if (
-        !['image/jpeg', 'image/png', 'image/webp'].includes(
-          imageFile.type
-        )
-      ) {
-        setErrorMessage('Choose a JPG, PNG or WebP image.')
-        return
-      }
+    if (filledOptions.length < 2) {
+      return 'Enter between 2 and 4 answer options.'
     }
 
     if (
-      (imageCategory === 'my' || imageCategory === 'default') &&
-      !imageUrl
+      new Set(
+        filledOptions.map((option) => option.text.trim().toLowerCase())
+      ).size !== filledOptions.length
     ) {
-      setErrorMessage('Please select an image.')
+      return 'Answer options must be different.'
+    }
+
+    const correctCount = filledOptions.filter((option) => option.isCorrect).length
+
+    if (questionType === 'SingleChoice' && correctCount !== 1) {
+      return 'Single-choice questions must have exactly one correct answer.'
+    }
+
+    if (questionType === 'MultipleChoice' && correctCount === 0) {
+      return 'Select at least one correct answer.'
+    }
+
+    return null
+  }
+
+  // Compute errors from the current values so the summary updates as fields are fixed,
+  // in the same way as Create Question.
+  const validationErrors: { field: string; message: string }[] = []
+  if (!title.trim()) {
+    validationErrors.push({ field: 'title', message: 'Question title is required.' })
+  }
+  if (
+    String(points).trim() === '' ||
+    !Number.isInteger(Number(points)) ||
+    Number(points) < 1 ||
+    Number(points) > 100
+  ) {
+    validationErrors.push({ field: 'points', message: 'Points must be between 1 and 100.' })
+  }
+
+  const answerError = validateAnswers()
+  if (answerError) {
+    validationErrors.push({ field: 'answers', message: answerError })
+  }
+
+  if (imageCategory === 'upload') {
+    if (!imageFile) {
+      validationErrors.push({ field: 'image', message: 'Please select an image.' })
+    } else if (imageFile.size > 5 * 1024 * 1024) {
+      validationErrors.push({ field: 'image', message: 'The image must be 5 MB or smaller.' })
+    } else if (!['image/jpeg', 'image/png', 'image/webp'].includes(imageFile.type)) {
+      validationErrors.push({ field: 'image', message: 'Choose a JPG, PNG or WebP image.' })
+    }
+  } else if ((imageCategory === 'my' || imageCategory === 'default') && !imageUrl) {
+    validationErrors.push({ field: 'image', message: 'Please select an image.' })
+  }
+
+  const errorFor = (field: string) =>
+    showValidation ? validationErrors.find((error) => error.field === field)?.message : undefined
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setErrorMessage(null)
+
+    setShowValidation(true)
+    if (validationErrors.length > 0) {
+      setInvalidSubmitCount((count) => count + 1)
       return
     }
 
@@ -411,13 +405,21 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
             Saving without changes keeps all results.
           </Alert>
 
-          {errorMessage && (
-            <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">
-              {errorMessage}
+          {(errorMessage || (showValidation && validationErrors.length > 0)) && (
+            <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert" aria-label="Validation summary">
+              <strong>Please correct the following errors:</strong>
+              {showValidation && validationErrors.length > 0 && (
+                <ul className="mb-0 mt-2">
+                  {validationErrors.map(({ field, message }) => (
+                    <li key={field}>{message}</li>
+                  ))}
+                </ul>
+              )}
+              {errorMessage && <div className="mt-2">{errorMessage}</div>}
             </Alert>
           )}
 
-          <Form onSubmit={handleSubmit}>
+          <Form noValidate onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="questionTitle">
               <Form.Label>
                 Title <span className="text-danger">*</span>
@@ -425,13 +427,23 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
               <Form.Control
                 required
                 maxLength={150}
+                isInvalid={Boolean(errorFor('title'))}
+                aria-invalid={Boolean(errorFor('title'))}
+                aria-describedby={errorFor('title') ? 'question-title-error' : undefined}
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
               />
+              {errorFor('title') && (
+                <Form.Control.Feedback id="question-title-error" type="invalid">
+                  {errorFor('title')}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="questionType">
-              <Form.Label>Question Type</Form.Label>
+              <Form.Label>
+                Question Type <span className="text-danger">*</span>
+              </Form.Label>
               <Form.Select
                 value={questionType}
                 onChange={(event) =>
@@ -439,11 +451,19 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
                     event.target.value as QuestionType
                   )
                 }
+                aria-describedby="questionTypeHelp"
               >
                 <option value="SingleChoice">Single Choice</option>
                 <option value="MultipleChoice">Multiple Choice</option>
                 <option value="ShortAnswer">Short Answer</option>
               </Form.Select>
+              <Form.Text id="questionTypeHelp">
+                {questionType === 'SingleChoice'
+                  ? 'Select one correct answer.'
+                  : questionType === 'MultipleChoice'
+                    ? 'Select one or more correct answers.'
+                    : 'Enter one or more accepted answers.'}
+              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="descriptionSelect">
@@ -464,15 +484,20 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
               </Form.Select>
 
               {descriptionChoice === 'custom' && (
-                <Form.Control
-                  className="mt-2"
-                  maxLength={500}
-                  value={customDescription}
-                  onChange={(event) =>
-                    setCustomDescription(event.target.value)
-                  }
-                  placeholder="Enter description"
-                />
+                <div className="mt-2">
+                  <Form.Label htmlFor="customDescription">
+                    Custom description
+                  </Form.Label>
+                  <Form.Control
+                    id="customDescription"
+                    maxLength={500}
+                    value={customDescription}
+                    onChange={(event) =>
+                      setCustomDescription(event.target.value)
+                    }
+                    placeholder="Enter description"
+                  />
+                </div>
               )}
             </Form.Group>
 
@@ -486,20 +511,35 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
                 onChange={(event) =>
                   setExplanation(event.target.value)
                 }
+                placeholder="Explain why the answer is correct"
               />
+              <Form.Text>
+                This explanation is shown after the challenge has been
+                submitted.
+              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="questionPoints">
-              <Form.Label>Points</Form.Label>
+              <Form.Label>
+                Points <span className="text-danger">*</span>
+              </Form.Label>
               <Form.Control
                 type="number"
                 required
                 min={1}
                 max={100}
                 step={1}
+                isInvalid={Boolean(errorFor('points'))}
+                aria-invalid={Boolean(errorFor('points'))}
+                aria-describedby={errorFor('points') ? 'question-points-error' : undefined}
                 value={points}
                 onChange={(event) => setPoints(event.target.value)}
               />
+              {errorFor('points') && (
+                <Form.Control.Feedback id="question-points-error" type="invalid">
+                  {errorFor('points')}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="imageCategory">
@@ -613,9 +653,14 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
                 <div className="mt-3">
                   <img
                     src={previewUrl}
-                    alt="Selected question preview"
+                    alt=""
                     className="question-image-preview"
                   />
+                </div>
+              )}
+              {errorFor('image') && (
+                <div className="invalid-feedback d-block" role="alert">
+                  {errorFor('image')}
                 </div>
               )}
             </Form.Group>
@@ -630,6 +675,9 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
             {questionType === 'ShortAnswer' ? (
               <fieldset>
                 <legend className="fs-4">Accepted Answers</legend>
+                {errorFor('answers') && (
+                  <div className="invalid-feedback d-block" role="alert">{errorFor('answers')}</div>
+                )}
                 <p className="text-muted">
                   Enter between 1 and 4 accepted answers.
                 </p>
@@ -659,6 +707,9 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
             ) : (
               <fieldset>
                 <legend className="fs-4">Answer Options</legend>
+                {errorFor('answers') && (
+                  <div className="invalid-feedback d-block" role="alert">{errorFor('answers')}</div>
+                )}
                 <p className="text-muted">
                   Enter between 2 and 4 answer options.
                 </p>
@@ -692,7 +743,13 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
                           ? 'correctOption'
                           : undefined
                       }
-                      label={`Correct answer for Option ${index + 1}`}
+                      // Screen readers hear "Mark option N as correct answer"; the visible text stays short.
+                      label={
+                        <>
+                          <span className="visually-hidden">Mark option {index + 1} as </span>
+                          Correct answer
+                        </>
+                      }
                       checked={option.isCorrect}
                       onChange={(event) =>
                         handleCorrectChange(

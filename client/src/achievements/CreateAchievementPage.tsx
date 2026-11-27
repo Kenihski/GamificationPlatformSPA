@@ -1,5 +1,5 @@
 
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Alert, Button, Card, Container, Form } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
@@ -11,6 +11,12 @@ const CreateAchievementPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [error, setError] = useState<string | null>(null)
+  const errorRef = useRef<HTMLDivElement>(null)
+
+  // Move focus to the error so screen reader users hear it, as with the other forms.
+  useEffect(() => {
+    if (error) errorRef.current?.focus()
+  }, [error])
 
   const [form, setForm] = useState<AchievementSaveRequest>({
     name: '',
@@ -70,7 +76,11 @@ const CreateAchievementPage = () => {
       <Card>
         <Card.Body>
           <Form onSubmit={handleSubmit}>
-            {error && <Alert variant="danger">{error}</Alert>}
+            {error && (
+              <Alert ref={errorRef} tabIndex={-1} variant="danger" role="alert">
+                {error}
+              </Alert>
+            )}
 
             <Form.Group className="mb-3" controlId="achievementName">
               <Form.Label>Name</Form.Label>

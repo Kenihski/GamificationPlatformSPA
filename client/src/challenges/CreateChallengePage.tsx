@@ -209,6 +209,7 @@ const CreateChallengePage = () => {
                 required
                 maxLength={100}
                 isInvalid={Boolean(fieldErrors.title)}
+                aria-invalid={Boolean(fieldErrors.title)}
                 aria-describedby={fieldErrors.title ? 'challenge-title-error' : undefined}
                 value={title}
                 onChange={(event) => {
@@ -231,6 +232,7 @@ const CreateChallengePage = () => {
                 required
                 maxLength={500}
                 isInvalid={Boolean(fieldErrors.description)}
+                aria-invalid={Boolean(fieldErrors.description)}
                 aria-describedby={fieldErrors.description ? 'challenge-description-error' : undefined}
                 value={description}
                 onChange={(event) => {
