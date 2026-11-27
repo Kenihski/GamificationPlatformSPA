@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { startTransition, useRef, useState } from 'react'
 import useNavbarReveal from './useNavbarReveal'
 import {
   Alert,
@@ -44,12 +44,16 @@ const NavMenu = () => {
     openLoginAfterRegistration(username)
   }
 
+  // Go to the home page as Subapp 1 does. React Router runs navigation as a
+  // transition, so logout runs in one too: React then renders both together.
+  // Otherwise a protected page would see the logged-out user first and send
+  // them to the login page, and the next user to log in would land there.
   const handleLogout = () => {
-    logout()
     closeMenu()
     navigate('/', {
       state: { message: 'You have been logged out successfully.' },
     })
+    startTransition(() => logout())
   }
 
   const isAccountPage =
