@@ -11,6 +11,7 @@ import ImageService from '../services/ImageService'
 import type { Question, QuestionSaveRequest, QuestionType } from '../types/Question'
 import './QuestionFormPage.css'
 import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 type ImageCategory = 'none' | 'current' | 'upload' | 'my' | 'default'
 
@@ -26,13 +27,6 @@ const descriptionChoices = [
   'Select all correct answers.',
   'Write the correct answer. Uppercase and lowercase letters are treated the same.',
 ]
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageSource = (url: string) =>
-  url.startsWith('http')
-    ? url
-    : `${apiBaseUrl}/${url.replace(/^\/+/, '')}`
 
 interface EditFormProps {
   question: Question
@@ -390,7 +384,7 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
     imageCategory === 'upload'
       ? uploadedPreviewUrl
       : imageUrl
-        ? getImageSource(imageUrl)
+        ? getImageUrl(imageUrl)
         : null
 
   return (

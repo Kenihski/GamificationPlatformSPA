@@ -6,16 +6,10 @@ import { Link } from 'react-router-dom'
 import QuestionService from '../services/QuestionService'
 import './AdminQuestionsPage.css'
 import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 const CHALLENGE_PAGE_SIZE = 12
 const QUESTION_PAGE_SIZE = 10
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageSource = (url: string) =>
-  url.startsWith('http')
-    ? url
-    : `${API_BASE_URL}/${url.replace(/^\/+/, '')}`
-
 const AdminQuestionsPage = () => {
   usePageTitle('List of Questions')
   const [search, setSearch] = useState('')
@@ -231,7 +225,7 @@ const AdminQuestionsPage = () => {
                       <td className="text-center">
                         {question.imageUrl ? (
                           <img
-                            src={getImageSource(question.imageUrl)}
+                            src={getImageUrl(question.imageUrl)}
                             alt=""
                             className="questions-table-image"
                           />

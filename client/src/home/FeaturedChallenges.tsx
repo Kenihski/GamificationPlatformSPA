@@ -3,18 +3,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Challenge } from '../types/Challenge'
 import './HomePage.css'
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageUrl = (imageUrl: string | null) => {
-  if (!imageUrl) return null
-
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-    return imageUrl
-  }
-
-  return `${API_BASE_URL}/${imageUrl.replace(/^\/+/, '')}`
-}
+import { getImageUrl } from '../shared/imageUrl'
 
 const PointsIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"

@@ -17,23 +17,12 @@ import { withReturnUrl } from '../shared/returnUrl'
 import FlashMessage from '../shared/FlashMessage'
 import './ChallengeDetailsPage.css'
 import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 type ManagementAction =
   | 'publish'
   | 'unpublish'
   | 'changeType'
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageUrl = (imageUrl: string | null) => {
-  if (!imageUrl) return null
-
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-    return imageUrl
-  }
-
-  return `${API_BASE_URL}/${imageUrl.replace(/^\/+/, '')}`
-}
 
 const ChallengeDetailsPage = () => {
   const { id } = useParams()

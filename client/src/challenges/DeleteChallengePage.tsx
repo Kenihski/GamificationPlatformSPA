@@ -6,13 +6,7 @@ import { useAuth } from '../auth/AuthContext'
 import ChallengeService from '../services/ChallengeService'
 import '../questions/QuestionFormPage.css'
 import usePageTitle from '../shared/usePageTitle'
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageSource = (url: string) =>
-  /^https?:\/\//i.test(url)
-    ? url
-    : `${apiBaseUrl}/${url.replace(/^\/+/, '')}`
+import { getImageUrl } from '../shared/imageUrl'
 
 const DeleteChallengePage = () => {
   usePageTitle('Delete Challenge')
@@ -86,7 +80,7 @@ const DeleteChallengePage = () => {
               <dt className="col-sm-3">Image</dt>
               <dd className="col-sm-9">
                 {challenge.imageUrl
-                  ? <img src={getImageSource(challenge.imageUrl)} alt="" className="img-fluid rounded" style={{ maxWidth: 250 }} />
+                  ? <img src={getImageUrl(challenge.imageUrl)} alt="" className="img-fluid rounded" style={{ maxWidth: 250 }} />
                   : <span className="text-muted">No image selected</span>}
               </dd>
             </dl>

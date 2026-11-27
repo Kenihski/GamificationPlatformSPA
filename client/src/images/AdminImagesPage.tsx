@@ -26,6 +26,7 @@ import type {
 } from '../services/ImageService'
 import './AdminImagesPage.css'
 import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
@@ -200,15 +201,12 @@ const AdminImagesPage = () => {
     }
   }
 
-  const imageUrl = (url: string) =>
-    `${import.meta.env.VITE_API_BASE_URL ?? ''}${url}`
-
   const renderUserImage = (image: AdminUserImage) => (
     <Col key={image.userImageId}>
       <Card className="admin-image-card shadow-sm position-relative">
         <div className="ratio ratio-4x3 bg-light rounded overflow-hidden">
           <img
-            src={imageUrl(image.imageUrl)}
+            src={getImageUrl(image.imageUrl)}
             alt=""
             className="w-100 h-100 object-fit-cover"
           />
@@ -260,7 +258,7 @@ const AdminImagesPage = () => {
       <Card className="admin-image-card shadow-sm position-relative">
         <div className="ratio ratio-4x3 bg-light rounded overflow-hidden">
           <img
-            src={imageUrl(image.imageUrl)}
+            src={getImageUrl(image.imageUrl)}
             alt=""
             className="w-100 h-100 object-fit-cover"
           />

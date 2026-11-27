@@ -15,16 +15,10 @@ import { useAuth } from '../auth/AuthContext'
 import type { Challenge } from '../types/Challenge'
 import './CreateChallengePage.css'
 import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 type ImageCategory = 'current' | 'upload' | 'my' | 'default'
 type FieldErrors = Partial<Record<'title' | 'description' | 'image', string>>
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageSource = (url: string) =>
-  url.startsWith('http')
-    ? url
-    : `${apiBaseUrl}${url.startsWith('/') ? '' : '/'}${url}`
 
 interface EditFormProps {
   challenge: Challenge
@@ -229,12 +223,12 @@ const EditForm = ({ challenge }: EditFormProps) => {
     updateMutation.mutate()
   }
 
-  const fallbackPreviewUrl = fallbackImage ? getImageSource(fallbackImage) : null
+  const fallbackPreviewUrl = fallbackImage ? getImageUrl(fallbackImage) : null
   const previewUrl =
     imageCategory === 'upload'
       ? uploadedPreviewUrl || fallbackPreviewUrl
       : imageUrl
-        ? getImageSource(imageUrl)
+        ? getImageUrl(imageUrl)
         : fallbackPreviewUrl
 
   return (

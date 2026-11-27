@@ -5,16 +5,12 @@ import { useAuth } from '../auth/AuthContext'
 import ImageService from '../services/ImageService'
 import { getSafeReturnUrl } from '../shared/returnUrl'
 import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 type DeleteImagePageProps = {
   // Default images belong to the admin library; user images to a user's library.
   isDefaultImage?: boolean
 }
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageSource = (url: string) =>
-  url.startsWith('http') ? url : `${apiBaseUrl}/${url.replace(/^\/+/, '')}`
 
 // Shared confirmation page for deleting library images, as ConfirmDelete in Subapp 1.
 const DeleteImagePage = ({ isDefaultImage = false }: DeleteImagePageProps) => {
@@ -136,7 +132,7 @@ const DeleteImagePage = ({ isDefaultImage = false }: DeleteImagePageProps) => {
 
           {imageUrl && (
             <img
-              src={getImageSource(imageUrl)}
+              src={getImageUrl(imageUrl)}
               alt=""
               className="img-fluid rounded mb-3 d-block"
               style={{ maxHeight: 200, objectFit: 'contain' }}

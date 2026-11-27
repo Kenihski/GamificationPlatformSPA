@@ -21,6 +21,7 @@ import type {
 } from '../types/Question'
 import './QuestionFormPage.css'
 import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 type ImageCategory = 'none' | 'upload' | 'my' | 'default'
 
@@ -36,13 +37,6 @@ const descriptionChoices = [
   'Select all correct answers.',
   'Write the correct answer. Uppercase and lowercase letters are treated the same.',
 ]
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageSource = (url: string) =>
-  url.startsWith('http')
-    ? url
-    : `${API_BASE_URL}/${url.replace(/^\/+/, '')}`
 
 const CreateQuestionPage = () => {
   usePageTitle('Create New Question')
@@ -351,7 +345,7 @@ const CreateQuestionPage = () => {
     imageCategory === 'upload'
       ? uploadedPreviewUrl
       : imageUrl
-        ? getImageSource(imageUrl)
+        ? getImageUrl(imageUrl)
         : null
 
   if (!validId) {

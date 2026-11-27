@@ -10,14 +10,10 @@ import ImageService from '../services/ImageService'
 import { useAuth } from '../auth/AuthContext'
 import './CreateChallengePage.css'
 import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 type ImageCategory = 'upload' | 'my' | 'default'
 type FieldErrors = Partial<Record<'title' | 'description' | 'image', string>>
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageSource = (url: string) =>
-  url.startsWith('http') ? url : `${apiBaseUrl}${url}`
 
 const CreateChallengePage = () => {
   usePageTitle('Create Challenge')
@@ -155,12 +151,12 @@ const CreateChallengePage = () => {
     createMutation.mutate()
   }
 
-  const fallbackPreviewUrl = fallbackImageUrl ? getImageSource(fallbackImageUrl) : null
+  const fallbackPreviewUrl = fallbackImageUrl ? getImageUrl(fallbackImageUrl) : null
   const previewUrl =
     imageCategory === 'upload'
       ? uploadedPreviewUrl || fallbackPreviewUrl
       : selectedImageUrl
-        ? getImageSource(selectedImageUrl)
+        ? getImageUrl(selectedImageUrl)
         : null
 
   return (

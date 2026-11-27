@@ -12,13 +12,7 @@ import { getSafeReturnUrl } from '../shared/returnUrl'
 import ChallengeService from '../services/ChallengeService'
 import QuestionService from '../services/QuestionService'
 import usePageTitle from '../shared/usePageTitle'
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageSource = (url: string) =>
-  url.startsWith('http')
-    ? url
-    : `${apiBaseUrl}/${url.replace(/^\/+/, '')}`
+import { getImageUrl } from '../shared/imageUrl'
 
 const DeleteQuestionPage = () => {
   usePageTitle('Delete Question')
@@ -167,7 +161,7 @@ const DeleteQuestionPage = () => {
                 <strong>Image:</strong>
                 <br />
                 <img
-                  src={getImageSource(question.imageUrl)}
+                  src={getImageUrl(question.imageUrl)}
                   alt=""
                   className="img-fluid mt-2"
                   style={{ maxWidth: 250 }}

@@ -18,6 +18,7 @@ import ImageService from '../services/ImageService'
 import type { ImageDeletionImpact } from '../services/ImageService'
 import './MyImagesPage.css'
 import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
@@ -191,7 +192,7 @@ const MyImagesPage = () => {
                 <Card className="h-100 shadow-sm my-images-card">
                   <div className="ratio ratio-4x3">
                     <img
-                      src={`${import.meta.env.VITE_API_BASE_URL ?? ''}${image.imageUrl}`}
+                      src={getImageUrl(image.imageUrl)}
                       alt=""
                       className="w-100 h-100 object-fit-cover rounded-top"
                     />
