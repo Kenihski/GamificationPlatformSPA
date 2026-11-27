@@ -2,7 +2,8 @@
 
 .about-page {
   max-width: 1100px;
-  margin: 0 auto;
+  /* Subapp 1 gets the extra 1rem from the navbar's bottom margin. */
+  margin: 1rem auto 0;
   padding: 3rem 0 4rem;
 }
 
@@ -149,7 +150,7 @@
 /* Explore Challenges button - matches Subapp 1 */
 .about-page .about-explore-button {
   padding: 0.375rem 0.75rem;
-  background: linear-gradient(135deg, #3159cf, #6540c5);
+  background: linear-gradient(135deg, #3d65d9, #7957d8);
   border: 1px solid #6d83ff;
   border-radius: 8px;
   color: #ffffff;
@@ -159,7 +160,7 @@
 
 .about-page .about-explore-button:hover,
 .about-page .about-explore-button:focus-visible {
-  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  background: linear-gradient(135deg, #4269dc, #7d5bdb);
   border-color: #9eabff;
   color: #ffffff;
 }

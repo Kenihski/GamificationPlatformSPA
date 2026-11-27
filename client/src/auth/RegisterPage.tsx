@@ -1,12 +1,15 @@
+import { Container } from 'react-bootstrap'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import RegisterForm from './RegisterForm'
 import { useAuthModal } from './AuthModalContext'
+import usePageTitle from '../shared/usePageTitle'
 
 interface RegisterLocationState {
   from?: string
 }
 
 const RegisterPage = () => {
+  usePageTitle('Register')
   const navigate = useNavigate()
   const { openLoginAfterRegistration } = useAuthModal()
   const location = useLocation()
@@ -31,8 +34,8 @@ const RegisterPage = () => {
   }
 
   return (
-    <main className="container auth-page">
-      <h2>Register</h2>
+    <Container className="auth-page management-page">
+      <h1 className="h2 my-4">Register</h1>
 
       <RegisterForm onSuccess={handleSuccess} />
 
@@ -42,7 +45,7 @@ const RegisterPage = () => {
           Login here
         </Link>
       </p>
-    </main>
+    </Container>
   )
 }
 

@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import ChallengeService from '../services/ChallengeService'
 import './MyChallengesPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 type ChallengeAction =
   | 'publish'
@@ -23,6 +24,7 @@ interface ActionRequest {
 }
 
 const MyChallengesPage = () => {
+  usePageTitle('My Challenges')
   const queryClient = useQueryClient()
   const { user } = useAuth()
   const [actionError, setActionError] = useState<string | null>(null)
@@ -87,7 +89,7 @@ const MyChallengesPage = () => {
   }
 
   return (
-    <Container className="my-challenges-page py-4">
+    <Container className="my-challenges-page">
       <div className="my-4">
         <h1 className="fw-bold mb-1">My Challenges</h1>
         <p className="text-secondary mb-0">
@@ -217,7 +219,7 @@ const MyChallengesPage = () => {
                           <Button
                             size="sm"
                             variant="outline-primary"
-                            className="my-challenges-type-button"
+                            className="my-challenges-type-button change-type-button"
                             disabled={actionMutation.isPending}
                             onClick={() => handleAction(challenge.challengeId, 'change-type')}
                           >

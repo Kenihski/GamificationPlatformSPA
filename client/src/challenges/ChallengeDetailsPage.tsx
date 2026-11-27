@@ -7,29 +7,23 @@ import {
   Spinner,
   Table,
 } from 'react-bootstrap'
-import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import ChallengeService from '../services/ChallengeService'
 import QuestionService from '../services/QuestionService'
 import QuizService from '../services/QuizService'
+import QuestionOverview from '../questions/QuestionOverview'
+import { withReturnUrl } from '../shared/returnUrl'
+import FlashMessage from '../shared/FlashMessage'
 import './ChallengeDetailsPage.css'
+import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
+import { formatDateTime } from '../shared/formatDate'
 
 type ManagementAction =
   | 'publish'
   | 'unpublish'
   | 'changeType'
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageUrl = (imageUrl: string | null) => {
-  if (!imageUrl) return null
-
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-    return imageUrl
-  }
-
-  return `${API_BASE_URL}/${imageUrl.replace(/^\/+/, '')}`
-}
 
 const ChallengeDetailsPage = () => {
   const { id } = useParams()
@@ -37,6 +31,7 @@ const ChallengeDetailsPage = () => {
   const fromMyChallenges = searchParams.get('fromMyChallenges') === 'true'
   const { user } = useAuth()
   const queryClient = useQueryClient()
+  const location = useLocation()
 
   const showQuestions = searchParams.get('showQuestions') === 'true'
   const toggleQuestions = () => {
@@ -51,6 +46,11 @@ const ChallengeDetailsPage = () => {
   const challengeId = Number(id)
   const validId = Number.isInteger(challengeId) && challengeId > 0
 
+  // Pages opened from here return to this page afterwards, as in Subapp 1.
+  const currentUrl = `${location.pathname}${location.search}`
+  const questionReturnUrl =
+    `/challenges/${challengeId}?showQuestions=true${fromMyChallenges ? '&fromMyChallenges=true' : ''}`
+
   const {
     data: challenge,
     isPending,
@@ -62,6 +62,8 @@ const ChallengeDetailsPage = () => {
     enabled: validId,
     retry: false,
   })
+
+  usePageTitle(challenge?.title)
 
   const isAdmin = user?.roles.includes('Admin') ?? false
   const isOwner =
@@ -188,6 +190,7 @@ const ChallengeDetailsPage = () => {
   return (
     <>
       <Container className="challenge-details-page">
+        <FlashMessage />
         {managementSuccess && (
           <Alert variant="success" role="status">
             {managementSuccess}
@@ -371,9 +374,17 @@ const ChallengeDetailsPage = () => {
               </div>
 
               <div className="d-flex gap-2 flex-wrap">
+                <Link
+                  to={withReturnUrl(`/challenges/${challengeId}/edit`, currentUrl)}
+                  className="btn btn-outline-warning"
+                >
+                  Edit
+                </Link>
+
                 {isAdmin && isOwner && (
                   <Button
                     variant="outline-primary"
+                    className="change-type-button"
                     disabled={managementMutation.isPending}
                     onClick={() => handleManagementAction('changeType')}
                   >
@@ -419,7 +430,7 @@ const ChallengeDetailsPage = () => {
               </Button>
 
               <Link
-                to={`/challenges/${challengeId}/questions/create`}
+                to={withReturnUrl(`/challenges/${challengeId}/questions/create`, questionReturnUrl)}
                 className="btn btn-primary"
               >
                 + Add Question
@@ -437,82 +448,12 @@ const ChallengeDetailsPage = () => {
                   <Alert variant="danger">
                     Could not load questions.
                   </Alert>
-                ) : questions.length === 0 ? (
-                  <Alert variant="info">
-                    No questions have been added yet.
-                  </Alert>
                 ) : (
-                  <div className="table-responsive">
-                    <Table striped bordered className="align-middle">
-                      <thead>
-                        <tr>
-                          <th>Question</th>
-                          <th>Answer Options</th>
-                          <th>Points</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        {[...questions]
-                          .sort((a, b) => a.questionId - b.questionId)
-                          .map((question) => (
-                            <tr key={question.questionId}>
-                              <td>
-                                <strong>{question.title}</strong>
-                                {question.description && (
-                                  <div className="text-muted small mt-1">
-                                    {question.description}
-                                  </div>
-                                )}
-                              </td>
-
-                              <td>
-                                {question.questionType === 'ShortAnswer'
-                                  ? question.acceptedAnswers.map(
-                                      (answer, index) => (
-                                        <div key={index}>
-                                          ✓ <strong>{answer}</strong>
-                                        </div>
-                                      )
-                                    )
-                                  : question.options.map((option) => (
-                                      <div key={option.questionOptionId}>
-                                        {option.isCorrect ? (
-                                          <>
-                                            ✓ <strong>{option.text}</strong>
-                                          </>
-                                        ) : (
-                                          <>○ {option.text}</>
-                                        )}
-                                      </div>
-                                    ))}
-                              </td>
-
-                              <td>{question.points}</td>
-
-                              <td>
-                                <div className="d-flex gap-2 flex-wrap">
-                                  <Link
-                                    to={`/challenges/${challengeId}/questions/${question.questionId}/edit`}
-                                    className="btn btn-sm btn-outline-warning challenge-question-action"
-                                  >
-                                    Edit
-                                  </Link>
-
-                                  <Link
-                                    to={`/challenges/${challengeId}/questions/${question.questionId}/delete`}
-                                    className="btn btn-sm btn-outline-danger challenge-question-action"
-                                  >
-                                    Delete
-                                  </Link>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </Table>
-                  </div>
+                  <QuestionOverview
+                    challengeId={challengeId}
+                    questions={questions}
+                    returnUrl={questionReturnUrl}
+                  />
                 )}
               </div>
             )}
@@ -582,16 +523,7 @@ const ChallengeDetailsPage = () => {
 
                         <td>
                           {attempt.completedAt
-                            ? new Date(attempt.completedAt).toLocaleString(
-                                'nb-NO',
-                                {
-                                  day: '2-digit',
-                                  month: '2-digit',
-                                  year: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                }
-                              )
+                            ? formatDateTime(attempt.completedAt)
                             : ''}
                         </td>
                       </tr>

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useLayoutEffect } from 'react'
+import { lazy, Suspense, useLayoutEffect, useRef } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import NavMenu from './shared/NavMenu'
 import AchievementNotifications from './achievements/AchievementNotifications'
@@ -83,6 +83,7 @@ const MyImagesPage = lazy(() => import('./images/MyImagesPage'))
 const AdminImagesPage = lazy(
   () => import('./images/AdminImagesPage')
 )
+const DeleteImagePage = lazy(() => import('./images/DeleteImagePage'))
 
 const AdminUsersPage = lazy(
   () => import('./users/AdminUsersPage')
@@ -91,15 +92,27 @@ const AdminUserDetailsPage = lazy(
   () => import('./users/AdminUserDetailsPage')
 )
 
-// Reset document scroll on page changes, not on query or hash changes.
+// Reset scroll and keyboard focus on page changes, not on query or hash changes.
+// A full page load in Subapp 1 starts at the top, so the next Tab reaches the
+// skip link; without this, focus would stay on the link that was clicked.
 const ScrollToTop = () => {
   const { pathname } = useLocation()
+  const focusStartRef = useRef<HTMLDivElement>(null)
+  const isFirstRender = useRef(true)
 
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+
+    // Pages that focus a message or error summary do so afterwards and win.
+    focusStartRef.current?.focus({ preventScroll: true })
   }, [pathname])
 
-  return null
+  return <div ref={focusStartRef} tabIndex={-1} className="route-focus-start" />
 }
 
 const App = () => {
@@ -111,7 +124,7 @@ const App = () => {
         <NavMenu />
         <AchievementNotifications />
 
-        <main id="main-content" tabIndex={-1}>
+        <main id="main-content" className="pb-3" tabIndex={-1}>
         <Suspense fallback={<p className="text-center mt-4">Loading...</p>}>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -134,6 +147,7 @@ const App = () => {
             <Route element={<ProtectedRoute />}>
               <Route path="/my-challenges" element={<MyChallengesPage />} />
               <Route path="/my-images" element={<MyImagesPage />} />
+              <Route path="/images/:id/delete" element={<DeleteImagePage />} />
               <Route path="/challenges/create" element={<CreateChallengePage />} />
               <Route path="/challenges/:id/edit" element={<EditChallengePage />} />
               <Route path="/challenges/:id/delete" element={<DeleteChallengePage />} />
@@ -184,6 +198,10 @@ const App = () => {
                 element={<DeleteAchievementPage />}
               />
               <Route path="/admin/images" element={<AdminImagesPage />} />
+              <Route
+                path="/admin/images/default/:id/delete"
+                element={<DeleteImagePage isDefaultImage />}
+              />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />

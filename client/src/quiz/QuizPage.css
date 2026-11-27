@@ -2,8 +2,10 @@
 /* Matches Subapp 1 quiz.css */
 
 .quiz-page.quiz-take-page {
-  max-width: 1200px;
-  padding: 36px 12px 60px;
+  /* Subapp 1 gets the 1rem margin from the navbar (mb-3). */
+  margin-top: 1rem;
+  padding-top: 24px;
+  padding-bottom: 60px;
 }
 
 .quiz-take-header {
@@ -123,10 +125,18 @@
   letter-spacing: 0.8px;
 }
 
+/* Points shown as a pill, as on the result page. */
 .quiz-question-points {
-  color: #e1e9ff;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.08);
+  color: #e2e8f0;
   font-size: 0.85rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .quiz-question-title {
@@ -245,13 +255,13 @@
 }
 
 .quiz-page .quiz-submit-button {
-  background: linear-gradient(135deg, #3159cf, #6540c5);
+  background: linear-gradient(135deg, #3d65d9, #7957d8);
   border: 1px solid #6d83ff;
   color: #ffffff;
 }
 
 .quiz-page .quiz-submit-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  background: linear-gradient(135deg, #4269dc, #7d5bdb);
   border-color: #9eabff;
   color: #ffffff;
 }

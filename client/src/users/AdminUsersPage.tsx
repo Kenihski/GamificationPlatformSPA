@@ -4,8 +4,10 @@ import { Alert, Container, Form, Spinner, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import UserService from '../services/UserService'
 import './AdminUsersPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const AdminUsersPage = () => {
+  usePageTitle('List of Users')
   const [search, setSearch] = useState('')
 
   const {
@@ -37,7 +39,7 @@ const AdminUsersPage = () => {
 
   if (isError) {
     return (
-      <Container className="py-4">
+      <Container className="pt-4">
         <Alert variant="danger">
           Could not load users: {error.message}
         </Alert>
@@ -46,7 +48,7 @@ const AdminUsersPage = () => {
   }
 
   return (
-    <Container className="py-4">
+    <Container className="pt-4">
       <div className="users-table-header mb-4">
         <div>
           <h1 className="fw-bold mb-1">List of Users</h1>

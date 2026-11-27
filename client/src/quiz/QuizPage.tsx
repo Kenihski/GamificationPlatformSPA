@@ -16,6 +16,7 @@ import type {
   QuizSubmissionRequest,
 } from '../types/Quiz'
 import './QuizPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const QuizPage = () => {
   const { id } = useParams()
@@ -30,6 +31,8 @@ const QuizPage = () => {
     queryFn: () => ChallengeService.getChallenge(challengeId),
     enabled: validId,
   })
+
+  usePageTitle(challenge?.title)
 
   const [quiz, setQuiz] = useState<QuizStartResponse | null>(null)
   const [startError, setStartError] = useState('')

@@ -23,12 +23,12 @@
 }
 
 .my-images-page .btn-primary {
-  background: linear-gradient(135deg, #3159cf, #6540c5);
+  background: linear-gradient(135deg, #3d65d9, #7957d8);
   border-color: #6d83ff;
 }
 
 .my-images-page .btn-primary:hover {
-  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  background: linear-gradient(135deg, #4269dc, #7d5bdb);
   border-color: #9eabff;
 }
 
@@ -43,18 +43,6 @@
 .my-images-card .card-body {
   padding: 1rem;
 }
-
-.my-images-page .btn-outline-danger {
-  color: #ff9ca6;
-  border-color: #c85a69;
-}
-
-.my-images-page .btn-outline-danger:hover {
-  color: #fff;
-  background-color: #a83f50;
-  border-color: #a83f50;
-}
-
 
 /* Feedback messages */
 .my-images-page .alert-success {

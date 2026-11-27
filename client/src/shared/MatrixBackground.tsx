@@ -176,7 +176,6 @@ const MatrixBackground = () => {
           onClick={toggleAnimation}
           aria-label={action}
           aria-controls="matrixBackground"
-          aria-pressed={enabled}
         >
           <svg
             width="20"

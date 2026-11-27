@@ -63,34 +63,14 @@
 
 /* Buttons */
 .achievement-form-page .btn-primary {
-  background: linear-gradient(135deg, #3159cf, #6540c5);
+  background: linear-gradient(135deg, #3d65d9, #7957d8);
   border-color: #6d83ff;
   color: #ffffff;
 }
 
 .achievement-form-page .btn-primary:hover {
-  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  background: linear-gradient(135deg, #4269dc, #7d5bdb);
   border-color: #9eabff;
-  color: #ffffff;
-}
-
-.achievement-form-page .btn-outline-primary {
-  border-color: #91adff;
-  color: #b8c8ff;
-}
-
-.achievement-form-page .btn-outline-primary:hover {
-  background: rgba(77, 99, 202, 0.35);
-  border-color: #b2c1ff;
-  color: #ffffff;
-}
-
-.achievement-form-page .btn-outline-danger {
-  --bs-btn-color: #ffb3bf;
-  --bs-btn-border-color: #ffb3bf;
-}
-
-.achievement-form-page .btn-outline-danger:hover {
   color: #ffffff;
 }
 
@@ -101,13 +81,13 @@
 
 /* Delete confirmation */
 .achievement-form-page .card.border-danger {
-  border-color: #dc3545 !important;
+  border-color: var(--danger-border) !important;
 }
 
 .achievement-form-page .alert-danger {
-  background: #4a222b;
-  border-color: #c35b69;
-  color: #ffe1e5;
+  background: #421b1b;
+  border-color: var(--danger-border);
+  color: #fff1ef;
 }
 
 .achievement-form-page .achievement-delete-points {

@@ -1,6 +1,7 @@
 import { Alert, Container } from 'react-bootstrap'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import LoginForm from './LoginForm'
+import usePageTitle from '../shared/usePageTitle'
 
 interface LoginLocationState {
   message?: string
@@ -9,6 +10,7 @@ interface LoginLocationState {
 }
 
 const LoginPage = () => {
+  usePageTitle('Login')
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -23,8 +25,8 @@ const LoginPage = () => {
   }
 
   return (
-    <Container className="auth-page">
-      <h2>Login</h2>
+    <Container className="auth-page management-page">
+      <h1 className="h2 my-4">Login</h1>
 
       {state?.message && (
         <Alert variant="success" role="status">

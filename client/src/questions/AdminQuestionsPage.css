@@ -74,7 +74,7 @@
 }
 
 .questions-nav-button:focus-visible {
-    outline: 3px solid #a5b8ff;
+    outline: 2px solid var(--focus-ring);
     outline-offset: 3px;
 }
 
@@ -116,9 +116,6 @@
 .questions-table-pagination .btn-outline-primary {
     --bs-btn-color: #b8c8ff;
     --bs-btn-border-color: #91adff;
-    --bs-btn-hover-color: #ffffff;
-    --bs-btn-hover-bg: rgba(77, 99, 202, 0.35);
-    --bs-btn-hover-border-color: #b2c1ff;
 
     --bs-btn-disabled-color: #0d6efd;
     --bs-btn-disabled-border-color: #0d6efd;
@@ -224,17 +221,6 @@
     border-color: #ffc107;
 }
 
-.questions-table-actions .btn-outline-danger {
-    color: #ffb5bd;
-    border-color: #ffb5bd;
-}
-
-.questions-table-actions .btn-outline-danger:hover {
-    color: #121a36;
-    background-color: #ffb5bd;
-    border-color: #ffb5bd;
-}
-
 /* Responsive layout */
 @media (max-width: 991px) {
     .questions-navigation-grid {
@@ -264,4 +250,10 @@
     .questions-nav-button {
         transition: none;
     }
+}
+
+/* Same as the challenge list description; this page does not load Challenges.css. */
+.challenge-list-description {
+  color: var(--home-muted, #d1d9ee);
+  line-height: 1.7;
 }

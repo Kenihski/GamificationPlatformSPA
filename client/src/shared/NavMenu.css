@@ -7,9 +7,35 @@
   border-bottom: 1px solid rgba(111, 132, 255, 0.35);
 }
 
+/* React-Bootstrap adds .navbar-expand, which stops the navbar from wrapping.
+   Let it wrap onto a second row on narrow screens, as in Subapp 1, so it never
+   makes the page wider than the window. */
+.site-navbar.navbar-expand {
+  flex-wrap: wrap;
+}
+
 /* Provide room for focus indicators if navigation controls wrap. */
 .site-navbar > .container-fluid {
   row-gap: 0.75rem;
+}
+
+/* From 1200px the main links stay in the exact centre: the left and right
+   columns are always equally wide, whatever the right side contains. */
+@media (min-width: 1200px) {
+  .site-navbar > .container-fluid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    column-gap: 1rem;
+  }
+
+  .site-navbar-start {
+    justify-self: start;
+  }
+
+  .site-navbar-end {
+    justify-self: end;
+  }
 }
 
 .site-navbar .navbar-brand {
@@ -38,8 +64,19 @@
   height: 1.5em;
 }
 
+/* Mouse focus keeps the soft glow; keyboard focus gets the shared light ring below. */
 .site-navbar .navbar-toggler:focus {
   box-shadow: 0 0 0 0.2rem rgba(111, 132, 255, 0.2);
+}
+
+.site-navbar .navbar-toggler:focus-visible {
+  box-shadow: 0 0 0 2px var(--focus-ring);
+}
+
+/* Rounded corners so the focus ring matches the rest of the navbar. */
+.site-navbar .nav-link,
+.site-navbar .navbar-brand {
+  border-radius: 8px;
 }
 
 /* Navbar links and welcome text */
@@ -51,6 +88,12 @@
 .site-navbar .nav-link {
   color: #edf1ff;
   text-decoration: none;
+}
+
+/* Welcome text and Logout sit 16px apart with no extra side padding, as in Subapp 1. */
+.site-navbar .site-navbar-end .nav-link {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .site-navbar .nav-link:hover,
@@ -127,7 +170,7 @@
 
 .site-sidebar .offcanvas-title {
   color: #ffffff;
-  font-size: 1.05rem;
+  font-size: 1.25rem;
   font-weight: 700;
 }
 
@@ -160,7 +203,6 @@
   padding: 11px 16px;
   border-radius: 9px;
   color: #edf1ff;
-  font-size: 0.95rem;
   font-weight: 500;
   text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -206,15 +248,9 @@
 
 /* Responsive */
 
+/* Welcome text and brand size stay as on larger screens, as in Subapp 1;
+   the navbar wraps onto a second row instead. */
 @media (max-width: 575.98px) {
-  .site-navbar .navbar-welcome {
-    display: none;
-  }
-
-  .site-navbar .navbar-brand {
-    font-size: 1rem;
-  }
-
   .site-sidebar .offcanvas-header {
     padding: 16px;
   }
@@ -234,13 +270,13 @@
 /* Login button */
 
 .site-navbar .btn-primary {
-  background: linear-gradient(135deg, #3159cf, #6540c5);
+  background: linear-gradient(135deg, #3d65d9, #7957d8);
   border-color: #6d83ff;
   color: #ffffff;
 }
 
 .site-navbar .btn-primary:hover {
-  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  background: linear-gradient(135deg, #4269dc, #7d5bdb);
   border-color: #9eabff;
   color: #ffffff;
 }
@@ -252,15 +288,20 @@
     min-width: 0;
   }
 
+  /* Same link size as Subapp 1, which also sets the navbar height. */
   .site-navbar .site-navbar-primary .nav-link {
     white-space: nowrap;
-    font-weight: 600;
+    padding: 10px 8px;
   }
 }
 
 /* Keyboard-only skip link, presented before the shared navigation. */
+/* Fixed to the window even while hidden, so the browser never scrolls the page to
+   reach it, also when focus comes from the browser toolbar. */
 .skip-to-main {
-  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 1px;
   height: 1px;
   padding: 0;
@@ -268,9 +309,12 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+/* Fixed to the window so focusing it does not scroll the page or push content down. */
 .skip-to-main:focus {
-  position: relative;
-  z-index: 2000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1100;
   display: block;
   width: auto;
   height: auto;
@@ -281,6 +325,39 @@
   white-space: normal;
   background: #111833;
   color: #fff;
-  outline: 2px solid #a5b4fc;
+  /* Same as the Subapp 1 skip link: light border plus the shared focus outline. */
+  border: 2px solid var(--focus-ring);
   border-radius: 6px;
+}
+
+/* The navbar stays at the top while scrolling and is hidden while scrolling down.
+   It is clipped instead of moved off-screen, so the browser does not scroll the
+   page when keyboard focus moves into it. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  /* The visible area reaches past the navbar so focus rings, shadows and the
+     matrix tooltip are not cut off. */
+  clip-path: inset(-12px -12px -80px -12px);
+  transition: clip-path 0.25s ease, opacity 0.25s ease;
+}
+
+/* Keyboard users tabbing into the navbar always see it. */
+.site-header.site-header-hidden:not(:focus-within) {
+  clip-path: inset(0 0 100% 0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Used for one frame when keyboard focus enters the hidden navbar. */
+.site-header.site-header-instant,
+.site-header.site-header-instant .site-navbar {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header {
+    transition: none;
+  }
 }

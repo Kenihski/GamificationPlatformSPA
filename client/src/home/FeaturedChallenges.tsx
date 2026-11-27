@@ -3,30 +3,20 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Challenge } from '../types/Challenge'
 import './HomePage.css'
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageUrl = (imageUrl: string | null) => {
-  if (!imageUrl) return null
-
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-    return imageUrl
-  }
-
-  return `${API_BASE_URL}/${imageUrl.replace(/^\/+/, '')}`
-}
+import { getImageUrl } from '../shared/imageUrl'
 
 const PointsIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth="2" aria-hidden="true">
-    <circle cx="12" cy="12" r="9" />
-    <path d="m8 12 3 3 5-6" />
+    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+    aria-hidden="true">
+    <path d="m12 2 3.1 6.3 7 1-5 4.9 1.2 7-6.3-3.3-6.3 3.3 1.2-7-5-4.9 7-1L12 2Z" />
   </svg>
 )
 
 const ClockIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth="2" aria-hidden="true">
+    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+    aria-hidden="true">
     <circle cx="12" cy="12" r="9" />
     <path d="M12 7v5l3 2" />
   </svg>
@@ -138,7 +128,7 @@ const FeaturedChallenges = ({ challenges }: FeaturedChallengesProps) => {
                   <ClockIcon />
                   {challenge.timeLimitMinutes == null
                     ? 'Unlimited time'
-                    : `${challenge.timeLimitMinutes} minutes`}
+                    : `${challenge.timeLimitMinutes} min`}
                 </span>
 
                 {!challenge.isCore && challenge.creatorUsername && (
@@ -165,7 +155,7 @@ const FeaturedChallenges = ({ challenges }: FeaturedChallengesProps) => {
               type="button"
               className="featured-carousel-prev d-flex align-items-center justify-content-center"
               onClick={previous}
-              aria-label="Previous featured challenge"
+              aria-label="Previous challenge"
             >
               <span
                 className="carousel-control-prev-icon"
@@ -177,7 +167,7 @@ const FeaturedChallenges = ({ challenges }: FeaturedChallengesProps) => {
               type="button"
               className="featured-carousel-next d-flex align-items-center justify-content-center"
               onClick={next}
-              aria-label="Next featured challenge"
+              aria-label="Next challenge"
             >
               <span
                 className="carousel-control-next-icon"
@@ -192,7 +182,7 @@ const FeaturedChallenges = ({ challenges }: FeaturedChallengesProps) => {
                   type="button"
                   className={itemIndex === index ? 'active' : ''}
                   onClick={() => setActiveIndex(itemIndex)}
-                  aria-label={`Show featured challenge ${itemIndex + 1}`}
+                  aria-label={`Go to challenge ${itemIndex + 1}`}
                   aria-current={itemIndex === index ? 'true' : undefined}
                 />
               ))}

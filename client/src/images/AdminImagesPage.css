@@ -34,6 +34,16 @@
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
 }
 
+/* Image names use the light card text colours from Subapp 1. */
+.admin-images-page .admin-image-card {
+  --bs-card-color: #ffffff;
+  color: #ffffff;
+}
+
+.admin-images-page .admin-image-card .card-text {
+  color: var(--home-muted);
+}
+
 .admin-images-page .admin-image-card .ratio {
   overflow: hidden;
   border-radius: 6px;
@@ -107,23 +117,6 @@
   box-shadow: 0 0 0 0.2rem rgba(111, 132, 255, 0.2);
 }
 
-/* Rename and delete buttons - Subapp 1 colors */
-.admin-images-page .btn-outline-primary {
-  border-color: #91adff;
-  color: #b8c8ff;
-}
-
-.admin-images-page .btn-outline-primary:hover {
-  background: rgba(77, 99, 202, 0.35);
-  border-color: #b2c1ff;
-  color: #fff;
-}
-
-.admin-images-page .btn-outline-danger {
-  --bs-btn-color: #ffb3bf;
-  --bs-btn-border-color: #ffb3bf;
-}
-
 /* Empty states */
 .admin-images-page .admin-images-empty {
   background: #192344;
@@ -152,14 +145,14 @@
 /* Primary buttons */
 .admin-images-page .btn-primary,
 .admin-images-modal .btn-primary {
-  background: linear-gradient(135deg, #3159cf, #6540c5);
+  background: linear-gradient(135deg, #3d65d9, #7957d8);
   border-color: #6d83ff;
   color: #fff;
 }
 
 .admin-images-page .btn-primary:hover,
 .admin-images-modal .btn-primary:hover {
-  background: linear-gradient(135deg, #3d65d9, #714bd1);
+  background: linear-gradient(135deg, #4269dc, #7d5bdb);
   border-color: #9eabff;
   color: #fff;
 }

@@ -1,24 +1,25 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Alert, Button, Card, Container, Spinner } from 'react-bootstrap'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { getSafeReturnUrl } from '../shared/returnUrl'
 import { useAuth } from '../auth/AuthContext'
 import ChallengeService from '../services/ChallengeService'
 import '../questions/QuestionFormPage.css'
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageSource = (url: string) =>
-  /^https?:\/\//i.test(url)
-    ? url
-    : `${apiBaseUrl}/${url.replace(/^\/+/, '')}`
+import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 const DeleteChallengePage = () => {
+  usePageTitle('Delete Challenge')
   const { id } = useParams()
   const challengeId = Number(id)
   const validId = Number.isInteger(challengeId) && challengeId > 0
   const { user } = useAuth()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const [searchParams] = useSearchParams()
+
+  // Admin user details sends a returnUrl; My Challenges is the default, as in Subapp 1.
+  const returnUrl = getSafeReturnUrl(searchParams.get('returnUrl'))
 
   const { data: challenge, isPending, isError } = useQuery({
     queryKey: ['challenge', challengeId],
@@ -34,8 +35,11 @@ const DeleteChallengePage = () => {
         queryClient.invalidateQueries({ queryKey: ['my-challenges'] }),
         queryClient.invalidateQueries({ queryKey: ['challenges'] }),
         queryClient.invalidateQueries({ queryKey: ['challenge', challengeId] }),
+        // The admin user details page lists the user's challenges.
+        queryClient.invalidateQueries({ queryKey: ['admin-user-details'] }),
+        queryClient.invalidateQueries({ queryKey: ['admin-users'] }),
       ])
-      navigate('/my-challenges')
+      navigate(returnUrl ?? '/my-challenges')
     },
   })
 
@@ -76,7 +80,7 @@ const DeleteChallengePage = () => {
               <dt className="col-sm-3">Image</dt>
               <dd className="col-sm-9">
                 {challenge.imageUrl
-                  ? <img src={getImageSource(challenge.imageUrl)} alt="" className="img-fluid rounded" style={{ maxWidth: 250 }} />
+                  ? <img src={getImageUrl(challenge.imageUrl)} alt="" className="img-fluid rounded" style={{ maxWidth: 250 }} />
                   : <span className="text-muted">No image selected</span>}
               </dd>
             </dl>
@@ -91,11 +95,11 @@ const DeleteChallengePage = () => {
             <Alert variant="danger" role="alert">Could not delete challenge: {deleteMutation.error.message}</Alert>
           )}
 
-          <div className="d-flex flex-wrap gap-2">
+          <div className="d-flex flex-wrap gap-2 pt-2">
             <Button variant="outline-danger" disabled={deleteMutation.isPending} onClick={() => deleteMutation.mutate()}>
               {deleteMutation.isPending ? 'Deleting...' : 'Confirm deletion'}
             </Button>
-            <Link to="/my-challenges" className="btn btn-outline-primary">Cancel</Link>
+            <Link to={returnUrl ?? '/my-challenges'} className="btn btn-outline-primary">Cancel</Link>
           </div>
         </Card.Body>
       </Card>

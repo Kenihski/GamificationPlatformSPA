@@ -11,15 +11,20 @@ import {
   Row,
   Spinner,
 } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import FlashMessage from '../shared/FlashMessage'
+import { withReturnUrl } from '../shared/returnUrl'
 import ImageService from '../services/ImageService'
 import type { ImageDeletionImpact } from '../services/ImageService'
 import './MyImagesPage.css'
+import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 const MyImagesPage = () => {
+  usePageTitle('My Images')
   const queryClient = useQueryClient()
   const [file, setFile] = useState<File | null>(null)
   const [fileInputKey, setFileInputKey] = useState(0)
@@ -50,17 +55,7 @@ const MyImagesPage = () => {
     },
   })
 
-  const deleteMutation = useMutation({
-    mutationFn: ImageService.deleteImage,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['my-images'] })
-      setBlockingQuestions([])
-      setSuccessMessage('Image deleted. Any challenge covers that used it now show Question 1.')
-    },
-    onError: (error: Error) => {
-      setErrorMessage(error.message)
-    },
-  })
+  const navigate = useNavigate()
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files?.[0] ?? null)
@@ -102,12 +97,8 @@ const MyImagesPage = () => {
         setErrorMessage('This image is used by questions. Replace it in the questions below before deleting it.')
         return
       }
-      const affected = impact.challenges.map((challenge) => challenge.title).join(', ')
-      const warning = affected
-        ? `This image is used as a cover by: ${affected}. Those covers will be replaced with Question 1. `
-        : ''
-      if (!window.confirm(`${warning}Permanently delete ${impact.imageName}? This cannot be undone.`)) return
-      deleteMutation.mutate(id)
+      // The confirmation page shows the affected challenge covers, as in Subapp 1.
+      navigate(withReturnUrl(`/images/${id}/delete`, '/my-images'))
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Could not check image usage.')
     }
@@ -127,6 +118,8 @@ const MyImagesPage = () => {
           Back to My Challenges
         </Link>
       </div>
+
+      <FlashMessage />
 
         {successMessage && (
         <Alert variant="success">
@@ -194,17 +187,13 @@ const MyImagesPage = () => {
       ) : (
         <Row xs={1} sm={2} lg={3} className="g-3">
           {images.map((image) => {
-            const isDeleting =
-              deleteMutation.isPending &&
-              deleteMutation.variables === image.userImageId
-
             return (
               <Col key={image.userImageId}>
                 <Card className="h-100 shadow-sm my-images-card">
                   <div className="ratio ratio-4x3">
                     <img
-                      src={`${import.meta.env.VITE_API_BASE_URL ?? ''}${image.imageUrl}`}
-                      alt={image.fileName}
+                      src={getImageUrl(image.imageUrl)}
+                      alt=""
                       className="w-100 h-100 object-fit-cover rounded-top"
                     />
                   </div>
@@ -218,10 +207,9 @@ const MyImagesPage = () => {
                       <Button
                         variant="outline-danger"
                         size="sm"
-                        disabled={deleteMutation.isPending}
                         onClick={() => handleDelete(image.userImageId)}
                       >
-                        {isDeleting ? 'Deleting...' : 'Delete Image'}
+                        Delete Image
                       </Button>
                     </div>
                   </Card.Body>

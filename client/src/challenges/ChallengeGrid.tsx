@@ -2,22 +2,11 @@
 import { Card, Col, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import type { Challenge } from '../types/Challenge'
+import { getImageUrl } from '../shared/imageUrl'
 
 interface ChallengeGridProps {
   challenges: Challenge[]
   completedChallengeIds: number[]
-}
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageUrl = (imageUrl: string | null) => {
-  if (!imageUrl) return null
-
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-    return imageUrl
-  }
-
-  return `${API_BASE_URL}/${imageUrl.replace(/^\/+/, '')}`
 }
 
 const ChallengeGrid = ({

@@ -3,8 +3,8 @@
   --home-blue: #91adff;
   --content-card-bg: #121a36;
   --content-card-border: rgba(125, 151, 230, 0.55);
-  --primary-gradient: linear-gradient(135deg, #3159cf, #6540c5);
-  --primary-gradient-hover: linear-gradient(135deg, #3d65d9, #714bd1);
+  --primary-gradient: linear-gradient(135deg, #3d65d9, #7957d8);
+  --primary-gradient-hover: linear-gradient(135deg, #4269dc, #7d5bdb);
 }
 
 .challenge-list-description {
@@ -39,18 +39,6 @@
 .challenge-list-page .challenge-toolbar .btn-primary:hover {
   background: var(--primary-gradient-hover);
   border-color: #9eabff;
-  color: #ffffff;
-}
-
-.challenge-list-page .challenge-toolbar .btn-outline-primary {
-  background: transparent;
-  border-color: #91adff;
-  color: #b8c8ff;
-}
-
-.challenge-list-page .challenge-toolbar .btn-outline-primary:hover {
-  background: rgba(77, 99, 202, 0.35);
-  border-color: #b2c1ff;
   color: #ffffff;
 }
 
@@ -269,12 +257,10 @@
 
 .challenge-list-page .challenge-table a {
   color: #a9bfff;
-  text-decoration: none;
 }
 
 .challenge-list-page .challenge-table a:hover {
   color: #d0dcff;
-  text-decoration: underline;
 }
 
 /* Table badges - matches Subapp 1 */

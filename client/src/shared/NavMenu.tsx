@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useRef, useState } from 'react'
+import useNavbarReveal from './useNavbarReveal'
 import {
   Alert,
   Button,
@@ -34,23 +35,8 @@ const NavMenu = () => {
   const isAdmin = user?.roles.includes('Admin') ?? false
   const navigate = useNavigate()
   const location = useLocation()
-
-  useEffect(() => {
-    const names: Record<string, string> = {
-      '/': 'Home',
-      '/challenges': 'Challenges',
-      '/challenges/create': 'Create Challenge',
-      '/my-challenges': 'My Challenges',
-      '/hall-of-fame': 'Hall of Fame',
-      '/leaderboard': 'Core Leaderboard',
-      '/about': 'About',
-      '/login': 'Login',
-      '/register': 'Register',
-    }
-    const page = names[location.pathname] ??
-      (location.pathname.includes('/edit') ? 'Edit' : 'Challenge Hub')
-    document.title = `${page} - Learning Challenge Hub`
-  }, [location.pathname])
+  const headerRef = useRef<HTMLElement>(null)
+  const navbarHidden = useNavbarReveal(headerRef)
 
   const closeMenu = () => setShowMenu(false)
 
@@ -72,30 +58,36 @@ const NavMenu = () => {
 
   return (
     <>
-      <Navbar className="site-navbar" data-bs-theme="dark">
+      <Navbar
+        ref={headerRef}
+        className={`site-navbar site-header${navbarHidden ? ' site-header-hidden' : ''}`}
+        data-bs-theme="dark"
+      >
         <Container fluid>
-          <button
-            type="button"
-            className="navbar-toggler me-3"
-            onClick={() => setShowMenu(true)}
-            aria-label="Open navigation menu"
-            aria-controls="sidebar-menu"
-            aria-expanded={showMenu}
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
+          <div className="site-navbar-start d-flex align-items-center">
+            <button
+              type="button"
+              className="navbar-toggler me-3"
+              onClick={() => setShowMenu(true)}
+              aria-label="Open navigation menu"
+              aria-controls="sidebar-menu"
+              aria-expanded={showMenu}
+            >
+              <span className="navbar-toggler-icon" />
+            </button>
 
-          <Navbar.Brand as={Link} to="/" className="me-auto">
-            Learning Challenge Hub
-          </Navbar.Brand>
+            <Navbar.Brand as={Link} to="/">
+              Learning Challenge Hub
+            </Navbar.Brand>
+          </div>
 
-          <Nav className="site-navbar-primary d-none d-xl-flex align-items-center gap-3 mx-auto">
-            <Nav.Link as={NavLink} to="/challenges">Challenges</Nav.Link>
+          <Nav className="site-navbar-primary d-none d-xl-flex align-items-center gap-3">
+            <Nav.Link as={NavLink} to="/challenges" end>Challenges</Nav.Link>
             <Nav.Link as={NavLink} to="/hall-of-fame">Hall of Fame</Nav.Link>
             <Nav.Link as={NavLink} to="/leaderboard">Core Leaderboard</Nav.Link>
           </Nav>
 
-          <Nav className="align-items-center gap-3">
+          <Nav className="site-navbar-end align-items-center gap-3">
             <MatrixBackground />
 
             {isAuthenticated ? (
@@ -172,6 +164,7 @@ const NavMenu = () => {
             <Nav.Link
               as={NavLink}
               to="/challenges"
+              end
               onClick={closeMenu}
             >
               Challenges
@@ -284,32 +277,34 @@ const NavMenu = () => {
             </>
           )}
 
-          <div className="site-sidebar-footer">
-            <Nav.Link
-              as={NavLink}
-              to="/about"
-              onClick={closeMenu}
-              className="d-flex align-items-center gap-2"
-            >
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 16v-4" />
-                <path d="M12 8h.01" />
-              </svg>
-              About
-            </Nav.Link>
-          </div>
         </Offcanvas.Body>
+
+        {/* Footer sits outside the body so it spans the full sidebar width, as in Subapp 1. */}
+        <div className="site-sidebar-footer">
+          <Nav.Link
+            as={NavLink}
+            to="/about"
+            onClick={closeMenu}
+            className="d-flex align-items-center gap-2"
+          >
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 16v-4" />
+              <path d="M12 8h.01" />
+            </svg>
+            About
+          </Nav.Link>
+        </div>
       </Offcanvas>
 
       <Modal

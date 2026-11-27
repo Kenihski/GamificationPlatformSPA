@@ -5,17 +5,13 @@ import { Alert, Button, Container, Form, Spinner, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import QuestionService from '../services/QuestionService'
 import './AdminQuestionsPage.css'
+import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 const CHALLENGE_PAGE_SIZE = 12
 const QUESTION_PAGE_SIZE = 10
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
-
-const getImageSource = (url: string) =>
-  url.startsWith('http')
-    ? url
-    : `${API_BASE_URL}/${url.replace(/^\/+/, '')}`
-
 const AdminQuestionsPage = () => {
+  usePageTitle('List of Questions')
   const [search, setSearch] = useState('')
   const [selectedChallengeId, setSelectedChallengeId] =
     useState<number | null>(null)
@@ -96,7 +92,7 @@ const AdminQuestionsPage = () => {
 
   if (isError) {
     return (
-      <Container className="py-4">
+      <Container className="pt-4">
         <Alert variant="danger">
           Could not load questions: {error.message}
         </Alert>
@@ -105,7 +101,7 @@ const AdminQuestionsPage = () => {
   }
 
   return (
-    <Container className="py-4">
+    <Container className="pt-4">
       <div className="questions-page-header mb-4">
         <div>
           <h1 className="fw-bold mb-2">List of Questions</h1>
@@ -224,12 +220,14 @@ const AdminQuestionsPage = () => {
                         </Link>
                       </td>
                       <td>
-                        {question.ownerUsername}
+                        <Link to={`/admin/users/${question.ownerId}`}>
+                          {question.ownerUsername}
+                        </Link>
                       </td>
                       <td className="text-center">
                         {question.imageUrl ? (
                           <img
-                            src={getImageSource(question.imageUrl)}
+                            src={getImageUrl(question.imageUrl)}
                             alt=""
                             className="questions-table-image"
                           />

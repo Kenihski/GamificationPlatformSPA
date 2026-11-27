@@ -1,16 +1,24 @@
 
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Alert, Button, Card, Container, Form } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import AdminAchievementService from '../services/AdminAchievementService'
 import type { AchievementSaveRequest } from '../types/Achievement'
 import './AchievementFormPages.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const CreateAchievementPage = () => {
+  usePageTitle('Create Achievement')
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [error, setError] = useState<string | null>(null)
+  const errorRef = useRef<HTMLDivElement>(null)
+
+  // Move focus to the error so screen reader users hear it, as with the other forms.
+  useEffect(() => {
+    if (error) errorRef.current?.focus()
+  }, [error])
 
   const [form, setForm] = useState<AchievementSaveRequest>({
     name: '',
@@ -59,7 +67,7 @@ const CreateAchievementPage = () => {
   }
 
   return (
-    <Container className="achievement-form-page mt-4 mb-5">
+    <Container className="achievement-form-page management-page mt-4 mb-5">
       <div className="mb-4">
         <h1>Create Achievement</h1>
         <p className="text-muted">
@@ -70,7 +78,11 @@ const CreateAchievementPage = () => {
       <Card>
         <Card.Body>
           <Form onSubmit={handleSubmit}>
-            {error && <Alert variant="danger">{error}</Alert>}
+            {error && (
+              <Alert ref={errorRef} tabIndex={-1} variant="danger" role="alert">
+                {error}
+              </Alert>
+            )}
 
             <Form.Group className="mb-3" controlId="achievementName">
               <Form.Label>Name</Form.Label>
@@ -172,7 +184,7 @@ const CreateAchievementPage = () => {
               />
             </Form.Group>
 
-            <div className="d-flex gap-2">
+            <div className="d-flex gap-2 pt-2">
               <Button
                 type="submit"
                 variant="primary"

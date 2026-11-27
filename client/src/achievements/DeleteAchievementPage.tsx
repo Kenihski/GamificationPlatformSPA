@@ -6,8 +6,10 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import AdminAchievementService from '../services/AdminAchievementService'
 import './AdminAchievementsPage.css'
 import './AchievementFormPages.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const DeleteAchievementPage = () => {
+  usePageTitle('Delete Achievement')
   const { id } = useParams()
   const achievementId = Number(id)
   const navigate = useNavigate()
@@ -78,7 +80,7 @@ const DeleteAchievementPage = () => {
   }
 
   return (
-    <Container className="achievement-form-page mt-4 mb-5">
+    <Container className="achievement-form-page management-page mt-4 mb-4">
       <div className="mb-4">
         <h1>Delete Achievement</h1>
         <p className="text-muted">
@@ -88,7 +90,7 @@ const DeleteAchievementPage = () => {
 
       <Card className="border-danger">
         <Card.Body>
-          <Card.Title as="h4">{achievement.name}</Card.Title>
+          <Card.Title as="h2" className="h4">{achievement.name}</Card.Title>
           <Card.Text>{achievement.description}</Card.Text>
 
           <div className="achievement-admin-badges mb-3">
@@ -106,12 +108,14 @@ const DeleteAchievementPage = () => {
           </div>
 
           <Alert variant="danger">
-            Deleting this achievement removes existing unlocks and their AP contributions, which may change the Hall of Fame rankings.
+            This achievement will be permanently deleted. Deleting this achievement will also remove it
+            from users who have already unlocked it. Its Achievement Points will no longer
+            count toward their totals, which may affect Hall of Fame rankings.
           </Alert>
 
           {error && <Alert variant="danger" role="alert">{error}</Alert>}
 
-          <div className="d-flex gap-2">
+          <div className="d-flex gap-2 pt-2">
             <Button
               variant="outline-danger"
               disabled={deleteMutation.isPending}

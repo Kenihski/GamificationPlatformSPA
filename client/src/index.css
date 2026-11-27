@@ -11,53 +11,293 @@ body {
   min-height: 100vh;
 }
 
-/* Shared text color matching Subapp 1 */
+/* Shared colours matching Subapp 1 (site.css). */
 :root {
   --home-muted: #d1d9ee;
+  --home-text: #ffffff;
+  --home-border: rgba(111, 132, 255, 0.35);
+  --content-card-bg: #121a36;
+  --content-card-border: rgba(125, 151, 230, 0.55);
+  --primary-gradient: linear-gradient(135deg, #3d65d9, #7957d8);
+  --primary-gradient-hover: linear-gradient(135deg, #4269dc, #7d5bdb);
+  --text-error: #ff756b;
+  --danger-border: #ff756b;
+  --danger-button-text: #ffb0a8;
+  --danger-hover-bg: #a51515;
+  --danger-active-bg: #8f1111;
+  --text-success: #91efc4;
+  --focus-ring: #b8c8ff;
 }
 
-/* Override Bootstrap's muted text colors */
+/* Bootstrap utility colours need lighter text on the dark theme. */
 .text-secondary,
 .text-muted {
   color: var(--home-muted) !important;
 }
 
-/* Match Bootstrap secondary outline buttons to Subapp 1 */
-.btn-outline-secondary {
-  --bs-btn-color: #d1d9ee;
-  --bs-btn-border-color: #91a5df;
+/* Bootstrap's form help text is dark grey; Subapp 1 uses form-text with text-muted. */
+.form-text {
+  color: var(--home-muted);
 }
 
-/* Accessible keyboard focus on interactive controls (not decorative elements). */
-:where(a, button, input, select, textarea, [role="button"]):focus-visible {
-  outline: 3px solid #b8c8ff;
+.text-danger {
+  color: var(--text-error) !important;
+}
+
+.text-success {
+  color: var(--text-success) !important;
+}
+
+/* Accessible keyboard focus on links and form fields (not decorative elements). */
+:where(a, button, input, select, textarea, [role="button"], [tabindex]):focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  /* Rounded like the rest of the design; components with their own radius keep it. */
+  border-radius: 6px;
+}
+
+/* The skip link target only receives focus so the next Tab starts in the content;
+   it is not interactive, so it needs no ring around the whole page. */
+#main-content:focus,
+.route-focus-start:focus {
+  outline: none;
+}
+
+/* Navigation links and controls use the same light ring as buttons instead of
+   Bootstrap's translucent blue, which is too faint on the dark background. */
+.nav-link:focus-visible,
+.navbar-brand:focus-visible,
+.page-link:focus-visible,
+.btn-close:focus-visible,
+.dropdown-item:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 2px var(--focus-ring);
+}
+
+/* Checkboxes and radios show the outline below instead of Bootstrap's blue glow. */
+.form-check-input:focus {
+  box-shadow: none;
+}
+
+/* Bootstrap removes the outline on focused form fields; keep the visible ring. */
+.form-control:focus-visible,
+.form-select:focus-visible,
+.form-check-input:focus-visible {
+  outline: 2px solid var(--focus-ring);
   outline-offset: 3px;
 }
 
-/* Consistent accessible destructive actions across SPA forms. */
+/* Buttons use a tight ring like Bootstrap, but in the light focus colour so it
+   keeps at least 3:1 contrast against the dark background (WCAG 1.4.11). */
+.btn:focus-visible {
+  outline: 0;
+  /* !important so page-specific glows (such as the home page buttons) cannot hide it. */
+  box-shadow: 0 0 0 2px var(--focus-ring) !important;
+}
+
+/* Secondary buttons matching Subapp 1 (Bootstrap's grey is replaced by dark blue). */
+.btn-secondary {
+  background: #303b65;
+  border-color: #56669b;
+  color: #ffffff;
+}
+
+.btn-secondary:hover {
+  background: #425184;
+  border-color: #7185c3;
+  color: #ffffff;
+}
+
+/* Outline buttons matching Subapp 1. */
+.btn-outline-primary {
+  border-color: #91adff;
+  color: #b8c8ff;
+}
+
+/* Hover, click and open state: solid blue, as Bootstrap shows when pressed in Subapp 1.
+   Same pattern as Edit (yellow), Delete (red) and Publish (green). */
+.btn-outline-primary:hover,
+.btn-outline-primary:active,
+.btn.btn-outline-primary[aria-expanded="true"] {
+  background: #0d6efd;
+  border-color: #0d6efd;
+  color: #ffffff;
+}
+
+/* Change Type uses the solid purple of the Community badge (white text, 5.6:1 contrast). */
+.btn.change-type-button:hover,
+.btn.change-type-button:focus-visible,
+.btn.change-type-button:active {
+  background: #7b4ec9;
+  border-color: #7b4ec9;
+  color: #ffffff;
+}
+
+/* Navigation-style buttons keep the subtle hover: the challenge list filters,
+   search and view switch, and View Leaderboard on the details page. */
+.challenge-list-page .challenge-toolbar .btn-outline-primary:hover,
+.challenge-list-page .challenge-toolbar .btn-outline-primary:focus-visible,
+.challenge-list-page .challenge-toolbar .btn-outline-primary:active,
+.btn.btn-outline-primary.challenge-details-leaderboard-button:hover,
+.btn.btn-outline-primary.challenge-details-leaderboard-button:focus-visible,
+.btn.btn-outline-primary.challenge-details-leaderboard-button:active {
+  background: rgba(77, 99, 202, 0.35);
+  border-color: #b2c1ff;
+  color: #ffffff;
+}
+
 .btn-outline-danger {
-  --bs-btn-color: #ffb0a8;
-  --bs-btn-border-color: #ff756b;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #852b36;
-  --bs-btn-hover-border-color: #ff756b;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #852b36;
-  --bs-btn-active-border-color: #ff756b;
+  /* Keep the outline design; lighter red text remains readable on dark cards. */
+  --bs-btn-color: var(--danger-button-text);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: var(--danger-border);
+  --bs-btn-hover-color: #ffffff;
+  --bs-btn-hover-bg: var(--danger-hover-bg);
+  --bs-btn-hover-border-color: var(--danger-border);
+  --bs-btn-active-color: #ffffff;
+  --bs-btn-active-bg: var(--danger-active-bg);
+  --bs-btn-active-border-color: var(--danger-border);
+  --bs-btn-disabled-color: var(--danger-button-text);
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: var(--danger-border);
 }
 
-/* Improve contrast of errors and feedback against dark panels. */
-.alert-danger { color: #ffe2de; background-color: #602932; border-color: #ff756b; }
-.alert-warning { color: #fff0c5; background-color: #493917; border-color: #e3ad48; }
-.alert-success { color: #e2ffe9; background-color: #1e5338; border-color: #65c493; }
-.form-control.is-invalid, .form-select.is-invalid { border-color: #ff756b; }
-
-/* Shared editing and destructive-action page dimensions. */
-.question-form-page, .achievement-form-page, .create-challenge-page {
-  max-width: 960px;
-  padding-inline: clamp(12px, 3vw, 24px);
+.btn-outline-success {
+  --bs-btn-color: var(--text-success);
+  --bs-btn-border-color: var(--text-success);
 }
-.question-form-page img, .achievement-form-page img, .create-challenge-page img {
+
+.btn-outline-secondary {
+  --bs-btn-color: var(--home-muted);
+  --bs-btn-border-color: #91a5df;
+}
+
+/* Bootstrap's default select arrow is too dark for these form fields. */
+.form-select {
+  --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23edf1ff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+
+/* All dialogs use dark surfaces, so their close icons must be light. */
+.btn-close {
+  --bs-btn-close-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 0 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
+  --bs-btn-close-white-filter: none;
+  --bs-btn-close-filter: none; /* Bootstrap 5.3.8: .btn-close-white would invert the white icon. */
+  --bs-btn-close-opacity: 0.8;
+  --bs-btn-close-hover-opacity: 1;
+}
+
+/* Field errors match Subapp 1: readable red text at normal size and no icon in the field.
+   Bootstrap's default red (#dc3545) is too dark against the dark background. */
+:root {
+  --bs-form-invalid-color: var(--text-error);
+  --bs-form-invalid-border-color: var(--danger-border);
+}
+
+.invalid-feedback {
+  color: var(--text-error);
+  font-size: 1em;
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: var(--danger-border);
+  background-image: none;
+  padding-right: 0.75rem;
+}
+
+.form-select.is-invalid {
+  --bs-form-select-bg-icon: none;
+  background-image: var(--bs-form-select-bg-img);
+  padding-right: 2.25rem;
+}
+
+/* Status badges used on My Challenges, Challenge Details and User Details.
+   Global so they are styled even when a page is opened directly. */
+.challenge-management-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+  vertical-align: middle;
+}
+
+.challenge-management-status-published {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.45);
+}
+
+.challenge-management-status-draft {
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+/* Alert colours live in auth/AuthStyles.css, which loads after this file. */
+
+/* All create, edit and delete form pages share one centred width (Subapp 1: .management-page). */
+.management-page {
+  /* 960px of content plus the Bootstrap container's 12px side padding, as in Subapp 1. */
+  max-width: calc(960px + var(--bs-gutter-x, 1.5rem));
+  margin-inline: auto;
+}
+
+/* Form page cards, matching Subapp 1 (site.css .card and challenge-management.css). */
+.management-page .card {
+  --bs-card-bg: var(--content-card-bg);
+  --bs-card-color: var(--home-text);
+  --bs-card-border-color: var(--content-card-border);
+  background: var(--content-card-bg);
+  color: var(--home-text);
+  border: 1px solid var(--content-card-border);
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+}
+
+.management-page .card-body {
+  padding: clamp(16px, 3vw, 28px);
+  overflow-wrap: anywhere;
+}
+
+.management-page .card-body,
+.management-page .card-title,
+.management-page .card h2,
+.management-page .card dt,
+.management-page .card dd {
+  color: var(--home-text);
+}
+
+.management-page .card-text {
+  color: var(--home-muted);
+}
+
+.management-page .card hr {
+  border-color: var(--home-border);
+  opacity: 1;
+}
+
+/* Border colour shows the risk: neutral for create, yellow for update, red for delete. */
+.management-page .card.border-danger {
+  --bs-card-border-color: var(--danger-border);
+  border-color: var(--danger-border) !important;
+}
+
+.management-page .card.border-warning {
+  --bs-card-border-color: #d4a72c;
+  border-color: #d4a72c !important;
+}
+
+.management-page .alert {
+  margin-block: 20px;
+}
+
+.management-page form > .btn {
+  margin-top: 8px;
+}
+.management-page img {
   max-width: 100%;
   height: auto;
 }
@@ -67,4 +307,15 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Shared question table: short headers and action buttons stay on one line,
+   so narrow form pages scroll the table instead of wrapping them. */
+.question-overview th,
+.question-overview .question-overview-actions {
+  white-space: nowrap;
+}
+
+.question-overview .question-overview-actions {
+  flex-wrap: nowrap;
 }

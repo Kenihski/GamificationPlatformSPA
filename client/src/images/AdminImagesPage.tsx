@@ -16,18 +16,23 @@ import {
   Tabs,
 } from 'react-bootstrap'
 import ImageService from '../services/ImageService'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import FlashMessage from '../shared/FlashMessage'
+import { withReturnUrl } from '../shared/returnUrl'
 import type {
   AdminUserImage,
   DefaultImage,
   ImageDeletionImpact,
 } from '../services/ImageService'
 import './AdminImagesPage.css'
+import usePageTitle from '../shared/usePageTitle'
+import { getImageUrl } from '../shared/imageUrl'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 const AdminImagesPage = () => {
+  usePageTitle('Manage Images')
   const queryClient = useQueryClient()
 
   const [activeTab, setActiveTab] = useState('default')
@@ -108,29 +113,11 @@ const AdminImagesPage = () => {
     onError: showError,
   })
 
-  const deleteDefaultMutation = useMutation({
-    mutationFn: ImageService.deleteDefaultImage,
-    onSuccess: async () => {
-      await refreshImages()
-      showSuccess('Default image deleted successfully.')
-    },
-    onError: showError,
-  })
-
-  const deleteUserMutation = useMutation({
-    mutationFn: ImageService.deleteImage,
-    onSuccess: async () => {
-      await refreshImages()
-      showSuccess('Image deleted successfully.')
-    },
-    onError: showError,
-  })
+  const navigate = useNavigate()
 
   const isUpdating =
     uploadMutation.isPending ||
-    renameMutation.isPending ||
-    deleteDefaultMutation.isPending ||
-    deleteUserMutation.isPending
+    renameMutation.isPending
 
   const handleUpload = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -180,11 +167,8 @@ const AdminImagesPage = () => {
       setErrorMessage('This image is used by questions. Replace it in those questions before deleting it.')
       return false
     }
-    const covers = impact.challenges.map((challenge) => challenge.title).join(', ')
-    const warning = covers
-      ? `Affected challenge covers: ${covers}. They will use Question 1 instead. `
-      : ''
-    return window.confirm(`${warning}Permanently delete ${impact.imageName}? This cannot be undone.`)
+    // The confirmation page shows the affected challenge covers, as in Subapp 1.
+    return true
   }
 
   const handleDeleteDefault = async (id: number) => {
@@ -196,7 +180,9 @@ const AdminImagesPage = () => {
         setErrorMessage('Question 1 is the protected fallback image and cannot be deleted.')
         return
       }
-      if (confirmImpact(info.impact)) deleteDefaultMutation.mutate(id)
+      if (confirmImpact(info.impact)) {
+        navigate(withReturnUrl(`/admin/images/default/${id}/delete`, '/admin/images'))
+      }
     } catch (error) {
       showError(error instanceof Error ? error : new Error('Could not check image usage.'))
     }
@@ -207,27 +193,28 @@ const AdminImagesPage = () => {
     setSuccessMessage(null)
     try {
       const impact = await ImageService.getImageDeletionImpact(id)
-      if (confirmImpact(impact)) deleteUserMutation.mutate(id)
+      if (confirmImpact(impact)) {
+        navigate(withReturnUrl(`/images/${id}/delete`, '/admin/images'))
+      }
     } catch (error) {
       showError(error instanceof Error ? error : new Error('Could not check image usage.'))
     }
   }
-
-  const imageUrl = (url: string) =>
-    `${import.meta.env.VITE_API_BASE_URL ?? ''}${url}`
 
   const renderUserImage = (image: AdminUserImage) => (
     <Col key={image.userImageId}>
       <Card className="admin-image-card shadow-sm position-relative">
         <div className="ratio ratio-4x3 bg-light rounded overflow-hidden">
           <img
-            src={imageUrl(image.imageUrl)}
-            alt={image.fileName}
+            src={getImageUrl(image.imageUrl)}
+            alt=""
             className="w-100 h-100 object-fit-cover"
           />
         </div>
 
-        <div className="px-2 py-2 text-break small">{image.fileName}</div>
+        <Card.Body>
+          <p className="card-text text-break mb-0">{image.fileName}</p>
+        </Card.Body>
         <Dropdown key={successCount} align="end" className="admin-image-options">
           <Dropdown.Toggle
             variant="light"
@@ -271,13 +258,15 @@ const AdminImagesPage = () => {
       <Card className="admin-image-card shadow-sm position-relative">
         <div className="ratio ratio-4x3 bg-light rounded overflow-hidden">
           <img
-            src={imageUrl(image.imageUrl)}
-            alt={image.name}
+            src={getImageUrl(image.imageUrl)}
+            alt=""
             className="w-100 h-100 object-fit-cover"
           />
         </div>
 
-        <div className="px-2 py-2 text-break small">{image.name}</div>
+        <Card.Body>
+          <p className="card-text text-break mb-0">{image.name}</p>
+        </Card.Body>
         <Dropdown key={successCount} align="end" className="admin-image-options">
           <Dropdown.Toggle
             variant="light"
@@ -378,13 +367,15 @@ const AdminImagesPage = () => {
   const defaultImages = data?.defaultImages ?? []
 
   return (
-    <Container className="admin-images-page mt-3">
+    <Container className="admin-images-page mt-4">
       <div className="mb-4">
         <h1 className="h2 mb-1">Manage Images</h1>
         <p className="text-secondary mb-0">
           View and manage uploaded and default images.
         </p>
       </div>
+
+      <FlashMessage />
 
       {successMessage && (
         <Alert ref={successRef} tabIndex={-1} variant="success" role="status">
@@ -420,7 +411,7 @@ const AdminImagesPage = () => {
         >
           {userImages.length === 0 ? (
             <div className="admin-images-empty text-center py-5 rounded">
-              <h5>No uploaded images</h5>
+              <h2 className="h5">No uploaded images</h2>
               <p className="mb-0">
                 Images uploaded by users will appear here.
               </p>
@@ -451,7 +442,7 @@ const AdminImagesPage = () => {
 
           {defaultImages.length === 0 ? (
             <div className="admin-images-empty text-center py-5 rounded">
-              <h5>No default images</h5>
+              <h2 className="h5">No default images</h2>
               <p className="mb-0">
                 Add a default image to make it available to all users.
               </p>

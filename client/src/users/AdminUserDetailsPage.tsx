@@ -2,16 +2,19 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Alert, Button, Container, Spinner, Table } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
+import { withReturnUrl } from '../shared/returnUrl'
 import UserService from '../services/UserService'
 import ChallengeService from '../services/ChallengeService'
 import './AdminUsersPage.css'
 import './AdminUserDetailsPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
-type ChallengeAction = 'delete' | 'publish' | 'unpublish'
+type ChallengeAction = 'publish' | 'unpublish'
 
 const PAGE_SIZE = 12
 
 const AdminUserDetailsPage = () => {
+  usePageTitle('User Details')
   const { id } = useParams()
   const userId = Number(id)
   const queryClient = useQueryClient()
@@ -40,8 +43,6 @@ const AdminUserDetailsPage = () => {
       action: ChallengeAction
     }) => {
       switch (action) {
-        case 'delete':
-          return ChallengeService.deleteChallenge(challengeId)
         case 'publish':
           return ChallengeService.publishChallenge(challengeId)
         case 'unpublish':
@@ -64,12 +65,6 @@ const AdminUserDetailsPage = () => {
   const handleAction = (challengeId: number, action: ChallengeAction) => {
     setActionError(null)
     actionMutation.mutate({ challengeId, action })
-  }
-
-  const handleDelete = (challengeId: number, title: string) => {
-    if (window.confirm(`Are you sure you want to delete "${title}"?\n\nThis action cannot be undone.`)) {
-      handleAction(challengeId, 'delete')
-    }
   }
 
   if (!Number.isInteger(userId) || userId <= 0) {
@@ -118,8 +113,8 @@ const AdminUserDetailsPage = () => {
     ?? challengeHistory[0]
 
   return (
-    <Container className="admin-user-details py-4">
-      <h2 className="my-4">{user.username}</h2>
+    <Container className="admin-user-details pt-4">
+      <h1 className="h2 my-4">{user.username}</h1>
 
       <div className="mb-4">
         <p>
@@ -144,7 +139,7 @@ const AdminUserDetailsPage = () => {
         </Alert>
       )}
 
-      <h3 className="mt-4">Created Challenges</h3>
+      <h2 className="h3 mt-4">Created Challenges</h2>
 
       {createdChallenges.length === 0 ? (
         <Alert variant="info">
@@ -197,22 +192,19 @@ const AdminUserDetailsPage = () => {
                         </Link>
 
                         <Link
-                          to={`/challenges/${challenge.challengeId}/edit`}
+                          to={withReturnUrl(`/challenges/${challenge.challengeId}/edit`, `/admin/users/${userId}`)}
                           className="btn btn-sm btn-outline-warning"
                         >
                           Edit
                         </Link>
 
-                        <Button
-                          size="sm"
-                          variant="outline-danger"
-                          disabled={actionMutation.isPending}
-                          onClick={() => handleDelete(challenge.challengeId, challenge.title)}
+                        {/* Deletion uses the same confirmation page as My Challenges, as in Subapp 1. */}
+                        <Link
+                          to={withReturnUrl(`/challenges/${challenge.challengeId}/delete`, `/admin/users/${userId}`)}
+                          className="btn btn-sm btn-outline-danger"
                         >
-                          {isUpdating && actionMutation.variables?.action === 'delete'
-                            ? 'Deleting...'
-                            : 'Delete'}
-                        </Button>
+                          Delete
+                        </Link>
 
                         <Button
                           size="sm"
@@ -225,7 +217,7 @@ const AdminUserDetailsPage = () => {
                             )
                           }
                         >
-                          {isUpdating && actionMutation.variables?.action !== 'delete'
+                          {isUpdating
                             ? 'Updating...'
                             : challenge.isPublished
                               ? 'Unpublish'
@@ -241,9 +233,9 @@ const AdminUserDetailsPage = () => {
         </div>
       )}
 
-      <h3 id="challengeHistoryHeading" className="mt-5 mb-4">
+      <h2 id="challengeHistoryHeading" className="h3 mt-5 mb-4">
         Challenge History
-      </h3>
+      </h2>
 
       {challengeHistory.length === 0 ? (
         <Alert variant="info">
@@ -307,7 +299,7 @@ const AdminUserDetailsPage = () => {
             return (
               <section className="user-history-card">
                 <div className="user-history-card-header">
-                  <h4>{activeChallenge.challengeTitle}</h4>
+                  <h3 className="h4">{activeChallenge.challengeTitle}</h3>
                   <span className="user-history-attempt-count">
                     {activeChallenge.attempts.length}{' '}
                     {activeChallenge.attempts.length === 1 ? 'attempt' : 'attempts'}

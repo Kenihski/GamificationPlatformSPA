@@ -3,8 +3,11 @@ import { Alert, Container, Spinner } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
 import QuizService from '../services/QuizService'
 import './QuizResultPage.css'
+import usePageTitle from '../shared/usePageTitle'
+import { formatDateTime } from '../shared/formatDate'
 
 const QuizResultPage = () => {
+  usePageTitle('Attempt Details')
   const { attemptId } = useParams()
   const id = Number(attemptId)
   const validId = Number.isInteger(id) && id > 0
@@ -40,10 +43,7 @@ const QuizResultPage = () => {
   const duration = Math.max(0, Math.round(result.timeUsedSeconds))
   const formattedTime = `${String(Math.floor(duration / 60)).padStart(2, '0')}:${String(duration % 60).padStart(2, '0')}`
   const completedAt = result.completedAt
-    ? new Date(result.completedAt).toLocaleString('nb-NO', {
-        day: '2-digit', month: '2-digit', year: 'numeric',
-        hour: '2-digit', minute: '2-digit', hour12: false,
-      })
+    ? formatDateTime(result.completedAt)
     : '—'
 
   return (
@@ -142,11 +142,15 @@ const QuizResultPage = () => {
                           aria-label={option.text}
                         />
                         <span className="quiz-result-option-text">{option.text}</span>
-                        {option.isSelected && (
-                          <span className="quiz-result-selected-label">Your answer</span>
-                        )}
-                        {option.isCorrect && (
-                          <span className="quiz-result-correct-label">Correct answer</span>
+                        {(option.isSelected || option.isCorrect) && (
+                          <span className="quiz-result-labels">
+                            {option.isSelected && (
+                              <span className="quiz-result-selected-label">Your answer</span>
+                            )}
+                            {option.isCorrect && (
+                              <span className="quiz-result-correct-label">Correct answer</span>
+                            )}
+                          </span>
                         )}
                       </div>
                     ))}
