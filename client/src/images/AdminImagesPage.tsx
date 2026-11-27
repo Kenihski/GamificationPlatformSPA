@@ -16,7 +16,7 @@ import {
   Tabs,
 } from 'react-bootstrap'
 import ImageService from '../services/ImageService'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import FlashMessage from '../shared/FlashMessage'
 import { withReturnUrl } from '../shared/returnUrl'
 import type {
@@ -35,7 +35,11 @@ const AdminImagesPage = () => {
   usePageTitle('Manage Images')
   const queryClient = useQueryClient()
 
-  const [activeTab, setActiveTab] = useState('default')
+  // ?tab=user opens the User Images tab, e.g. after deleting a user image.
+  const [searchParams] = useSearchParams()
+  const [activeTab, setActiveTab] = useState(
+    searchParams.get('tab') === 'user' ? 'user' : 'default'
+  )
   const [showModal, setShowModal] = useState(false)
   const [imageName, setImageName] = useState('')
   const [file, setFile] = useState<File | null>(null)
@@ -194,7 +198,7 @@ const AdminImagesPage = () => {
     try {
       const impact = await ImageService.getImageDeletionImpact(id)
       if (confirmImpact(impact)) {
-        navigate(withReturnUrl(`/images/${id}/delete`, '/admin/images'))
+        navigate(withReturnUrl(`/user-images/${id}/delete`, '/admin/images?tab=user'))
       }
     } catch (error) {
       showError(error instanceof Error ? error : new Error('Could not check image usage.'))

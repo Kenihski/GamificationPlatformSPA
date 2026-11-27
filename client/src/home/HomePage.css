@@ -124,7 +124,7 @@
   padding-bottom: 38px;
 }
 
-.home-page .featured-carousel-frame {
+.home-page .featured-carousel .carousel-inner {
   overflow: hidden;
   border: 1px solid var(--content-card-border);
   border-radius: 18px;
@@ -257,35 +257,42 @@
 
 /* Carousel navigation */
 
-.home-page .featured-carousel-prev,
-.home-page .featured-carousel-next {
-  position: absolute;
+.home-page .featured-carousel .carousel-control-prev,
+.home-page .featured-carousel .carousel-control-next {
   top: 50%;
+  bottom: auto;
   z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 42px;
   height: 60px;
   transform: translateY(-85%);
   border: 1px solid rgba(145, 169, 255, 0.45);
   border-radius: 9px;
   background: rgba(12, 18, 43, 0.9);
-  color: #ffffff;
+  opacity: 0.95;
   cursor: pointer;
 }
 
-.home-page .featured-carousel-prev {
+.home-page .featured-carousel .carousel-control-prev {
   left: 8px;
 }
 
-.home-page .featured-carousel-next {
+.home-page .featured-carousel .carousel-control-next {
   right: 8px;
 }
 
-.home-page .featured-carousel-prev:hover,
-.home-page .featured-carousel-next:hover {
+.home-page .featured-carousel .carousel-control-prev:hover,
+.home-page .featured-carousel .carousel-control-next:hover,
+.home-page .featured-carousel .carousel-control-prev:focus-visible,
+.home-page .featured-carousel .carousel-control-next:focus-visible {
   background: #303b70;
+  opacity: 1;
+}
+
+/* Bootstrap removes the outline on carousel controls; bring back the site's focus ring. */
+.home-page .featured-carousel .carousel-control-prev:focus-visible,
+.home-page .featured-carousel .carousel-control-next:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
 .home-page .featured-carousel .carousel-control-prev-icon,
@@ -294,28 +301,27 @@
   height: 19px;
 }
 
-.home-page .featured-carousel-indicators {
-  position: absolute;
-  bottom: 7px;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  gap: 7px;
-  width: 100%;
+.home-page .featured-carousel .carousel-indicators {
+  bottom: 0;
+  margin: 0;
 }
 
-.home-page .featured-carousel-indicators button {
-  width: 9px;
-  height: 9px;
-  padding: 0;
+/* 24x24 click area (WCAG 2.5.8); the padding keeps the visible dot at 9px. */
+.home-page .featured-carousel .carousel-indicators button {
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  padding: 7.5px;
+  margin: 0;
   border: 0;
   border-radius: 50%;
   background: #a9b8e8;
+  background-clip: content-box;
   opacity: 0.45;
   cursor: pointer;
 }
 
-.home-page .featured-carousel-indicators button.active {
+.home-page .featured-carousel .carousel-indicators button.active {
   background: #a9b8ff;
   opacity: 1;
 }
@@ -606,8 +612,8 @@
     font-size: 1.6rem;
   }
 
-  .home-page .featured-carousel-prev,
-  .home-page .featured-carousel-next {
+  .home-page .featured-carousel .carousel-control-prev,
+  .home-page .featured-carousel .carousel-control-next {
     top: 105px;
     transform: translateY(-50%);
   }
@@ -645,7 +651,7 @@
 }
 
 /* Keep Matrix animation behind opaque home-page cards. */
-.home-page .featured-carousel-frame,
+.home-page .featured-carousel .carousel-inner,
 .home-page .featured-challenges-empty,
 .home-page .home-ranking-card,
 .home-page .home-feature-card {

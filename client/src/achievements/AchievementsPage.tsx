@@ -72,9 +72,9 @@ const AchievementsPage = ({ userId }: AchievementsPageProps) => {
               {data.milestoneIcon} {data.milestoneName}
             </h1>
 
-            <h5 className="text-muted mb-3">
+            <p className="h5 text-muted mb-3">
               {data.username}'s Achievements
-            </h5>
+            </p>
 
             <p className="milestone-message mb-0">
               {data.milestoneMessage}

@@ -67,7 +67,7 @@ const ChallengeLeaderboardPage = () => {
 
         <h1>🏆 Leaderboard</h1>
 
-        <h4 className="mb-3">{data.title}</h4>
+        <h2 className="h4 mb-3">{data.title}</h2>
 
         <p className="leaderboard-page-description">
           Rankings are based on each user's first completed attempt
