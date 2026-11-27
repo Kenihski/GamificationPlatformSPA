@@ -91,6 +91,9 @@ const ChallengeTable = ({
                     <img
                       src={imageUrl}
                       alt=""
+                      width={80}
+                      height={53}
+                      loading="lazy"
                       className="challenge-table-image"
                     />
                   )}

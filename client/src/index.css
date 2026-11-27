@@ -63,6 +63,12 @@ body {
   outline: none;
 }
 
+/* Keep the first child's top margin inside main. Otherwise the margin moves
+   main itself, and the whole page jumps when "Loading..." is replaced by content. */
+#main-content {
+  display: flow-root;
+}
+
 /* Navigation links and controls use the same light ring as buttons instead of
    Bootstrap's translucent blue, which is too faint on the dark background. */
 .nav-link:focus-visible,
