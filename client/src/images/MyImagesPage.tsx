@@ -98,7 +98,7 @@ const MyImagesPage = () => {
         return
       }
       // The confirmation page shows the affected challenge covers, as in Subapp 1.
-      navigate(withReturnUrl(`/images/${id}/delete`, '/my-images'))
+      navigate(withReturnUrl(`/user-images/${id}/delete`, '/my-images'))
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Could not check image usage.')
     }
