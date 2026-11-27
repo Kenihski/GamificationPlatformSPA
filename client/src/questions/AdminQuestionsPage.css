@@ -251,3 +251,9 @@
         transition: none;
     }
 }
+
+/* Same as the challenge list description; this page does not load Challenges.css. */
+.challenge-list-description {
+  color: var(--home-muted, #d1d9ee);
+  line-height: 1.7;
+}

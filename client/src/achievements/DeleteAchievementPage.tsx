@@ -80,7 +80,7 @@ const DeleteAchievementPage = () => {
   }
 
   return (
-    <Container className="achievement-form-page management-page mt-4 mb-5">
+    <Container className="achievement-form-page management-page mt-4 mb-4">
       <div className="mb-4">
         <h1>Delete Achievement</h1>
         <p className="text-muted">
@@ -115,7 +115,7 @@ const DeleteAchievementPage = () => {
 
           {error && <Alert variant="danger" role="alert">{error}</Alert>}
 
-          <div className="d-flex gap-2">
+          <div className="d-flex gap-2 pt-2">
             <Button
               variant="outline-danger"
               disabled={deleteMutation.isPending}

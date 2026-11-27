@@ -18,6 +18,7 @@ import FlashMessage from '../shared/FlashMessage'
 import './ChallengeDetailsPage.css'
 import usePageTitle from '../shared/usePageTitle'
 import { getImageUrl } from '../shared/imageUrl'
+import { formatDateTime } from '../shared/formatDate'
 
 type ManagementAction =
   | 'publish'
@@ -522,16 +523,7 @@ const ChallengeDetailsPage = () => {
 
                         <td>
                           {attempt.completedAt
-                            ? new Date(attempt.completedAt).toLocaleString(
-                                'nb-NO',
-                                {
-                                  day: '2-digit',
-                                  month: '2-digit',
-                                  year: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                }
-                              )
+                            ? formatDateTime(attempt.completedAt)
                             : ''}
                         </td>
                       </tr>

@@ -7,6 +7,7 @@ import AchievementService from '../services/AchievementService'
 import HallOfFameService from '../services/HallOfFameService'
 import './AchievementsPage.css'
 import usePageTitle from '../shared/usePageTitle'
+import { formatDate } from '../shared/formatDate'
 
 interface AchievementsPageProps {
   userId?: number
@@ -178,14 +179,7 @@ const AchievementsPage = ({ userId }: AchievementsPageProps) => {
                 {achievement.isUnlocked && achievement.unlockedAt && (
                   <div className="achievement-date">
                     Unlocked{' '}
-                    {new Date(achievement.unlockedAt).toLocaleDateString(
-                      'nb-NO',
-                      {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                      }
-                    )}
+                    {formatDate(achievement.unlockedAt)}
                   </div>
                 )}
               </div>

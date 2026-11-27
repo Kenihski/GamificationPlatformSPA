@@ -351,9 +351,14 @@ const EditForm = ({ challenge }: EditFormProps) => {
                 <option value="my">My Images</option>
                 <option value="default">Default Images</option>
               </Form.Select>
-              <Form.Text className="text-secondary">
+              <p className="form-text text-muted">
                 If no image is selected, Question 1 will be used. You can choose another image.
-              </Form.Text>
+              </p>
+              <p role="status" className="text-muted">
+                {previewUrl && previewUrl !== fallbackPreviewUrl
+                  ? 'A custom image is selected. You can change it using the image controls above.'
+                  : 'Selected image: Question 1 (default).'}
+              </p>
 
               {imageCategory === 'upload' && (
                 <div className="mt-3">

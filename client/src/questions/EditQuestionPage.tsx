@@ -669,7 +669,7 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
 
             {questionType === 'ShortAnswer' ? (
               <fieldset>
-                <legend className="fs-4">Accepted Answers</legend>
+                <legend className="h4">Accepted Answers</legend>
                 {errorFor('answers') && (
                   <div className="invalid-feedback d-block" role="alert">{errorFor('answers')}</div>
                 )}
@@ -701,7 +701,7 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
               </fieldset>
             ) : (
               <fieldset>
-                <legend className="fs-4">Answer Options</legend>
+                <legend className="h4">Answer Options</legend>
                 {errorFor('answers') && (
                   <div className="invalid-feedback d-block" role="alert">{errorFor('answers')}</div>
                 )}

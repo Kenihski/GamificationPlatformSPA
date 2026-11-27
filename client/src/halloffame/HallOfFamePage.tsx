@@ -60,7 +60,7 @@ const HallOfFamePage = () => {
                   </td>
 
                   <td>
-                    <span className="me-1">{user.milestoneIcon}</span>
+                    <span className="me-1">{user.milestoneIcon}</span>{' '}
                     {user.milestoneName}
                   </td>
 

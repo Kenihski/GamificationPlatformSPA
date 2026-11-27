@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import QuizService from '../services/QuizService'
 import './QuizResultPage.css'
 import usePageTitle from '../shared/usePageTitle'
+import { formatDateTime } from '../shared/formatDate'
 
 const QuizResultPage = () => {
   usePageTitle('Attempt Details')
@@ -42,10 +43,7 @@ const QuizResultPage = () => {
   const duration = Math.max(0, Math.round(result.timeUsedSeconds))
   const formattedTime = `${String(Math.floor(duration / 60)).padStart(2, '0')}:${String(duration % 60).padStart(2, '0')}`
   const completedAt = result.completedAt
-    ? new Date(result.completedAt).toLocaleString('nb-NO', {
-        day: '2-digit', month: '2-digit', year: 'numeric',
-        hour: '2-digit', minute: '2-digit', hour12: false,
-      })
+    ? formatDateTime(result.completedAt)
     : '—'
 
   return (

@@ -92,7 +92,7 @@ const AdminQuestionsPage = () => {
 
   if (isError) {
     return (
-      <Container className="py-4">
+      <Container className="pt-4">
         <Alert variant="danger">
           Could not load questions: {error.message}
         </Alert>
@@ -101,7 +101,7 @@ const AdminQuestionsPage = () => {
   }
 
   return (
-    <Container className="py-4">
+    <Container className="pt-4">
       <div className="questions-page-header mb-4">
         <div>
           <h1 className="fw-bold mb-2">List of Questions</h1>
@@ -220,7 +220,9 @@ const AdminQuestionsPage = () => {
                         </Link>
                       </td>
                       <td>
-                        {question.ownerUsername}
+                        <Link to={`/admin/users/${question.ownerId}`}>
+                          {question.ownerUsername}
+                        </Link>
                       </td>
                       <td className="text-center">
                         {question.imageUrl ? (

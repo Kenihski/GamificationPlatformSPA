@@ -8,7 +8,9 @@
   --primary-gradient-hover: linear-gradient(135deg, #4269dc, #7d5bdb);
   /* Subapp 1 gets the 1rem margin from the navbar (mb-3). */
   margin-top: 1rem;
-  padding: 28px 0 65px;
+  /* Vertical only, so the container keeps its side padding. */
+  padding-top: 28px;
+  padding-bottom: 65px;
 }
 
 /* Navigation */

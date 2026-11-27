@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom'
 import LeaderboardService from '../services/LeaderboardService'
 import './ChallengeLeaderboardPage.css'
 import usePageTitle from '../shared/usePageTitle'
+import { formatDateTime } from '../shared/formatDate'
 
 const formatTime = (seconds: number) => {
   if (seconds >= 60) {
@@ -12,16 +13,6 @@ const formatTime = (seconds: number) => {
   }
 
   return `${Math.round(seconds)} sec`
-}
-
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleString('nb-NO', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
 }
 
 const ChallengeLeaderboardPage = () => {
@@ -137,7 +128,7 @@ const ChallengeLeaderboardPage = () => {
 
                     <td>{formatTime(entry.timeUsedSeconds)}</td>
 
-                    <td>{formatDate(entry.completedAt)}</td>
+                    <td>{formatDateTime(entry.completedAt)}</td>
                   </tr>
                 ))}
               </tbody>

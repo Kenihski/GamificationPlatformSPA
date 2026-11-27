@@ -120,7 +120,7 @@ const EditAchievementPage = () => {
   }
 
   return (
-    <Container className="achievement-form-page management-page mt-4 mb-5">
+    <Container className="achievement-form-page management-page mt-4 mb-4">
       <div className="mb-4">
         <h1>Edit Achievement</h1>
         <p className="text-muted">
@@ -235,7 +235,7 @@ const EditAchievementPage = () => {
               </Form.Select>
             </Form.Group>
 
-            <div className="d-flex gap-2">
+            <div className="d-flex gap-2 pt-2">
               <Button
                 type="submit"
                 variant="outline-warning"

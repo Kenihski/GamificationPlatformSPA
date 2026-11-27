@@ -25,7 +25,8 @@ const CreateChallengePage = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [timeLimit, setTimeLimit] = useState('')
-  const [showAnswers, setShowAnswers] = useState(false)
+  // Subapp 1 (Challenge model) turns this on by default.
+  const [showAnswers, setShowAnswers] = useState(true)
   const [imageCategory, setImageCategory] = useState<ImageCategory>('default')
   const [imageUrl, setImageUrl] = useState('')
   const [imageFile, setImageFile] = useState<File | null>(null)
@@ -160,7 +161,7 @@ const CreateChallengePage = () => {
         : null
 
   return (
-    <Container className="create-challenge-page management-page pb-4">
+    <Container className="create-challenge-page management-page">
       <h1 className="h2 my-4">Create New Challenge</h1>
 
       <Card>
@@ -278,6 +279,7 @@ const CreateChallengePage = () => {
               <Form.Label>Image</Form.Label>
               <Form.Select
                 value={imageCategory}
+                aria-describedby="imageHelp"
                 onChange={(event) =>
                   handleCategoryChange(event.target.value as ImageCategory)
                 }
@@ -286,11 +288,16 @@ const CreateChallengePage = () => {
                 <option value="my">My Images</option>
                 <option value="default">Default Images</option>
               </Form.Select>
-              <Form.Text className="text-secondary" role="status">
-                Question 1 is selected by default. Choose another default image,
-                one of your images, or upload a new one. If you leave the image selection empty,
-                the default will be used.
-              </Form.Text>
+              <p id="imageHelp" className="text-muted mt-2">
+                Question 1 is the default image. You can choose another default image,
+                select one of your images, or upload a new one.
+                If you leave the image selection empty, the default will be used.
+              </p>
+              <p role="status" className="text-muted">
+                {previewUrl && previewUrl !== fallbackPreviewUrl
+                  ? 'A custom image is selected. You can change it using the image controls above.'
+                  : 'Selected image: Question 1 (default).'}
+              </p>
 
               {imageCategory === 'upload' && (
                 <div className="mt-3">
@@ -357,7 +364,7 @@ const CreateChallengePage = () => {
                         clearFieldError('image')
                       }}
                     >
-                      <option value="">-- Select default image --</option>
+                      {!fallbackImageUrl && <option value="">-- Select default image --</option>}
                       {defaultImagesQuery.data?.map((image) => (
                         <option key={image.defaultImageId} value={image.imageUrl}>
                           {image.name}
@@ -374,9 +381,6 @@ const CreateChallengePage = () => {
                 </div>
               )}
 
-              <div role="status" className="visually-hidden">
-                {previewUrl ? 'Challenge image preview updated.' : 'Choose an image to preview.'}
-              </div>
               {previewUrl && (
                 <img
                   src={previewUrl}
@@ -386,7 +390,7 @@ const CreateChallengePage = () => {
               )}
             </Form.Group>
 
-            <div className="d-flex gap-2 create-challenge-actions">
+            <div className="d-flex gap-2 pt-2 create-challenge-actions">
               <Button type="submit" variant="primary" disabled={createMutation.isPending}>
                 {createMutation.isPending ? 'Creating...' : 'Create Challenge'}
               </Button>

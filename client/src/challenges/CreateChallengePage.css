@@ -35,11 +35,6 @@
   color: #d1d9ee;
 }
 
-/* Keep form groups compact, as in Subapp 1. */
-.create-challenge-page .form-label {
-  margin-bottom: 4px;
-}
-
 .create-challenge-page .form-check-input {
   background-color: #ffffff;
   border-color: #a9b4d2;
@@ -63,13 +58,12 @@
   color: #ffffff;
 }
 
+/* Same size and placement as the Subapp 1 preview. */
 .create-challenge-page .challenge-image-preview {
   display: block;
-  width: 270px;
+  width: 300px;
   max-width: 100%;
   height: auto;
-  margin: 12px 0 0 12px;
   object-fit: contain;
-  border-radius: 8px;
 }
 

@@ -376,7 +376,7 @@ const CreateQuestionPage = () => {
   }
 
   return (
-    <Container className="question-form-page management-page pb-4">
+    <Container className="question-form-page management-page">
       <h1 className="h2 my-4">Create New Question</h1>
 
       <Card>
@@ -658,7 +658,7 @@ const CreateQuestionPage = () => {
 
             {questionType === 'ShortAnswer' ? (
               <fieldset>
-                <legend className="fs-4">Accepted Answers</legend>
+                <legend className="h4">Accepted Answers</legend>
                 {errorFor('answers') && (
                   <div className="invalid-feedback d-block" role="alert">{errorFor('answers')}</div>
                 )}
@@ -691,7 +691,7 @@ const CreateQuestionPage = () => {
               </fieldset>
             ) : (
               <fieldset>
-                <legend className="fs-4">Answer Options</legend>
+                <legend className="h4">Answer Options</legend>
                 {errorFor('answers') && (
                   <div className="invalid-feedback d-block" role="alert">{errorFor('answers')}</div>
                 )}

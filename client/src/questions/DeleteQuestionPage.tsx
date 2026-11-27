@@ -219,7 +219,7 @@ const DeleteQuestionPage = () => {
             </Alert>
           )}
 
-          <div className="d-flex flex-wrap gap-2 mt-2">
+          <div className="d-flex flex-wrap gap-2 pt-2">
             <Button
               variant="outline-danger"
               disabled={deleteMutation.isPending}

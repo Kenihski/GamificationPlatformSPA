@@ -184,7 +184,7 @@ const CreateAchievementPage = () => {
               />
             </Form.Group>
 
-            <div className="d-flex gap-2">
+            <div className="d-flex gap-2 pt-2">
               <Button
                 type="submit"
                 variant="primary"

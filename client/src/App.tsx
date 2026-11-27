@@ -124,7 +124,7 @@ const App = () => {
         <NavMenu />
         <AchievementNotifications />
 
-        <main id="main-content" tabIndex={-1}>
+        <main id="main-content" className="pb-3" tabIndex={-1}>
         <Suspense fallback={<p className="text-center mt-4">Loading...</p>}>
           <Routes>
             <Route path="/" element={<HomePage />} />

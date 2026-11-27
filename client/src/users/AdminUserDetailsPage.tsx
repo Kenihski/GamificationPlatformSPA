@@ -113,7 +113,7 @@ const AdminUserDetailsPage = () => {
     ?? challengeHistory[0]
 
   return (
-    <Container className="admin-user-details py-4">
+    <Container className="admin-user-details pt-4">
       <h1 className="h2 my-4">{user.username}</h1>
 
       <div className="mb-4">
