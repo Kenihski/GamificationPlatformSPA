@@ -79,6 +79,13 @@
   border-radius: 8px;
 }
 
+/* Let the site name wrap on very narrow screens instead of widening the page. */
+@media (max-width: 359.98px) {
+  .site-navbar .navbar-brand {
+    white-space: normal;
+  }
+}
+
 /* Navbar links and welcome text */
 
 .site-navbar .navbar-welcome {
@@ -359,5 +366,13 @@
 @media (prefers-reduced-motion: reduce) {
   .site-header {
     transition: none;
+  }
+}
+
+/* In a low window, such as at 400 % zoom, the navbar would cover much of the
+   screen and hide keyboard focus, so it scrolls away with the page instead. */
+@media (max-height: 479.98px) {
+  .site-header {
+    position: static;
   }
 }
