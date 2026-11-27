@@ -4,6 +4,7 @@ import { Alert, Container, Spinner, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import LeaderboardService from '../services/LeaderboardService'
 import './ChallengeLeaderboardPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const formatTotalTime = (totalSeconds: number) => {
   const hours = Math.floor(totalSeconds / 3600)
@@ -18,6 +19,7 @@ const formatTotalTime = (totalSeconds: number) => {
 }
 
 const CoreLeaderboardPage = () => {
+  usePageTitle('Core Leaderboard')
   const { data, isPending, isError } = useQuery({
     queryKey: ['core-leaderboard'],
     queryFn: LeaderboardService.getCoreLeaderboard,

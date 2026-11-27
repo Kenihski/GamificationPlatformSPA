@@ -10,6 +10,7 @@ import QuestionService from '../services/QuestionService'
 import ImageService from '../services/ImageService'
 import type { Question, QuestionSaveRequest, QuestionType } from '../types/Question'
 import './QuestionFormPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 type ImageCategory = 'none' | 'current' | 'upload' | 'my' | 'default'
 
@@ -789,6 +790,7 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
 }
 
 const EditQuestionPage = () => {
+  usePageTitle('Update Question')
   const { id, questionId: questionIdParam } = useParams()
 
   const challengeId = Number(id)

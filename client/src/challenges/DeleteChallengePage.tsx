@@ -5,6 +5,7 @@ import { getSafeReturnUrl } from '../shared/returnUrl'
 import { useAuth } from '../auth/AuthContext'
 import ChallengeService from '../services/ChallengeService'
 import '../questions/QuestionFormPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
 
@@ -14,6 +15,7 @@ const getImageSource = (url: string) =>
     : `${apiBaseUrl}/${url.replace(/^\/+/, '')}`
 
 const DeleteChallengePage = () => {
+  usePageTitle('Delete Challenge')
   const { id } = useParams()
   const challengeId = Number(id)
   const validId = Number.isInteger(challengeId) && challengeId > 0

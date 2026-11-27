@@ -20,6 +20,7 @@ import type {
   QuestionType,
 } from '../types/Question'
 import './QuestionFormPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 type ImageCategory = 'none' | 'upload' | 'my' | 'default'
 
@@ -44,6 +45,7 @@ const getImageSource = (url: string) =>
     : `${API_BASE_URL}/${url.replace(/^\/+/, '')}`
 
 const CreateQuestionPage = () => {
+  usePageTitle('Create New Question')
   const { id } = useParams()
   const challengeId = Number(id)
   const validId = Number.isInteger(challengeId) && challengeId > 0

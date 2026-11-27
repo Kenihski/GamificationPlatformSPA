@@ -4,8 +4,10 @@ import { Alert, Container, Form, Spinner, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import UserService from '../services/UserService'
 import './AdminUsersPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const AdminUsersPage = () => {
+  usePageTitle('List of Users')
   const [search, setSearch] = useState('')
 
   const {

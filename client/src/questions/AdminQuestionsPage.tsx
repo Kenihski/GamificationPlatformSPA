@@ -5,6 +5,7 @@ import { Alert, Button, Container, Form, Spinner, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import QuestionService from '../services/QuestionService'
 import './AdminQuestionsPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const CHALLENGE_PAGE_SIZE = 12
 const QUESTION_PAGE_SIZE = 10
@@ -16,6 +17,7 @@ const getImageSource = (url: string) =>
     : `${API_BASE_URL}/${url.replace(/^\/+/, '')}`
 
 const AdminQuestionsPage = () => {
+  usePageTitle('List of Questions')
   const [search, setSearch] = useState('')
   const [selectedChallengeId, setSelectedChallengeId] =
     useState<number | null>(null)

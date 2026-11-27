@@ -6,8 +6,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import AdminAchievementService from '../services/AdminAchievementService'
 import type { AchievementSaveRequest } from '../types/Achievement'
 import './AchievementFormPages.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const CreateAchievementPage = () => {
+  usePageTitle('Create Achievement')
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [error, setError] = useState<string | null>(null)

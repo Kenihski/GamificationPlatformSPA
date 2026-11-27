@@ -3,8 +3,10 @@ import { Alert, Container, Spinner, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import HallOfFameService from '../services/HallOfFameService'
 import './HallOfFamePage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const HallOfFamePage = () => {
+  usePageTitle('Hall of Fame')
   const { data, isPending, isError } = useQuery({
     queryKey: ['hall-of-fame'],
     queryFn: HallOfFameService.getAll,

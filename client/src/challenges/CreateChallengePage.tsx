@@ -9,6 +9,7 @@ import type { ChallengeSaveRequest } from '../services/ChallengeService'
 import ImageService from '../services/ImageService'
 import { useAuth } from '../auth/AuthContext'
 import './CreateChallengePage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 type ImageCategory = 'upload' | 'my' | 'default'
 type FieldErrors = Partial<Record<'title' | 'description' | 'image', string>>
@@ -19,6 +20,7 @@ const getImageSource = (url: string) =>
   url.startsWith('http') ? url : `${apiBaseUrl}${url}`
 
 const CreateChallengePage = () => {
+  usePageTitle('Create Challenge')
   const navigate = useNavigate()
   const { user } = useAuth()
   const isAdmin = user?.roles.includes('Admin') ?? false

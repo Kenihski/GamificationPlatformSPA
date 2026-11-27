@@ -7,12 +7,14 @@ import UserService from '../services/UserService'
 import ChallengeService from '../services/ChallengeService'
 import './AdminUsersPage.css'
 import './AdminUserDetailsPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 type ChallengeAction = 'publish' | 'unpublish'
 
 const PAGE_SIZE = 12
 
 const AdminUserDetailsPage = () => {
+  usePageTitle('User Details')
   const { id } = useParams()
   const userId = Number(id)
   const queryClient = useQueryClient()

@@ -4,6 +4,7 @@ import { Alert, Container, Spinner, Table } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
 import LeaderboardService from '../services/LeaderboardService'
 import './ChallengeLeaderboardPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const formatTime = (seconds: number) => {
   if (seconds >= 60) {
@@ -24,6 +25,7 @@ const formatDate = (date: string) => {
 }
 
 const ChallengeLeaderboardPage = () => {
+  usePageTitle('Leaderboard')
   const { id } = useParams()
   const challengeId = Number(id)
   const validId = Number.isInteger(challengeId) && challengeId > 0

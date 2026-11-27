@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import AdminAchievementService from '../services/AdminAchievementService'
 import './AchievementsPage.css'
 import './AdminAchievementsPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 interface PublishRequest {
   id: number
@@ -13,6 +14,7 @@ interface PublishRequest {
 }
 
 const AdminAchievementsPage = () => {
+  usePageTitle('Achievement Management')
   const queryClient = useQueryClient()
   const [actionError, setActionError] = useState<string | null>(null)
 

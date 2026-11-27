@@ -25,11 +25,13 @@ import type {
   ImageDeletionImpact,
 } from '../services/ImageService'
 import './AdminImagesPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 const AdminImagesPage = () => {
+  usePageTitle('Manage Images')
   const queryClient = useQueryClient()
 
   const [activeTab, setActiveTab] = useState('default')
@@ -411,7 +413,7 @@ const AdminImagesPage = () => {
         >
           {userImages.length === 0 ? (
             <div className="admin-images-empty text-center py-5 rounded">
-              <h5>No uploaded images</h5>
+              <h2 className="h5">No uploaded images</h2>
               <p className="mb-0">
                 Images uploaded by users will appear here.
               </p>
@@ -442,7 +444,7 @@ const AdminImagesPage = () => {
 
           {defaultImages.length === 0 ? (
             <div className="admin-images-empty text-center py-5 rounded">
-              <h5>No default images</h5>
+              <h2 className="h5">No default images</h2>
               <p className="mb-0">
                 Add a default image to make it available to all users.
               </p>

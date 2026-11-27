@@ -15,6 +15,7 @@ import type { ChallengeFilter } from '../types/Challenge'
 import ChallengeGrid from './ChallengeGrid'
 import ChallengeTable from './ChallengeTable'
 import './Challenges.css'
+import usePageTitle from '../shared/usePageTitle'
 
 type ChallengeView = 'Grid' | 'Table'
 
@@ -29,6 +30,7 @@ const ChallengeListPage = () => {
   const [searchInput, setSearchInput] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [view, setView] = useState<ChallengeView>(getInitialView)
+  usePageTitle(`Challenges - ${view}`)
 
   const { user } = useAuth()
 

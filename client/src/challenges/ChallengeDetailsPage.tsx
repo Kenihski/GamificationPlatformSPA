@@ -16,6 +16,7 @@ import QuestionOverview from '../questions/QuestionOverview'
 import { withReturnUrl } from '../shared/returnUrl'
 import FlashMessage from '../shared/FlashMessage'
 import './ChallengeDetailsPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 type ManagementAction =
   | 'publish'
@@ -71,6 +72,8 @@ const ChallengeDetailsPage = () => {
     enabled: validId,
     retry: false,
   })
+
+  usePageTitle(challenge?.title)
 
   const isAdmin = user?.roles.includes('Admin') ?? false
   const isOwner =

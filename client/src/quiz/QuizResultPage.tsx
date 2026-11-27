@@ -3,8 +3,10 @@ import { Alert, Container, Spinner } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
 import QuizService from '../services/QuizService'
 import './QuizResultPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const QuizResultPage = () => {
+  usePageTitle('Attempt Details')
   const { attemptId } = useParams()
   const id = Number(attemptId)
   const validId = Number.isInteger(id) && id > 0

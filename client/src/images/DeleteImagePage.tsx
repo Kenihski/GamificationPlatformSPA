@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import ImageService from '../services/ImageService'
 import { getSafeReturnUrl } from '../shared/returnUrl'
+import usePageTitle from '../shared/usePageTitle'
 
 type DeleteImagePageProps = {
   // Default images belong to the admin library; user images to a user's library.
@@ -17,6 +18,7 @@ const getImageSource = (url: string) =>
 
 // Shared confirmation page for deleting library images, as ConfirmDelete in Subapp 1.
 const DeleteImagePage = ({ isDefaultImage = false }: DeleteImagePageProps) => {
+  usePageTitle('Delete Image')
   const { id } = useParams()
   const imageId = Number(id)
   const validId = Number.isInteger(imageId) && imageId > 0

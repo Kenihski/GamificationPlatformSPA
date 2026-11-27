@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
 import './NotFoundPage.css'
+import usePageTitle from './usePageTitle'
 
-const NotFoundPage = () => (
+const NotFoundPage = () => {
+  usePageTitle('Page not found')
+  return (
   <div className="container not-found-page py-4">
     <section className="alert alert-danger mt-4" role="alert" aria-labelledby="not-found-title">
       <h1 id="not-found-title" className="h3">404 — Page not found</h1>
@@ -15,6 +18,7 @@ const NotFoundPage = () => (
       <Link to="/challenges" className="btn btn-secondary">View Challenges</Link>
     </div>
   </div>
-)
+  )
+}
 
 export default NotFoundPage

@@ -1,9 +1,12 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { Alert, Container, Spinner } from 'react-bootstrap'
+import { Navigate } from 'react-router-dom'
+import { useAuth } from '../auth/AuthContext'
 import AchievementService from '../services/AchievementService'
 import HallOfFameService from '../services/HallOfFameService'
 import './AchievementsPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 interface AchievementsPageProps {
   userId?: number
@@ -11,6 +14,9 @@ interface AchievementsPageProps {
 
 const AchievementsPage = ({ userId }: AchievementsPageProps) => {
   const isPublic = userId !== undefined
+  const { user } = useAuth()
+  // Admins have no personal achievements; Subapp 1 sends them to Achievement Management.
+  const redirectAdmin = !isPublic && (user?.roles.includes('Admin') ?? false)
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: isPublic
@@ -20,8 +26,14 @@ const AchievementsPage = ({ userId }: AchievementsPageProps) => {
       isPublic
         ? HallOfFameService.getUserAchievements(userId)
         : AchievementService.getMine(),
-    enabled: !isPublic || (Number.isInteger(userId) && userId > 0),
+    enabled: !redirectAdmin && (!isPublic || (Number.isInteger(userId) && userId > 0)),
   })
+
+  usePageTitle(data ? `${data.username}'s Achievements` : 'Achievements')
+
+  if (redirectAdmin) {
+    return <Navigate to="/admin/achievements" replace />
+  }
 
   if (isPublic && (!Number.isInteger(userId) || userId <= 0)) {
     return (

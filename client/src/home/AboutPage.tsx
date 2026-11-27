@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import './AboutPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const guideLinks = [
   ['getting-started', 'Getting Started'],
@@ -12,7 +13,9 @@ const guideLinks = [
   ['fair-play', 'Fair Play'],
 ] as const
 
-const AboutPage = () => (
+const AboutPage = () => {
+  usePageTitle('About')
+  return (
   <main className="container">
     <div className="about-page">
       <section className="about-hero text-center mb-5">
@@ -161,6 +164,7 @@ const AboutPage = () => (
       </div>
     </div>
   </main>
-)
+  )
+}
 
 export default AboutPage

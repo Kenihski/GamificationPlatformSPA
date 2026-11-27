@@ -14,6 +14,7 @@ import FlashMessage from '../shared/FlashMessage'
 import { useAuth } from '../auth/AuthContext'
 import type { Challenge } from '../types/Challenge'
 import './CreateChallengePage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 type ImageCategory = 'current' | 'upload' | 'my' | 'default'
 type FieldErrors = Partial<Record<'title' | 'description' | 'image', string>>
@@ -520,6 +521,7 @@ const EditForm = ({ challenge }: EditFormProps) => {
 }
 
 const EditChallengePage = () => {
+  usePageTitle('Update Challenge')
   const { user } = useAuth()
   const { id } = useParams()
   const challengeId = Number(id)

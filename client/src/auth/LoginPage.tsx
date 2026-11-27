@@ -1,6 +1,7 @@
 import { Alert, Container } from 'react-bootstrap'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import LoginForm from './LoginForm'
+import usePageTitle from '../shared/usePageTitle'
 
 interface LoginLocationState {
   message?: string
@@ -9,6 +10,7 @@ interface LoginLocationState {
 }
 
 const LoginPage = () => {
+  usePageTitle('Login')
   const navigate = useNavigate()
   const location = useLocation()
 

@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import ChallengeService from '../services/ChallengeService'
 import './MyChallengesPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 type ChallengeAction =
   | 'publish'
@@ -23,6 +24,7 @@ interface ActionRequest {
 }
 
 const MyChallengesPage = () => {
+  usePageTitle('My Challenges')
   const queryClient = useQueryClient()
   const { user } = useAuth()
   const [actionError, setActionError] = useState<string | null>(null)

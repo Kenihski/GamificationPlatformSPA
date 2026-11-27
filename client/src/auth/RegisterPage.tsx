@@ -2,12 +2,14 @@ import { Container } from 'react-bootstrap'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import RegisterForm from './RegisterForm'
 import { useAuthModal } from './AuthModalContext'
+import usePageTitle from '../shared/usePageTitle'
 
 interface RegisterLocationState {
   from?: string
 }
 
 const RegisterPage = () => {
+  usePageTitle('Register')
   const navigate = useNavigate()
   const { openLoginAfterRegistration } = useAuthModal()
   const location = useLocation()

@@ -6,8 +6,10 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import AdminAchievementService from '../services/AdminAchievementService'
 import './AdminAchievementsPage.css'
 import './AchievementFormPages.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const DeleteAchievementPage = () => {
+  usePageTitle('Delete Achievement')
   const { id } = useParams()
   const achievementId = Number(id)
   const navigate = useNavigate()

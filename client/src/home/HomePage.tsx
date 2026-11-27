@@ -8,6 +8,7 @@ import ChallengeService from '../services/ChallengeService'
 import FeaturedChallenges from './FeaturedChallenges'
 import HomeRankingCards from './HomeRankingCards'
 import './HomePage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const BookIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -81,6 +82,7 @@ const FeatureCard = ({
 )
 
 const HomePage = () => {
+  usePageTitle('Home Page')
   const { user } = useAuth()
   const location = useLocation()
   const message = location.state?.message === 'You have been logged out successfully.'

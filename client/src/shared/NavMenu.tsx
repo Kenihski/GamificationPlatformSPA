@@ -35,23 +35,6 @@ const NavMenu = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  useEffect(() => {
-    const names: Record<string, string> = {
-      '/': 'Home',
-      '/challenges': 'Challenges',
-      '/challenges/create': 'Create Challenge',
-      '/my-challenges': 'My Challenges',
-      '/hall-of-fame': 'Hall of Fame',
-      '/leaderboard': 'Core Leaderboard',
-      '/about': 'About',
-      '/login': 'Login',
-      '/register': 'Register',
-    }
-    const page = names[location.pathname] ??
-      (location.pathname.includes('/edit') ? 'Edit' : 'Challenge Hub')
-    document.title = `${page} - Learning Challenge Hub`
-  }, [location.pathname])
-
   const closeMenu = () => setShowMenu(false)
 
   const handleRegistrationSuccess = (username: string) => {

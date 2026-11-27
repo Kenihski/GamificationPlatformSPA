@@ -17,11 +17,13 @@ import { withReturnUrl } from '../shared/returnUrl'
 import ImageService from '../services/ImageService'
 import type { ImageDeletionImpact } from '../services/ImageService'
 import './MyImagesPage.css'
+import usePageTitle from '../shared/usePageTitle'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 const MyImagesPage = () => {
+  usePageTitle('My Images')
   const queryClient = useQueryClient()
   const [file, setFile] = useState<File | null>(null)
   const [fileInputKey, setFileInputKey] = useState(0)

@@ -11,6 +11,7 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { getSafeReturnUrl } from '../shared/returnUrl'
 import ChallengeService from '../services/ChallengeService'
 import QuestionService from '../services/QuestionService'
+import usePageTitle from '../shared/usePageTitle'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
 
@@ -20,6 +21,7 @@ const getImageSource = (url: string) =>
     : `${apiBaseUrl}/${url.replace(/^\/+/, '')}`
 
 const DeleteQuestionPage = () => {
+  usePageTitle('Delete Question')
   const { id, questionId: questionIdParam } = useParams()
 
   const challengeId = Number(id)
