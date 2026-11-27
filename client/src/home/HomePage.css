@@ -306,7 +306,7 @@
   margin: 0;
 }
 
-/* 24x24 click area (WCAG 2.5.8); the padding keeps the visible dot at 9px. */
+/* 24x24 click area; the padding keeps the visible dot at 9px. */
 .home-page .featured-carousel .carousel-indicators button {
   box-sizing: border-box;
   width: 24px;

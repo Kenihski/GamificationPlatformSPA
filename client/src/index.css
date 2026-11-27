@@ -29,6 +29,11 @@ body {
   --focus-ring: #b8c8ff;
 }
 
+/* Keep keyboard focus clear of the sticky navbar when the page scrolls to it. */
+html {
+  scroll-padding-top: 5rem;
+}
+
 /* Bootstrap utility colours need lighter text on the dark theme. */
 .text-secondary,
 .text-muted {
@@ -94,7 +99,7 @@ body {
 }
 
 /* Buttons use a tight ring like Bootstrap, but in the light focus colour so it
-   keeps at least 3:1 contrast against the dark background (WCAG 1.4.11). */
+   keeps at least 3:1 contrast against the dark background. */
 .btn:focus-visible {
   outline: 0;
   /* !important so page-specific glows (such as the home page buttons) cannot hide it. */

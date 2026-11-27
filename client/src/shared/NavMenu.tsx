@@ -316,9 +316,10 @@ const NavMenu = () => {
         onHide={closeLogin}
         centered
         className="auth-modal"
+        aria-labelledby="login-modal-title"
       >
         <Modal.Header closeButton>
-          <Modal.Title as="h5">Login</Modal.Title>
+          <Modal.Title as="h5" id="login-modal-title">Login</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -357,9 +358,10 @@ const NavMenu = () => {
         onHide={closeRegister}
         centered
         className="auth-modal"
+        aria-labelledby="register-modal-title"
       >
         <Modal.Header closeButton>
-          <Modal.Title as="h5">Create Account</Modal.Title>
+          <Modal.Title as="h5" id="register-modal-title">Create Account</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
