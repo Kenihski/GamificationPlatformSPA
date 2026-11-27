@@ -173,16 +173,6 @@
   border-color: #9eabff;
   color: #fff;
 }
-.challenge-details-page .btn-outline-primary {
-  border-color: #91adff;
-  color: #b8c8ff;
-}
-.challenge-details-page .btn-outline-primary:hover {
-  background: rgba(77, 99, 202, 0.35);
-  border-color: #b2c1ff;
-  color: #fff;
-}
-
 /* Management and history */
 .challenge-details-panel {
   margin-top: 32px;

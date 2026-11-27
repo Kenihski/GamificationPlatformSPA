@@ -69,18 +69,6 @@
   color: #ffffff;
 }
 
-.create-challenge-page .btn-outline-primary {
-  background: transparent;
-  border-color: #91adff;
-  color: #b8c8ff;
-}
-
-.create-challenge-page .btn-outline-primary:hover {
-  background: rgba(77, 99, 202, 0.25);
-  border-color: #b2c1ff;
-  color: #ffffff;
-}
-
 .create-challenge-page .challenge-image-preview {
   display: block;
   width: 270px;

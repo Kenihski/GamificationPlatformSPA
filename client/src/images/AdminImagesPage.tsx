@@ -16,7 +16,9 @@ import {
   Tabs,
 } from 'react-bootstrap'
 import ImageService from '../services/ImageService'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import FlashMessage from '../shared/FlashMessage'
+import { withReturnUrl } from '../shared/returnUrl'
 import type {
   AdminUserImage,
   DefaultImage,
@@ -108,29 +110,11 @@ const AdminImagesPage = () => {
     onError: showError,
   })
 
-  const deleteDefaultMutation = useMutation({
-    mutationFn: ImageService.deleteDefaultImage,
-    onSuccess: async () => {
-      await refreshImages()
-      showSuccess('Default image deleted successfully.')
-    },
-    onError: showError,
-  })
-
-  const deleteUserMutation = useMutation({
-    mutationFn: ImageService.deleteImage,
-    onSuccess: async () => {
-      await refreshImages()
-      showSuccess('Image deleted successfully.')
-    },
-    onError: showError,
-  })
+  const navigate = useNavigate()
 
   const isUpdating =
     uploadMutation.isPending ||
-    renameMutation.isPending ||
-    deleteDefaultMutation.isPending ||
-    deleteUserMutation.isPending
+    renameMutation.isPending
 
   const handleUpload = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -180,11 +164,8 @@ const AdminImagesPage = () => {
       setErrorMessage('This image is used by questions. Replace it in those questions before deleting it.')
       return false
     }
-    const covers = impact.challenges.map((challenge) => challenge.title).join(', ')
-    const warning = covers
-      ? `Affected challenge covers: ${covers}. They will use Question 1 instead. `
-      : ''
-    return window.confirm(`${warning}Permanently delete ${impact.imageName}? This cannot be undone.`)
+    // The confirmation page shows the affected challenge covers, as in Subapp 1.
+    return true
   }
 
   const handleDeleteDefault = async (id: number) => {
@@ -196,7 +177,9 @@ const AdminImagesPage = () => {
         setErrorMessage('Question 1 is the protected fallback image and cannot be deleted.')
         return
       }
-      if (confirmImpact(info.impact)) deleteDefaultMutation.mutate(id)
+      if (confirmImpact(info.impact)) {
+        navigate(withReturnUrl(`/admin/images/default/${id}/delete`, '/admin/images'))
+      }
     } catch (error) {
       showError(error instanceof Error ? error : new Error('Could not check image usage.'))
     }
@@ -207,7 +190,9 @@ const AdminImagesPage = () => {
     setSuccessMessage(null)
     try {
       const impact = await ImageService.getImageDeletionImpact(id)
-      if (confirmImpact(impact)) deleteUserMutation.mutate(id)
+      if (confirmImpact(impact)) {
+        navigate(withReturnUrl(`/images/${id}/delete`, '/admin/images'))
+      }
     } catch (error) {
       showError(error instanceof Error ? error : new Error('Could not check image usage.'))
     }
@@ -389,6 +374,8 @@ const AdminImagesPage = () => {
           View and manage uploaded and default images.
         </p>
       </div>
+
+      <FlashMessage />
 
       {successMessage && (
         <Alert ref={successRef} tabIndex={-1} variant="success" role="status">

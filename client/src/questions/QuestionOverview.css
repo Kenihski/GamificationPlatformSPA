@@ -1,0 +1,47 @@
+/* Shared question table, styled like the Subapp 1 site.css tables. */
+.question-overview {
+  max-width: 100%;
+}
+
+.question-overview .table {
+  --bs-table-bg: transparent;
+  --bs-table-color: #f5f7ff;
+  --bs-table-border-color: rgba(124, 139, 196, 0.25);
+  --bs-table-striped-bg: rgba(80, 99, 190, 0.09);
+  --bs-table-striped-color: #f5f7ff;
+  --bs-table-hover-bg: rgba(80, 99, 190, 0.18);
+  --bs-table-hover-color: #ffffff;
+}
+
+.question-overview .table thead th {
+  background: rgba(60, 75, 145, 0.2);
+  color: #91adff;
+  border-bottom-color: rgba(111, 132, 255, 0.35);
+}
+
+.question-overview .table td,
+.question-overview .table th {
+  vertical-align: middle;
+}
+
+/* Equal dimensions for Edit and Delete actions. */
+.question-overview .challenge-question-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  min-height: 29px;
+  padding: 0.25rem 0.75rem;
+  white-space: nowrap;
+}
+
+.question-overview .challenge-details-notice {
+  padding: 14px 18px;
+  border: 1px solid #465477;
+  border-left: 4px solid #7089d9;
+  border-radius: 8px;
+  background-color: #1c2745;
+  color: #dce5ff;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}

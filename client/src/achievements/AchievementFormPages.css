@@ -74,17 +74,6 @@
   color: #ffffff;
 }
 
-.achievement-form-page .btn-outline-primary {
-  border-color: #91adff;
-  color: #b8c8ff;
-}
-
-.achievement-form-page .btn-outline-primary:hover {
-  background: rgba(77, 99, 202, 0.35);
-  border-color: #b2c1ff;
-  color: #ffffff;
-}
-
 .achievement-form-page .btn-outline-warning {
   --bs-btn-color: #ffc107;
   --bs-btn-border-color: #ffc107;

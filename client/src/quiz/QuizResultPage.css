@@ -314,18 +314,6 @@
   font-weight: 600;
 }
 
-.quiz-result-page .btn-outline-primary {
-  background: transparent;
-  border-color: #91adff;
-  color: #b8c8ff;
-}
-
-.quiz-result-page .btn-outline-primary:hover {
-  background: rgba(77, 99, 202, 0.35);
-  border-color: #b2c1ff;
-  color: #ffffff;
-}
-
 /* Responsive layout */
 @media (max-width: 900px) {
   .quiz-result-stats-four {

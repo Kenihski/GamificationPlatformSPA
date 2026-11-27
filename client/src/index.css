@@ -73,7 +73,30 @@ body {
   color: #b8c8ff;
 }
 
-.btn-outline-primary:hover {
+/* Hover, click and open state: solid blue, as Bootstrap shows when pressed in Subapp 1.
+   Same pattern as Edit (yellow), Delete (red) and Publish (green). */
+.btn-outline-primary:hover,
+.btn-outline-primary:active,
+.btn.btn-outline-primary[aria-expanded="true"] {
+  background: #0d6efd;
+  border-color: #0d6efd;
+  color: #ffffff;
+}
+
+/* Change Type uses the solid purple of the Community badge (white text, 5.6:1 contrast). */
+.btn.change-type-button:hover,
+.btn.change-type-button:active {
+  background: #7b4ec9;
+  border-color: #7b4ec9;
+  color: #ffffff;
+}
+
+/* Navigation-style buttons keep the subtle hover: the challenge list filters,
+   search and view switch, and View Leaderboard on the details page. */
+.challenge-list-page .challenge-toolbar .btn-outline-primary:hover,
+.challenge-list-page .challenge-toolbar .btn-outline-primary:active,
+.btn.btn-outline-primary.challenge-details-leaderboard-button:hover,
+.btn.btn-outline-primary.challenge-details-leaderboard-button:active {
   background: rgba(77, 99, 202, 0.35);
   border-color: #b2c1ff;
   color: #ffffff;
@@ -142,6 +165,31 @@ body {
   --bs-form-select-bg-icon: none;
   background-image: var(--bs-form-select-bg-img);
   padding-right: 2.25rem;
+}
+
+/* Status badges used on My Challenges, Challenge Details and User Details.
+   Global so they are styled even when a page is opened directly. */
+.challenge-management-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+  vertical-align: middle;
+}
+
+.challenge-management-status-published {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.45);
+}
+
+.challenge-management-status-draft {
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.4);
 }
 
 /* Alert colours live in auth/AuthStyles.css, which loads after this file. */
@@ -215,4 +263,15 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Shared question table: short headers and action buttons stay on one line,
+   so narrow form pages scroll the table instead of wrapping them. */
+.question-overview th,
+.question-overview .question-overview-actions {
+  white-space: nowrap;
+}
+
+.question-overview .question-overview-actions {
+  flex-wrap: nowrap;
 }

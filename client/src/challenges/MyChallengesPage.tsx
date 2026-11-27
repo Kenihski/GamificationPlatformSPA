@@ -217,7 +217,7 @@ const MyChallengesPage = () => {
                           <Button
                             size="sm"
                             variant="outline-primary"
-                            className="my-challenges-type-button"
+                            className="my-challenges-type-button change-type-button"
                             disabled={actionMutation.isPending}
                             onClick={() => handleAction(challenge.challengeId, 'change-type')}
                           >

@@ -42,18 +42,6 @@
   color: #ffffff;
 }
 
-.challenge-list-page .challenge-toolbar .btn-outline-primary {
-  background: transparent;
-  border-color: #91adff;
-  color: #b8c8ff;
-}
-
-.challenge-list-page .challenge-toolbar .btn-outline-primary:hover {
-  background: rgba(77, 99, 202, 0.35);
-  border-color: #b2c1ff;
-  color: #ffffff;
-}
-
 .challenge-list-page .challenge-search-form .form-control {
   min-width: 0;
   background-color: #253154;

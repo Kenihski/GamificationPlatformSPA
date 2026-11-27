@@ -7,7 +7,8 @@ import {
   Container,
   Spinner,
 } from 'react-bootstrap'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { getSafeReturnUrl } from '../shared/returnUrl'
 import ChallengeService from '../services/ChallengeService'
 import QuestionService from '../services/QuestionService'
 
@@ -32,6 +33,10 @@ const DeleteQuestionPage = () => {
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const [searchParams] = useSearchParams()
+
+  // Return to the page the user came from, as in Subapp 1.
+  const returnUrl = getSafeReturnUrl(searchParams.get('returnUrl'))
 
   const challengeQuery = useQuery({
     queryKey: ['challenge', challengeId],
@@ -67,7 +72,14 @@ const DeleteQuestionPage = () => {
         }),
       ])
 
-      navigate(`/challenges/${challengeId}`)
+      navigate(returnUrl ?? `/challenges/${challengeId}?showQuestions=true`, {
+        state: {
+          // Deleting the last question of a published challenge unpublishes it.
+          successMessage: challengeQuery.data?.isPublished && challengeQuery.data.questionCount === 1
+            ? 'Question deleted. The challenge was automatically unpublished because it has no questions left. Previous attempts and scores were reset.'
+            : 'Question deleted. Previous attempts and scores were reset.',
+        },
+      })
     },
   })
 
@@ -221,7 +233,7 @@ const DeleteQuestionPage = () => {
             </Button>
 
             <Link
-              to={`/challenges/${challengeId}`}
+              to={returnUrl ?? `/challenges/${challengeId}`}
               className="btn btn-outline-primary"
             >
               Cancel

@@ -57,13 +57,13 @@
     vertical-align: middle;
 }
 
-.users-table a {
+.users-table a:not(.btn) {
     color: #b8c8ff;
     text-decoration: underline;
     text-underline-offset: 2px;
 }
 
-.users-table a:hover {
+.users-table a:not(.btn):hover {
     color: #ffffff;
 }
 

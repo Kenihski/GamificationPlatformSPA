@@ -16,7 +16,7 @@
 .admin-user-details .table thead th {
   background: rgba(60, 75, 145, 0.2);
   color: #91adff;
-  border-bottom-color: #50649d;
+  border-bottom-color: rgba(111, 132, 255, 0.35);
 }
 
 .admin-user-details .table td,
@@ -44,18 +44,6 @@
 .admin-user-details .my-challenges-actions .btn {
   white-space: nowrap;
   text-decoration: none;
-}
-
-/* Match Subapp 1 button colors */
-.admin-user-details .btn-outline-primary {
-  --bs-btn-color: #b8c8ff;
-  --bs-btn-border-color: #91adff;
-}
-
-.admin-user-details .btn-outline-primary:hover {
-  background: rgba(77, 99, 202, 0.35);
-  border-color: #b2c1ff;
-  color: #ffffff;
 }
 
 .admin-user-details .btn-outline-warning {
@@ -173,13 +161,6 @@
   flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 20px;
-}
-
-.user-history-card-header h4 {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #f5f7ff;
 }
 
 .user-history-attempt-count {

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Alert, Button, Card, Container, Spinner } from 'react-bootstrap'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { getSafeReturnUrl } from '../shared/returnUrl'
 import { useAuth } from '../auth/AuthContext'
 import ChallengeService from '../services/ChallengeService'
 import '../questions/QuestionFormPage.css'
@@ -19,6 +20,10 @@ const DeleteChallengePage = () => {
   const { user } = useAuth()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const [searchParams] = useSearchParams()
+
+  // Admin user details sends a returnUrl; My Challenges is the default, as in Subapp 1.
+  const returnUrl = getSafeReturnUrl(searchParams.get('returnUrl'))
 
   const { data: challenge, isPending, isError } = useQuery({
     queryKey: ['challenge', challengeId],
@@ -34,8 +39,11 @@ const DeleteChallengePage = () => {
         queryClient.invalidateQueries({ queryKey: ['my-challenges'] }),
         queryClient.invalidateQueries({ queryKey: ['challenges'] }),
         queryClient.invalidateQueries({ queryKey: ['challenge', challengeId] }),
+        // The admin user details page lists the user's challenges.
+        queryClient.invalidateQueries({ queryKey: ['admin-user-details'] }),
+        queryClient.invalidateQueries({ queryKey: ['admin-users'] }),
       ])
-      navigate('/my-challenges')
+      navigate(returnUrl ?? '/my-challenges')
     },
   })
 
@@ -95,7 +103,7 @@ const DeleteChallengePage = () => {
             <Button variant="outline-danger" disabled={deleteMutation.isPending} onClick={() => deleteMutation.mutate()}>
               {deleteMutation.isPending ? 'Deleting...' : 'Confirm deletion'}
             </Button>
-            <Link to="/my-challenges" className="btn btn-outline-primary">Cancel</Link>
+            <Link to={returnUrl ?? '/my-challenges'} className="btn btn-outline-primary">Cancel</Link>
           </div>
         </Card.Body>
       </Card>

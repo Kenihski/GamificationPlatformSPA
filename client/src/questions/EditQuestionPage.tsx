@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Alert, Button, Card, Container, Form, Spinner } from 'react-bootstrap'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { getSafeReturnUrl } from '../shared/returnUrl'
 import ChallengeService from '../services/ChallengeService'
 import QuestionService from '../services/QuestionService'
 import ImageService from '../services/ImageService'
@@ -40,6 +41,10 @@ interface EditFormProps {
 const EditForm = ({ question, challengeTitle }: EditFormProps) => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const [searchParams] = useSearchParams()
+
+  // Return to the page the user came from, as in Subapp 1.
+  const returnUrl = getSafeReturnUrl(searchParams.get('returnUrl'))
 
   const challengeId = question.challengeId
   const currentImage = question.imageUrl ?? ''
@@ -87,7 +92,6 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
   const [uploadedPreviewUrl, setUploadedPreviewUrl] =
     useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const errorSummaryRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (errorMessage) errorSummaryRef.current?.focus()
@@ -194,9 +198,11 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
       )
     },
     onSuccess: async (changed) => {
+      const target = returnUrl ?? `/challenges/${challengeId}?showQuestions=true`
+
+      // An unchanged save leaves the form as well, as in Subapp 1.
       if (!changed) {
-        setErrorMessage(null)
-        setSuccessMessage('No changes were made. Previous attempts and scores are preserved.')
+        navigate(target, { state: { successMessage: 'No changes were made.' } })
         return
       }
       await Promise.all([
@@ -214,7 +220,9 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
         }),
       ])
 
-      navigate(`/challenges/${challengeId}`)
+      navigate(target, {
+        state: { successMessage: 'Question updated. Previous attempts and scores were reset.' },
+      })
     },
     onError: (error: Error) => {
       setErrorMessage(error.message)
@@ -275,7 +283,6 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setErrorMessage(null)
-    setSuccessMessage(null)
 
     if (!title.trim()) {
       setErrorMessage('Question title is required.')
@@ -404,7 +411,6 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
             Saving without changes keeps all results.
           </Alert>
 
-          {successMessage && <Alert variant="success" role="status">{successMessage}</Alert>}
           {errorMessage && (
             <Alert ref={errorSummaryRef} tabIndex={-1} variant="danger" role="alert">
               {errorMessage}
@@ -712,8 +718,8 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
               </Button>
 
               <Link
-                to={`/challenges/${challengeId}`}
-                className="btn btn-secondary"
+                to={returnUrl ?? `/challenges/${challengeId}`}
+                className="btn btn-outline-primary"
               >
                 Cancel
               </Link>

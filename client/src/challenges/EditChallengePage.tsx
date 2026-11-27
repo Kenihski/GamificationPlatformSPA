@@ -3,10 +3,14 @@ import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Alert, Button, Card, Container, Form, Spinner } from 'react-bootstrap'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import ChallengeService from '../services/ChallengeService'
 import type { ChallengeSaveRequest } from '../services/ChallengeService'
 import ImageService from '../services/ImageService'
+import QuestionService from '../services/QuestionService'
+import QuestionOverview from '../questions/QuestionOverview'
+import { getSafeReturnUrl, withReturnUrl } from '../shared/returnUrl'
+import FlashMessage from '../shared/FlashMessage'
 import { useAuth } from '../auth/AuthContext'
 import type { Challenge } from '../types/Challenge'
 import './CreateChallengePage.css'
@@ -27,6 +31,30 @@ interface EditFormProps {
 const EditForm = ({ challenge }: EditFormProps) => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  // Return to the page the user came from, as in Subapp 1. My Challenges is the default.
+  const returnUrl = getSafeReturnUrl(searchParams.get('returnUrl'))
+
+  // The question overview starts closed so the form and its buttons come first.
+  // It opens automatically when the user returns from a question page.
+  const showQuestions = searchParams.get('showQuestions') === 'true'
+  const toggleQuestions = () => {
+    const next = new URLSearchParams(searchParams)
+    if (showQuestions) next.delete('showQuestions')
+    else next.set('showQuestions', 'true')
+    setSearchParams(next, { replace: true })
+  }
+
+  // Question pages opened from here come back to this form with the overview open.
+  const questionReturnParams = new URLSearchParams({ showQuestions: 'true' })
+  if (returnUrl) questionReturnParams.set('returnUrl', returnUrl)
+  const questionReturnUrl = `/challenges/${challenge.challengeId}/edit?${questionReturnParams}`
+
+  const questionsQuery = useQuery({
+    queryKey: ['questions', challenge.challengeId],
+    queryFn: () => QuestionService.getQuestions(challenge.challengeId),
+  })
 
   const [title, setTitle] = useState(challenge.title)
   const [description, setDescription] = useState(challenge.description ?? '')
@@ -138,9 +166,10 @@ const EditForm = ({ challenge }: EditFormProps) => {
         queryClient.invalidateQueries({ queryKey: ['my-challenges'] }),
         queryClient.invalidateQueries({ queryKey: ['challenges'] }),
         queryClient.invalidateQueries({ queryKey: ['challenge'] }),
+        queryClient.invalidateQueries({ queryKey: ['admin-user-details'] }),
       ])
 
-      navigate('/my-challenges')
+      navigate(returnUrl ?? '/my-challenges')
     },
     onError: (error: Error) => {
       setErrorMessage(error.message)
@@ -190,6 +219,8 @@ const EditForm = ({ challenge }: EditFormProps) => {
   return (
     <Container className="create-challenge-page management-page my-4">
       <h1 className="mb-4">Update Challenge</h1>
+
+      <FlashMessage />
 
       <Card className="border-warning">
         <Card.Body>
@@ -357,20 +388,72 @@ const EditForm = ({ challenge }: EditFormProps) => {
               )}
             </Form.Group>
 
-            <div className="d-flex flex-wrap gap-2 mt-2">
-              <Button
-                type="submit"
-                variant="outline-warning"
-                disabled={updateMutation.isPending}
-              >
-                {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
-              </Button>
+            <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-2">
+              <div className="d-flex flex-wrap gap-2">
+                <Button
+                  type="submit"
+                  variant="outline-warning"
+                  disabled={updateMutation.isPending}
+                >
+                  {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+                </Button>
 
-              <Link to="/my-challenges" className="btn btn-outline-primary">
-                Cancel
-              </Link>
+                <Link to={returnUrl ?? '/my-challenges'} className="btn btn-outline-primary">
+                  Cancel
+                </Link>
+              </div>
+
+              {/* Same toggle as on Challenge Details; it opens the question overview below. */}
+              <Button
+                variant="outline-primary"
+                type="button"
+                aria-expanded={showQuestions}
+                aria-controls="questionOverview"
+                onClick={toggleQuestions}
+              >
+                Questions ({questionsQuery.data?.length ?? challenge.questionCount})
+              </Button>
             </div>
           </Form>
+        </Card.Body>
+      </Card>
+
+      {/* Manage the questions here as well, so editing does not require the details page. */}
+      <Card
+        as="section"
+        id="questionOverview"
+        className="mt-4"
+        aria-labelledby="questionOverviewTitle"
+        hidden={!showQuestions}
+      >
+        <Card.Body>
+          <div className="d-flex justify-content-between align-items-center gap-3 flex-wrap mb-3">
+            <h2 id="questionOverviewTitle" className="h4 mb-0">
+              Questions ({questionsQuery.data?.length ?? challenge.questionCount})
+            </h2>
+
+            <Link
+              to={withReturnUrl(`/challenges/${challenge.challengeId}/questions/create`, questionReturnUrl)}
+              className="btn btn-primary"
+            >
+              + Add Question
+            </Link>
+          </div>
+
+          {questionsQuery.isPending ? (
+            <div role="status">
+              <Spinner animation="border" size="sm" />
+              <span className="ms-2">Loading questions...</span>
+            </div>
+          ) : questionsQuery.isError ? (
+            <Alert variant="danger" role="alert">Could not load questions.</Alert>
+          ) : (
+            <QuestionOverview
+              challengeId={challenge.challengeId}
+              questions={questionsQuery.data}
+              returnUrl={questionReturnUrl}
+            />
+          )}
         </Card.Body>
       </Card>
     </Container>

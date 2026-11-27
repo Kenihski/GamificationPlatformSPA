@@ -10,7 +10,8 @@ import {
   Form,
   Spinner,
 } from 'react-bootstrap'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { getSafeReturnUrl } from '../shared/returnUrl'
 import ChallengeService from '../services/ChallengeService'
 import QuestionService from '../services/QuestionService'
 import ImageService from '../services/ImageService'
@@ -49,6 +50,10 @@ const CreateQuestionPage = () => {
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const [searchParams] = useSearchParams()
+
+  // Return to the page the user came from, as in Subapp 1.
+  const returnUrl = getSafeReturnUrl(searchParams.get('returnUrl'))
 
   const [title, setTitle] = useState('')
   const [questionType, setQuestionType] =
@@ -175,7 +180,10 @@ const CreateQuestionPage = () => {
         }),
       ])
 
-      navigate(`/challenges/${challengeId}?showQuestions=true`)
+      // Same confirmation as Subapp 1, shown on the page the user returns to.
+      navigate(returnUrl ?? `/challenges/${challengeId}?showQuestions=true`, {
+        state: { successMessage: 'Question created. Previous attempts and scores were reset.' },
+      })
     },
     onError: (error: Error) => {
       setErrorMessage(error.message)
@@ -747,7 +755,7 @@ const CreateQuestionPage = () => {
               </Button>
 
               <Link
-                to={`/challenges/${challengeId}`}
+                to={returnUrl ?? `/challenges/${challengeId}`}
                 className="btn btn-secondary"
               >
                 Back to Challenge

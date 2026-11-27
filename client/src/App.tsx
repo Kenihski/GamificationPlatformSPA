@@ -83,6 +83,7 @@ const MyImagesPage = lazy(() => import('./images/MyImagesPage'))
 const AdminImagesPage = lazy(
   () => import('./images/AdminImagesPage')
 )
+const DeleteImagePage = lazy(() => import('./images/DeleteImagePage'))
 
 const AdminUsersPage = lazy(
   () => import('./users/AdminUsersPage')
@@ -134,6 +135,7 @@ const App = () => {
             <Route element={<ProtectedRoute />}>
               <Route path="/my-challenges" element={<MyChallengesPage />} />
               <Route path="/my-images" element={<MyImagesPage />} />
+              <Route path="/images/:id/delete" element={<DeleteImagePage />} />
               <Route path="/challenges/create" element={<CreateChallengePage />} />
               <Route path="/challenges/:id/edit" element={<EditChallengePage />} />
               <Route path="/challenges/:id/delete" element={<DeleteChallengePage />} />
@@ -184,6 +186,10 @@ const App = () => {
                 element={<DeleteAchievementPage />}
               />
               <Route path="/admin/images" element={<AdminImagesPage />} />
+              <Route
+                path="/admin/images/default/:id/delete"
+                element={<DeleteImagePage isDefaultImage />}
+              />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />

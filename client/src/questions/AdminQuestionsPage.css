@@ -116,9 +116,6 @@
 .questions-table-pagination .btn-outline-primary {
     --bs-btn-color: #b8c8ff;
     --bs-btn-border-color: #91adff;
-    --bs-btn-hover-color: #ffffff;
-    --bs-btn-hover-bg: rgba(77, 99, 202, 0.35);
-    --bs-btn-hover-border-color: #b2c1ff;
 
     --bs-btn-disabled-color: #0d6efd;
     --bs-btn-disabled-border-color: #0d6efd;

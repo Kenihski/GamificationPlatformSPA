@@ -117,18 +117,6 @@
   box-shadow: 0 0 0 0.2rem rgba(111, 132, 255, 0.2);
 }
 
-/* Rename and delete buttons - Subapp 1 colors */
-.admin-images-page .btn-outline-primary {
-  border-color: #91adff;
-  color: #b8c8ff;
-}
-
-.admin-images-page .btn-outline-primary:hover {
-  background: rgba(77, 99, 202, 0.35);
-  border-color: #b2c1ff;
-  color: #fff;
-}
-
 /* Empty states */
 .admin-images-page .admin-images-empty {
   background: #192344;
