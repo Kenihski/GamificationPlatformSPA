@@ -184,6 +184,8 @@ const AchievementNotifications = () => {
   if (!queue.length) return null
 
   const active = queue.slice(0, Math.min(visibleCount, wide ? 3 : 1))
+  // Newest on top, as in Subapp 1: older notices move down and close from the bottom.
+  const shown = [...active].reverse()
 
   return (
     <>
@@ -191,7 +193,7 @@ const AchievementNotifications = () => {
         {active.map((item) => `${item.name}: ${item.description}`).join('. ')}
       </div>
       <div className="achievement-notification-container">
-        {active.map((item) => (
+        {shown.map((item) => (
           <AchievementToast key={item.userAchievementId}
             item={item} onClose={(id, restoreFocus) => { void onClose(id, restoreFocus) }} />
         ))}

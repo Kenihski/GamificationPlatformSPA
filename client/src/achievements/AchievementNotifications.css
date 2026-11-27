@@ -1,12 +1,12 @@
-
+/* Achievement notifications, matching Subapp 1 (achievements.css) in size and placement. */
 .achievement-notification-container {
   position: fixed;
   top: calc(var(--site-navbar-height, 65px) + 12px);
-  right: 12px;
-  z-index: 1050;
+  right: 16px;
+  z-index: 1030;
   width: 320px;
-  max-width: calc(100vw - 24px);
-  max-height: calc(100vh - 81px);
+  max-width: calc(100vw - 40px);
+  max-height: calc(100dvh - var(--site-navbar-height, 65px) - 28px);
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;
@@ -19,8 +19,9 @@
   isolation: isolate;
   display: flex;
   align-items: center;
-  min-height: 74px;
-  padding: 10px;
+  flex-shrink: 0;
+  min-height: 0;
+  padding: 12px;
   border: 2px solid #d4a72c;
   border-radius: 10px;
   background: linear-gradient(110deg, #304789, #563b85);
@@ -37,6 +38,7 @@
   border-color: #c39352;
 }
 
+/* Gradually fade a grey layer over the original gradient. */
 .achievement-notification::before {
   content: "";
   position: absolute;
@@ -59,6 +61,7 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
 }
 
+/* Keep notification content above the overlay. */
 .achievement-notification > * {
   position: relative;
   z-index: 1;
@@ -68,12 +71,12 @@
   flex-grow: 1;
   min-width: 0;
   overflow-wrap: anywhere;
-  padding-right: 10px;
+  padding-right: 8px;
 }
 
 .achievement-notification-heading {
-  margin-bottom: 4px;
-  font-size: 0.65rem;
+  margin-bottom: 5px;
+  font-size: 0.75rem;
   font-weight: bold;
   letter-spacing: 0.05rem;
   color: #f0cd7b;
@@ -87,24 +90,25 @@
 
 .achievement-notification-description {
   margin-top: 4px;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: #d1d9ee;
 }
 
+/* The top margin keeps the points box clear of the close button. */
 .achievement-notification-points {
-  width: 52px;
-  min-width: 52px;
-  height: 49px;
+  min-width: 48px;
+  flex-shrink: 0;
+  margin-top: 24px;
   padding: 6px;
   border: 1px solid #d4a72c;
   border-radius: 8px;
   background-color: #3b315b;
   color: #ffe092;
-  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.8rem;
+  text-align: center;
+  font-size: 0.9rem;
   font-weight: bold;
   transition:
     background-color 2.5s ease,
@@ -127,11 +131,8 @@
 .achievement-notification-close {
   position: absolute;
   z-index: 2;
-  top: 3px;
-  right: 3px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  top: 2px;
+  right: 2px;
   width: 32px;
   height: 32px;
   border: none;
@@ -173,23 +174,49 @@
   }
 }
 
+/* Smaller screens show one notification at the bottom centre, as in Subapp 1.
+   Keep this breakpoint in sync with the 992px check in AchievementNotifications.tsx. */
 @media (max-width: 991.98px) {
   .achievement-notification-container {
     top: auto;
-    bottom: max(12px, env(safe-area-inset-bottom));
+    bottom: max(16px, env(safe-area-inset-bottom));
     left: 50%;
     right: auto;
     transform: translateX(-50%);
-    width: min(320px, calc(100vw - 24px));
-    max-height: 55vh;
+    max-width: calc(100vw - 24px);
   }
+}
+
+/* Compact notifications on phones: full width with a small margin and slightly
+   smaller text, still at least about 13.6px for the description. */
+@media (max-width: 575.98px) {
+  .achievement-notification-container {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+  }
+
   .achievement-notification {
-    min-height: 74px;
     padding: 10px;
   }
+
+  .achievement-notification-heading {
+    margin-bottom: 3px;
+    font-size: 0.7rem;
+  }
+
+  .achievement-notification-name {
+    font-size: 0.95rem;
+  }
+
+  .achievement-notification-description {
+    margin-top: 2px;
+    font-size: 0.85rem;
+  }
+
   .achievement-notification-points {
-    width: 52px;
-    min-width: 52px;
-    height: 49px;
+    min-width: 44px;
+    margin-top: 20px;
+    padding: 4px 6px;
+    font-size: 0.85rem;
   }
 }
