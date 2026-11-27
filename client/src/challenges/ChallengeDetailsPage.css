@@ -6,7 +6,9 @@
   --content-card-border: rgba(125, 151, 230, 0.55);
   --primary-gradient: linear-gradient(135deg, #3d65d9, #7957d8);
   --primary-gradient-hover: linear-gradient(135deg, #4269dc, #7d5bdb);
-  padding: 15px 0 65px;
+  /* Subapp 1 gets the 1rem margin from the navbar (mb-3). */
+  margin-top: 1rem;
+  padding: 28px 0 65px;
 }
 
 /* Navigation */
@@ -14,7 +16,6 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 25px;
   margin-bottom: 22px;
   color: #a9bfff;
   font-weight: 600;
