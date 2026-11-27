@@ -1,5 +1,6 @@
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { Carousel } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import type { Challenge } from '../types/Challenge'
 import './HomePage.css'
@@ -35,18 +36,13 @@ interface FeaturedChallengesProps {
   challenges: Challenge[]
 }
 
+// Users who ask for reduced motion get no automatic rotation.
+const prefersReducedMotion = () =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
 const FeaturedChallenges = ({ challenges }: FeaturedChallengesProps) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [paused, setPaused] = useState(false)
-
-  useEffect(() => {
-    if (paused || challenges.length < 2 ||
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const timer = window.setInterval(() => {
-      setActiveIndex((index) => (index + 1) % challenges.length)
-    }, 5000)
-    return () => window.clearInterval(timer)
-  }, [paused, challenges.length])
 
   if (challenges.length === 0) {
     return (
@@ -59,25 +55,26 @@ const FeaturedChallenges = ({ challenges }: FeaturedChallengesProps) => {
     )
   }
 
-  const index = activeIndex % challenges.length
-  const challenge = challenges[index]
-  const imageUrl = getImageUrl(challenge.imageUrl)
-
-  const previous = () => {
-    setActiveIndex((current) =>
-      (current - 1 + challenges.length) % challenges.length
-    )
-  }
-
-  const next = () => {
-    setActiveIndex((current) => (current + 1) % challenges.length)
-  }
+  const hasSeveral = challenges.length > 1
 
   return (
     <div className="featured-challenges">
       <h2 className="featured-challenges-title">Featured Challenges</h2>
 
-      <div className="featured-carousel"
+      {/* Bootstrap's carousel, as in Subapp 1. Rotation pauses while the mouse
+          or keyboard focus is inside, so users can read and use the links. */}
+      <Carousel
+        className="featured-carousel"
+        aria-label="Featured challenges"
+        activeIndex={activeIndex % challenges.length}
+        onSelect={(index) => setActiveIndex(index)}
+        interval={paused || prefersReducedMotion() ? null : 5000}
+        pause={false}
+        controls={hasSeveral}
+        indicators={hasSeveral}
+        indicatorLabels={challenges.map((_, index) => `Go to challenge ${index + 1}`)}
+        prevLabel="Previous challenge"
+        nextLabel="Next challenge"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         onFocusCapture={() => setPaused(true)}
@@ -85,111 +82,82 @@ const FeaturedChallenges = ({ challenges }: FeaturedChallengesProps) => {
           if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false)
         }}
       >
-        <div className="featured-carousel-frame">
-          <div className="featured-challenge-card">
-            <div className="featured-challenge-image">
-              {imageUrl && <img src={imageUrl} alt="" />}
-            </div>
+        {challenges.map((challenge, index) => {
+          const imageUrl = getImageUrl(challenge.imageUrl)
 
-            <div className="featured-challenge-content">
-              <div className="featured-challenge-badges">
-                <span
-                  className={`featured-badge ${
-                    challenge.isCore
-                      ? 'featured-badge-core'
-                      : 'featured-badge-community'
-                  }`}
-                >
-                  {challenge.isCore ? 'CORE' : 'COMMUNITY'}
-                </span>
+          return (
+            <Carousel.Item key={challenge.challengeId}>
+              <div className="featured-challenge-card">
+                <div className="featured-challenge-image">
+                  {imageUrl && (
+                    <img
+                      src={imageUrl}
+                      alt=""
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                    />
+                  )}
+                </div>
 
-                {challenge.isPopular && (
-                  <span className="featured-badge featured-badge-popular">
-                    ★ POPULAR
-                  </span>
-                )}
+                <div className="featured-challenge-content">
+                  <div className="featured-challenge-badges">
+                    <span
+                      className={`featured-badge ${
+                        challenge.isCore
+                          ? 'featured-badge-core'
+                          : 'featured-badge-community'
+                      }`}
+                    >
+                      {challenge.isCore ? 'CORE' : 'COMMUNITY'}
+                    </span>
+
+                    {challenge.isPopular && (
+                      <span className="featured-badge featured-badge-popular">
+                        ★ POPULAR
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 className="featured-challenge-name">
+                    {challenge.title}
+                  </h3>
+
+                  <p className="featured-challenge-description">
+                    {challenge.description}
+                  </p>
+
+                  <div className="featured-challenge-meta">
+                    <span>
+                      <PointsIcon />
+                      {challenge.maxPoints} points
+                    </span>
+
+                    <span>
+                      <ClockIcon />
+                      {challenge.timeLimitMinutes == null
+                        ? 'Unlimited time'
+                        : `${challenge.timeLimitMinutes} min`}
+                    </span>
+
+                    {!challenge.isCore && challenge.creatorUsername && (
+                      <span>
+                        <UserIcon />
+                        Created by {challenge.creatorUsername}
+                      </span>
+                    )}
+                  </div>
+
+                  <Link
+                    to={`/challenges/${challenge.challengeId}`}
+                    className="btn btn-primary featured-challenge-button"
+                  >
+                    View Challenge <span aria-hidden="true">→</span>
+                  </Link>
+                </div>
               </div>
-
-              <h3 className="featured-challenge-name">
-                {challenge.title}
-              </h3>
-
-              <p className="featured-challenge-description">
-                {challenge.description}
-              </p>
-
-              <div className="featured-challenge-meta">
-                <span>
-                  <PointsIcon />
-                  {challenge.maxPoints} points
-                </span>
-
-                <span>
-                  <ClockIcon />
-                  {challenge.timeLimitMinutes == null
-                    ? 'Unlimited time'
-                    : `${challenge.timeLimitMinutes} min`}
-                </span>
-
-                {!challenge.isCore && challenge.creatorUsername && (
-                  <span>
-                    <UserIcon />
-                    Created by {challenge.creatorUsername}
-                  </span>
-                )}
-              </div>
-
-              <Link
-                to={`/challenges/${challenge.challengeId}`}
-                className="btn btn-primary featured-challenge-button"
-              >
-                View Challenge <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {challenges.length > 1 && (
-          <>
-            <button
-              type="button"
-              className="featured-carousel-prev d-flex align-items-center justify-content-center"
-              onClick={previous}
-              aria-label="Previous challenge"
-            >
-              <span
-                className="carousel-control-prev-icon"
-                aria-hidden="true"
-              />
-            </button>
-
-            <button
-              type="button"
-              className="featured-carousel-next d-flex align-items-center justify-content-center"
-              onClick={next}
-              aria-label="Next challenge"
-            >
-              <span
-                className="carousel-control-next-icon"
-                aria-hidden="true"
-              />
-            </button>
-
-            <div className="featured-carousel-indicators">
-              {challenges.map((item, itemIndex) => (
-                <button
-                  key={item.challengeId}
-                  type="button"
-                  className={itemIndex === index ? 'active' : ''}
-                  onClick={() => setActiveIndex(itemIndex)}
-                  aria-label={`Go to challenge ${itemIndex + 1}`}
-                  aria-current={itemIndex === index ? 'true' : undefined}
-                />
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+            </Carousel.Item>
+          )
+        })}
+      </Carousel>
     </div>
   )
 }
