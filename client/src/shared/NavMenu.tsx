@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useRef, useState } from 'react'
+import useNavbarReveal from './useNavbarReveal'
 import {
   Alert,
   Button,
@@ -34,6 +35,8 @@ const NavMenu = () => {
   const isAdmin = user?.roles.includes('Admin') ?? false
   const navigate = useNavigate()
   const location = useLocation()
+  const headerRef = useRef<HTMLElement>(null)
+  const navbarHidden = useNavbarReveal(headerRef)
 
   const closeMenu = () => setShowMenu(false)
 
@@ -55,7 +58,11 @@ const NavMenu = () => {
 
   return (
     <>
-      <Navbar className="site-navbar" data-bs-theme="dark">
+      <Navbar
+        ref={headerRef}
+        className={`site-navbar site-header${navbarHidden ? ' site-header-hidden' : ''}`}
+        data-bs-theme="dark"
+      >
         <Container fluid>
           <div className="site-navbar-start d-flex align-items-center">
             <button

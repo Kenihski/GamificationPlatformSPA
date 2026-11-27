@@ -304,9 +304,12 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+/* Fixed to the window so focusing it does not scroll the page or push content down. */
 .skip-to-main:focus {
-  position: relative;
-  z-index: 2000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1100;
   display: block;
   width: auto;
   height: auto;
@@ -320,4 +323,29 @@
   /* Same as the Subapp 1 skip link: light border plus the shared focus outline. */
   border: 2px solid var(--focus-ring);
   border-radius: 6px;
+}
+
+/* The navbar stays at the top while scrolling; useNavbarReveal hides it while
+   scrolling down and shows it on scroll up or when the mouse reaches the top. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  transition: top 0.25s ease;
+}
+
+/* Used for one frame when keyboard focus enters the hidden navbar. */
+.site-header.site-header-instant {
+  transition: none;
+}
+
+/* Keyboard users tabbing into the navbar always see it. */
+.site-header.site-header-hidden:not(:focus-within) {
+  top: calc(-1 * var(--site-header-height, 80px) - 4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header {
+    transition: none;
+  }
 }
