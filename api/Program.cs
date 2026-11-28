@@ -1,5 +1,6 @@
 
 using System.Text;
+using System.Security.Cryptography;
 using GamificationPlatform.DAL;
 using GamificationPlatform.Models;
 using GamificationPlatform.Services;
@@ -67,10 +68,20 @@ builder.Services
     .AddEntityFrameworkStores<ChallengeDbContext>()
     .AddDefaultTokenProviders();
 
-// Read the JWT signing key from User Secrets or environment variables.
-var jwtKey = builder.Configuration["Jwt:Key"]
-    ?? throw new InvalidOperationException(
-        "JWT signing key is not configured.");
+// Prefer an explicitly configured signing key. For local development only,
+// generate an ephemeral key shared by token issuance and validation.
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrWhiteSpace(jwtKey))
+{
+    if (!builder.Environment.IsDevelopment())
+    {
+        throw new InvalidOperationException(
+            "JWT signing key is not configured.");
+    }
+
+    jwtKey = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+    builder.Configuration["Jwt:Key"] = jwtKey;
+}
 
 var jwtIssuer = builder.Configuration["Jwt:Issuer"]
     ?? throw new InvalidOperationException(
