@@ -434,6 +434,13 @@ namespace GamificationPlatform.Controllers
                         "Answer options must be different.");
                 }
 
+                if (options.Any(o => o.IsCorrect && string.IsNullOrWhiteSpace(o.Text)))
+                {
+                    ModelState.AddModelError(
+                        nameof(dto.Options),
+                        "Correct answers must use filled answer options.");
+                }
+
                 var correctCount = options.Count(o =>
                     o.IsCorrect && !string.IsNullOrWhiteSpace(o.Text));
 

@@ -305,6 +305,10 @@ const EditForm = ({ question, challengeTitle }: EditFormProps) => {
       return null
     }
 
+    if (options.some((option) => option.isCorrect && !option.text.trim())) {
+      return 'Correct answers must use filled answer options.'
+    }
+
     const filledOptions = options.filter((option) => option.text.trim())
 
     if (filledOptions.length < 2) {
